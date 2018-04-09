@@ -1,0 +1,63 @@
+<head>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/ascetic.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .title {
+            margin-top: 1%;
+            margin-left: 15%;
+            font-size: 200%;
+        }
+
+        #code {
+            left: 15%;
+            width: 80%;
+            position: absolute;
+            word-wrap: break-word;
+            z-index: -1;
+        }
+
+        .hljs {
+            display: block;
+            overflow-x: auto;
+            padding: 0.5em;
+            background: rgba(0, 0, 100, 0.02);
+        }
+
+        .hljs-comment {
+            color: blue;
+        }
+
+        .font {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size: 1.25em;
+        }
+
+        li {
+            background: white;
+            list-style-type: none;
+            padding: 0.5em;
+            width: 10em;
+            background: rgb(240,240,240);
+            margin-bottom: 0.25em;
+        }
+    </style>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <div class="title">Example for <a href="https://github.com/davidfig/sortable/">github.com/davidfig/sortable/</a></div>
+    <div id="example">
+        <ul id="example-1">
+            <li>item 1</li>
+            <li>item 2</li>
+            <li>item 3</li>
+            <li>item 4</li>
+            <li>item 5</li>
+        </ul>
+    </div>
+    <pre><code class="javascript" id="code"></code></pre>
+</body>

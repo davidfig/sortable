@@ -1,0 +1,18 @@
+{
+  "name": "yy-sortable",
+  "version": "0.1.0",
+  "description": "Vanilla drag-and-drop sortable list(s)",
+  "main": "index.js",
+  "scripts": {
+    "test": "budo docs/code.js:index.js --dir docs --live"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "eventemitter3": "^3.0.1"
+  },
+  "devDependencies": {
+    "fork-me-github": "^1.0.3",
+    "highlight.js": "^9.12.0"
+  }
+}
