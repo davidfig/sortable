@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/budo docs/code.js:index.js --dir docs --live",
     "build-demo": "./node_modules/.bin/browserify docs/code.js -o docs/index.js",
-    "docs": "./node_modules/.bin/jsdoc -c .jsdoc.json",
+    "docs": "rm -rf ./docs/jsdoc && ./node_modules/.bin/jsdoc -c .jsdoc.json",
     "transpile": "./node_modules/.bin/babel src/sortable.js --out-dir dist --source-maps inline",
     "prepublishOnly": "npm run transpile && npm run build-demo && npm run docs"
   },

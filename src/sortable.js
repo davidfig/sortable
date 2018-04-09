@@ -26,7 +26,7 @@ const defaults = {
     }
 }
 
-module.exports = class Sortable extends Events
+class Sortable extends Events
 {
     /**
      * Create sortable list
@@ -416,3 +416,5 @@ module.exports = class Sortable extends Events
         return defaults
     }
 }
+
+module.exports = Sortable
