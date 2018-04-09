@@ -36,13 +36,58 @@
             font-size: 1.25em;
         }
 
-        li {
-            background: white;
+        .examples {
+            user-select: none;
+        }
+
+        li, .entry {
             list-style-type: none;
             padding: 0.5em;
             width: 10em;
             background: rgb(240,240,240);
-            margin-bottom: 0.25em;
+            margin: 0.25em;
+        }
+
+        .skip {
+            padding: 0.5em;
+            width: 10em;
+            background: rgb(255,200,200);
+            margin: 0.25em;
+        }
+
+        .example-title {
+            text-align: center;
+            font-weight: bold;
+            margin: 1em;
+        }
+
+        .separator {
+            margin: 2em;
+            width: calc(100% - 4em);
+            border-top: solid 1px black;
+        }
+
+        #example-2, #example-3, #example-5 {
+            display: flex;
+            justify-content: space-around;
+            background: rgb(249, 249, 249);
+        }
+
+        #example-2 > div, #example-3 > div, #example-4 > div {
+            width: 10em;
+            margin: 0 auto;
+        }
+
+        #example-4 {
+            background: rgb(249, 249, 249);
+        }
+
+        #example-4 > div {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            margin-bottom: 1em;
         }
     </style>
     <script src="index.js"></script>
@@ -50,14 +95,70 @@
 
 <body>
     <div class="title">Example for <a href="https://github.com/davidfig/sortable/">github.com/davidfig/sortable/</a></div>
-    <div id="example">
+    <div class="example-title">Sortable List</div>
+    <div class="examples">
         <ul id="example-1">
-            <li>item 1</li>
-            <li>item 2</li>
-            <li>item 3</li>
-            <li>item 4</li>
-            <li>item 5</li>
+            <li>pencil</li>
+            <li>pen</li>
+            <li>eraser</li>
         </ul>
+        <div class="separator"></div>
+        <div class="example-title">Sortable Between Lists</div>
+        <div id="example-2">
+            <div>
+                <div class="entry">apple</div>
+                <div class="entry">orange</div>
+                <div class="entry">pear</div>
+            </div>
+            <div>
+                <div class="entry">asparagus</div>
+                <div class="entry">cabbage</div>
+                <div class="entry">green beans</div>
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="example-title">Sortable Between Lists (First Sortable and Second Ordered)</div>
+        <div id="example-3">
+            <div>
+                <div class="entry" data-order=1>1. computer</div>
+                <div class="entry" data-order=2>2. mouse</div>
+                <div class="entry" data-order=4>4. keyboard</div>
+            </div>
+            <div>
+                <div class="entry" data-order=3>3. game pad</div>
+                <div class="entry" data-order=5>5. speakers</div>
+                <div class="entry" data-order=6>6. monitor</div>
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="example-title">Horizontal Sortable Between Lists (First Sortable and Second Ordered)</div>
+        <div id="example-4">
+            <div>
+                <div class="entry" data-order=1>1. egg</div>
+                <div class="entry" data-order=2>2. milk</div>
+                <div class="entry" data-order=4>4. cheese</div>
+            </div>
+            <div>
+                <div class="entry" data-order=3>3. soup</div>
+                <div class="entry" data-order=5>5. dessert</div>
+                <div class="entry" data-order=6>6. meat</div>
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="example-title">Sortable Lists With Non-Draggable Members (First Sortable and Second Ordered)</div>
+        <div id="example-5">
+            <div>
+                <div class="entry" data-order=1>1. cars</div>
+                <div class="skip" data-order=2>2. motorcycles</div>
+                <div class="entry" data-order=4>4. bicycles</div>
+            </div>
+            <div>
+                <div class="entry" data-order=3>3. skateboards</div>
+                <div class="skip" data-order=5>5. feet</div>
+                <div class="entry" data-order=6>6. scooters</div>
+            </div>
+        </div>
     </div>
+    <div class="separator"></div>
     <pre><code class="javascript" id="code"></code></pre>
 </body>
