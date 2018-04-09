@@ -144,30 +144,34 @@ class Sortable extends Events
     /**
      * find closest Sortable to screen location
      * @param {UIEvent} e
+     * @param {HTMLElement} dragging
      * @param {Sortable[]} list of related Sortables
      * @private
      */
-    _findClosest(e, list)
+    _findClosest(e, dragging, list)
     {
         function inside(element)
         {
-            const x1 = e.pageX
-            const y1 = e.pageY
-            const x2 = element.offsetLeft
-            const y2 = element.offsetTop
-            const h1 = element.offsetWidth
-            const w1 = element.offsetHeight
-            return x2 >= x1 && x2 <= x1 + w1 && y2 >= y1 && y2 <= y1 + h1
+            const x1 = dragging.offsetLeft
+            const y1 = dragging.offsetTop
+            const w1 = dragging.offsetWidth
+            const h1 = dragging.offsetHeight
+            const pos = toGlobal(element)
+            const x2 = pos.x
+            const y2 = pos.y
+            const w2 = element.offsetWidth
+            const h2 = element.offsetHeight
+            return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
         }
 
         let min = Infinity, found
         for (let related of list)
         {
-            if (inside(related))
+            if (inside(related.element))
             {
                 return related
             }
-            else
+            else if (related.options.alwaysInList)
             {
                 const calculate = this._distanceToClosestCorner(e, related.element)
                 if (calculate < min)
@@ -375,7 +379,15 @@ class Sortable extends Events
             }
             else
             {
-                Sortable._placeInList(this._findClosest(e, list), this.dragging)
+                const closest = this._findClosest(e, this.dragging, list)
+                if (closest)
+                {
+                    Sortable._placeInList(closest, this.dragging)
+                }
+                else
+                {
+                    this.dragging.indicator.remove()
+                }
             }
             e.preventDefault()
             e.stopPropagation()

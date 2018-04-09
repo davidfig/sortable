@@ -8,8 +8,8 @@ function test()
     })
 
     const two = document.getElementById('example-2')
-    new Sortable(two.children[0], { name: 'list-2' })
-    new Sortable(two.children[1], { name: 'list-2' })
+    new Sortable(two.children[0], { name: 'list-2', alwaysInList: true })
+    new Sortable(two.children[1], { name: 'list-2', alwaysInList: true })
 
     const three = document.getElementById('example-3')
     new Sortable(three.children[0], { name: 'list-3' })

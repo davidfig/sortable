@@ -44,7 +44,7 @@
             list-style-type: none;
             padding: 0.5em;
             width: 10em;
-            background: rgb(240,240,240);
+            background: rgb(230,230,230);
             margin: 0.25em;
         }
 
@@ -58,13 +58,24 @@
         .example-title {
             text-align: center;
             font-weight: bold;
-            margin: 1em;
+            margin: 1em 1em 0;
+        }
+
+        .example-subtitle {
+            text-align: center;
+            font-size: 0.85em;
+            margin-bottom: 1em;
         }
 
         .separator {
             margin: 2em;
             width: calc(100% - 4em);
             border-top: solid 1px black;
+        }
+
+        #example-1 {
+            width: fit-content;
+            margin: 0 auto;
         }
 
         #example-2, #example-3, #example-5 {
@@ -74,7 +85,6 @@
         }
 
         #example-2 > div, #example-3 > div, #example-4 > div {
-            width: 10em;
             margin: 0 auto;
         }
 
@@ -118,6 +128,7 @@
         </div>
         <div class="separator"></div>
         <div class="example-title">Sortable Between Lists (First Sortable and Second Ordered)</div>
+        <div class="example-subtitle">alwaysInList = false</div>
         <div id="example-3">
             <div>
                 <div class="entry" data-order=1>1. computer</div>
