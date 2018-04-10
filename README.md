@@ -9,6 +9,7 @@ Features include:
 * search descendents for a className when determining where to sort or how to order (options.deepSearch)
 * custom icons to show what is happening during drag
 * robust event system based on eventemitter3
+* ordered lists may be reverse ordered 
 
 ## Rationale
 I tried many of the existing drag-and-drop libraries but could not find all the features I wanted in one neat package.

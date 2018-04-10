@@ -24,6 +24,10 @@ function test()
     const six = document.getElementById('example-6')
     new Sortable(six.children[0], { name: 'list-6', dragClass: 'entry' })
     new Sortable(six.children[1], { name: 'list-6', dragClass: 'entry', deepSearch: true, sort: false })
+
+    const seven = document.getElementById('example-7')
+    new Sortable(seven.children[0], { name: 'list-7', dragClass: 'entry' })
+    new Sortable(seven.children[1], { name: 'list-7', dragClass: 'entry', sort: false, reverseOrder: true })
 }
 
 window.onload = function ()

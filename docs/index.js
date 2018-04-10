@@ -25,6 +25,10 @@ function test()
     const six = document.getElementById('example-6')
     new Sortable(six.children[0], { name: 'list-6', dragClass: 'entry' })
     new Sortable(six.children[1], { name: 'list-6', dragClass: 'entry', deepSearch: true, sort: false })
+
+    const seven = document.getElementById('example-7')
+    new Sortable(seven.children[0], { name: 'list-7', dragClass: 'entry' })
+    new Sortable(seven.children[1], { name: 'list-7', dragClass: 'entry', sort: false, reverseOrder: true })
 }
 
 window.onload = function ()
@@ -33,7 +37,7 @@ window.onload = function ()
     require('fork-me-github')('https://github.com/davidfig/sortable')
     require('./highlight')()
 }
-},{"../src/sortable":184,"./highlight":2,"fork-me-github":4}],2:[function(require,module,exports){
+},{"../src/sortable":185,"./highlight":2,"fork-me-github":4}],2:[function(require,module,exports){
 // shows the code in the demo
 module.exports = function highlight()
 {
@@ -17377,9 +17381,6 @@ module.exports = function(hljs) {
 },{}],183:[function(require,module,exports){
 module.exports={copy:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABXklEQVQ4ja2VPWsCQRCGHw8hlVjbm2C6BMTmigR/hySQwP4gyyvSJdjYna29EEhjEU0tln4cp0Y4NoW7ybq3Z87EF6bY2eGZWZiZhXwqK/uzioAAXoAxIJWNlU+omFy6BAYGJMsGKvag7oFNDpi2DXBnAgpWZW/Ame/7VCqVVLb1ek2v17Pdn8AV8G46i+YzwzCULk2n00PPL2oQwAPQsFNPJhO63e73eblcpqpWaihGoIG3rqgwDAmCgGazCYCUEiEEAJ1Ox05wYwLrWal936fdbqf8/X7fBtYBPHYNe54FPEIXQNk7AWhPHrAAPk7AGgMLXeGreRNFEbPZjNVqhZQyL3CPIciYhlar5ezJarVqxwr46cMn4BFHL87nc4bDYaqc7XZrHgeK4R49M7JUKlEomGE7JUlCHMewm+drrNHT+vdycKlG/vVV+w2mpRfsMzAyICPlO2rBupT7C/gC9G7LXmZLz0YAAAAASUVORK5CYII=',move:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABDUlEQVQ4ja2VMW6DMBSGP9IsTCxcoWo6IJZMHCaIhQv0HlwBMcRjb8BeRsYgbpGhmaCLX+VS45o0n/SE8LN/vd/YD/Aj0nE3e6AEFDAAs45Bj5V6jhevQGeIrEWn5zrJgZuHmMQNOLkq2yJmih6WYntPmy77P/a09FmYpqkrXwI8acE3IFnbC0EpRRAE9H1vS1+BdynzaGayLCMMw18r4jimrmsAmqZZpr81omX54zjOLqZpmvM8t9mOdn/Z3EqgnwPwLINrlquqIkkSiqKwWR6AF3lReHzltm3XrM7A2VR/2LER/nuwP7A0i3uv3ieWqyc8tDkIB0/7nauyJdJgz8DFELnosU0N1ob3L+ALRMrs/Hdy9wQAAAAASUVORK5CYII=',delete:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAB40lEQVQ4jaWVwU4TURSGv3OnQp1CJgMxbEkmEN1p0rBxAV2AxPgOmC58CRY8BpEFUZ/BRE0XwsIESRNhVS1h4RICNJXOpFPbOS5oh1LaodJ/d2/O/eb/T3LOwBAquK5TcF1nmFrpd/kVUnXbziOypJAV1TkAFTkSKKK6kw6C7Rw07wR+nJh4YkXRO2DhDjP7LWNev6rVSgOBnzKZNVTfAuPXFcLY1BQAjYsLUO1+EqrIm5e+/+EWsO3sRwc2PjMTA3PHx1et8LwYGJ6cxFBjWU9fXF7+jIHtnn3rjrnq+4l5P2cyN+Kng+B5DpopgLpt5+np2e/NzURgjxbqtp0nCLZS7VhLPb3h0cpKIqHUc1bVRWDLAChkex/Ynkd5Y4OHs7PUSiUqe3vYnsev9XVsz7v1ATEmC5AquK7TDMO5fi7+HB5CFBGentI4OwOgenDQ37LqfMF1HZOY6x4yy5VKVUWORiaJlJcrlaoBECiOytMoKgJcRVbdGRUoIrsxMB0E28D+vWHwvc0YPHqrvs/fapUHjkMUhqCKSafju65JqRvLenZj9DrqXg5j09OJrhrn55C0HDr6Mjn5OGq13jPE+jKWtdZxNhAI1wtWVRfFmCyq81fVUtYoKorI7qAFO5T+5xfwD0HCxifvFsyRAAAAAElFTkSuQmCC',reorder:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABWklEQVQ4ja2VMW7CQBBFn5BdIcElnIg07lwnPQUNddJYPoMLbuDaHS3pKHyDpAsSFwhxyQVAQqEA/RTxWhvHYIP40i92NPr7Z3dnFtqhX/BqOEAEvAIrQAVXRSwqclrhAVhYIqe4KHLP4gXYtxAz3APP55xdImaLDqpiTrVMz/OUpqlc1y1jvu8rz3PFcVxX/p8zjapi6/VakjSfz0vRIAgkSUmS1DmNADqF4FNp1XEIw5DtdgtAt9tlNBqdOiYbj/bCfhoClCSJJCkIgjLW4PDTOOwDd20sNOAe6Hca0y5EB9gAXzfQWgEbc9VLGsoej8eEYQjAcDjkeDwymUw4HA4mZWkcArw1bZ9lGbvdDoBer8d0OrXFAN7txb+HHcex8jyX7/tlzHVdpWkqz/OqN/xBzbC4tvW+qWk9g5sOB4NBtfwTXJxzVoUZsDN+O8DuhhkXDtg6tP4CfgAjHd1NvsCHcAAAAABJRU5ErkJggg=='}
 },{}],184:[function(require,module,exports){
-const Events = require('eventemitter3')
-
-const toGlobal = require('./toGlobal')
 const icons = require('./icons')
 
 /**
@@ -17390,8 +17391,9 @@ const icons = require('./icons')
  * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
  * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
  * @property {boolean} [options.sort=true] allow sorting within list
- * @property {string} [options.sortId=data-order] for ordered lists, use this data id to figure out sort order
- * @property {boolean} [options.sortIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
+ * @property {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
+ * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
+ * @property {string} [options.reverseOrder] reverse sort the orderId
  * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
  * @property {object} [options.childrenStyles] styles to apply to children elements of Sortable
  * @property {boolean} [options.useIcons=true] show icons when dragging
@@ -17401,11 +17403,11 @@ const icons = require('./icons')
  * @property {string} [options.icons.copy]
  * @property {string} [options.icons.delete]
  */
-const defaults = {
+module.exports = {
     name: 'sortable',
     sort: true,
-    sortId: 'data-order',
-    sortIdIsNumber: true,
+    orderId: 'data-order',
+    orderIdIsNumber: true,
     threshold: 10,
     alwaysInList: true,
     dragClass: null,
@@ -17422,6 +17424,11 @@ const defaults = {
     useIcons: true,
     icons
 }
+},{"./icons":183}],185:[function(require,module,exports){
+const Events = require('eventemitter3')
+
+const toGlobal = require('./toGlobal')
+const defaults = require('./options')
 
 class Sortable extends Events
 {
@@ -17433,7 +17440,9 @@ class Sortable extends Events
      * @param {boolean} [options.sort=true] allow sorting within list
      * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise use all children
      * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
-     * @param {string} [options.sortId=data-order] for non-sorting lists, use this data id to figure out sort order
+     * @param {string} [options.orderId=data-order] for non-sorting lists, use this data id to figure out sort order
+     * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.orderId to properly sort numbers
+     * @param {string} [options.reverseOrder] reverse sort the orderId
      * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
      * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
      * @param {object} [options.icons] default set of icons
@@ -17441,12 +17450,16 @@ class Sortable extends Events
      * @param {string} [options.icons.move] source of image
      * @param {string} [options.icons.copy] source of image
      * @param {string} [options.icons.delete] source of image
+     * @fires clicked
+     * @fires pickup
      * @fires order
      * @fires add
      * @fires remove
+     * @fires update
      * @fires order-pending
      * @fires add-pending
      * @fires remove-pending
+     * @fires update-pending
      */
     constructor(element, options)
     {
@@ -17532,6 +17545,7 @@ class Sortable extends Events
             this.dragging.icon = image
         }
         this.dragging.pickup = true
+        this.emit('pickup', this.dragging, this)
     }
 
     /**
@@ -17723,20 +17737,42 @@ class Sortable extends Events
      */
     _placeInOrderedList(sortable, dragging)
     {
-        const id = sortable.options.sortId
+        const id = sortable.options.orderId
         dragging.indicator.remove()
         sortable.indicator = dragging.indicator
-        const dragOrder = sortable.indicator.getAttribute(id)
+        let dragOrder = sortable.indicator.getAttribute(id)
+        dragOrder = sortable.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder
         let found
-        const elements = this._getChildren(sortable, true)
-        for (let child of elements)
+        const children = this._getChildren(sortable, true)
+        if (sortable.options.reverseOrder)
         {
-            if (sortable.options.sortIdIsNumber ? parseInt(dragOrder) < parseInt(child.getAttribute(id)) : dragOrder < child.getAttribute(id))
+            for (let i = children.length - 1; i >= 0; i--)
             {
-                child.parentNode.insertBefore(sortable.indicator, child)
-                this._setIcon(dragging, sortable)
-                found = true
-                break
+                const child = children[i]
+                let childDragOrder = child.getAttribute(id)
+                childDragOrder = sortable.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
+                if (dragOrder > childDragOrder)
+                {
+                    child.parentNode.insertBefore(sortable.indicator, child)
+                    this._setIcon(dragging, sortable)
+                    found = true
+                    break
+                }
+            }
+        }
+        else
+        {
+            for (let child of children)
+            {
+                let childDragOrder = child.getAttribute(id)
+                childDragOrder = sortable.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
+                if (dragOrder < childDragOrder)
+                {
+                    child.parentNode.insertBefore(sortable.indicator, child)
+                    this._setIcon(dragging, sortable)
+                    found = true
+                    break
+                }
             }
         }
         if (!found)
@@ -17811,6 +17847,18 @@ class Sortable extends Events
             dragging.icon.src = dragging.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
             dragging.current = sortable
         }
+        if (dragging.original === sortable)
+        {
+            sortable.emit('reorder-pending', dragging, sortable)
+            sortable.emit('update-pending', sortable)
+        }
+        else
+        {
+            sortable.emit('add-pending', dragging, sortable)
+            dragging.original.emit('remove-pending', dragging, dragging.original)
+            sortable.emit('update-pending')
+            dragging.original.emit('update-pending')
+        }
     }
 
     /**
@@ -17844,8 +17892,6 @@ class Sortable extends Events
             }
             else
             {
-                sortable.element.appendChild(dragging.indicator)
-                sortable.indicator = dragging.indicator
                 const xa1 = dragging.offsetLeft
                 const ya1 = dragging.offsetTop
                 const xa2 = dragging.offsetLeft + dragging.offsetWidth
@@ -17894,6 +17940,12 @@ class Sortable extends Events
                         this._setIcon(dragging, sortable)
                         sortable.emit('dragging-order-change', sortable)
                     }
+                }
+                else
+                {
+                    sortable.element.appendChild(dragging.indicator)
+                    sortable.indicator = dragging.indicator
+                    this._setIcon(dragging, sortable)
                 }
             }
         }
@@ -17970,28 +18022,45 @@ class Sortable extends Events
         {
             if (this.dragging.pickup)
             {
-                if (this.indicator.parentNode)
-                {
-                    this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
-                    this.dragging.original = this.dragging.current
-                }
-                else
-                {
-                    this.emit('removed', this.dragging, this)
-                    this.dragging.remove()
-                    this.dragging.original = null
-                }
                 this.dragging.style.position = ''
                 this.dragging.style.zIndex = ''
                 this.dragging.style.boxShadow = ''
                 this.dragging.style.opacity = ''
-                this.indicator.remove()
-                this.indicator = null
+                if (this.indicator.parentNode)
+                {
+                    this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
+                    this.dragging.original = this.dragging.current
+                    this.indicator.remove()
+                    this.indicator = null
+                    if (this.dragging.original === this)
+                    {
+                        this.emit('reorder', this.dragging, this)
+                        this.emit('update', this.dragging, this)
+                    }
+                    else
+                    {
+                        this.dragging.original.emit('remove', this.dragging, this.dragging.original)
+                        this.dragging.original.emit('update', this.dragging, this.dragging.original)
+                        this.emit('add', this.dragging, this)
+                        this.emit('update', this.dragging, this)
+                    }
+                }
+                else
+                {
+                    this.emit('remove', this.dragging, this)
+                    this.indicator.remove()
+                    this.indicator = null
+                    this.dragging.remove()
+                    this.dragging.original = null
+                }
                 if (this.dragging.icon)
                 {
                     this.dragging.icon.remove()
                 }
-                this.emit('dropped', this.dragging, this)
+            }
+            else
+            {
+                this.emit('clicked', this.dragging, this)
             }
             this.dragging = null
             e.preventDefault()
@@ -18024,7 +18093,7 @@ class Sortable extends Events
 }
 
 module.exports = Sortable
-},{"./icons":183,"./toGlobal":185,"eventemitter3":3}],185:[function(require,module,exports){
+},{"./options":184,"./toGlobal":186,"eventemitter3":3}],186:[function(require,module,exports){
 // from https://stackoverflow.com/a/26230989/1955997
 module.exports = function toGlobal(e)
 {

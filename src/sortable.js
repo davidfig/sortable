@@ -13,7 +13,9 @@ class Sortable extends Events
      * @param {boolean} [options.sort=true] allow sorting within list
      * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise use all children
      * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
-     * @param {string} [options.sortId=data-order] for non-sorting lists, use this data id to figure out sort order
+     * @param {string} [options.orderId=data-order] for non-sorting lists, use this data id to figure out sort order
+     * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.orderId to properly sort numbers
+     * @param {string} [options.reverseOrder] reverse sort the orderId
      * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
      * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
      * @param {object} [options.icons] default set of icons
@@ -308,20 +310,42 @@ class Sortable extends Events
      */
     _placeInOrderedList(sortable, dragging)
     {
-        const id = sortable.options.sortId
+        const id = sortable.options.orderId
         dragging.indicator.remove()
         sortable.indicator = dragging.indicator
-        const dragOrder = sortable.indicator.getAttribute(id)
+        let dragOrder = sortable.indicator.getAttribute(id)
+        dragOrder = sortable.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder
         let found
-        const elements = this._getChildren(sortable, true)
-        for (let child of elements)
+        const children = this._getChildren(sortable, true)
+        if (sortable.options.reverseOrder)
         {
-            if (sortable.options.sortIdIsNumber ? parseInt(dragOrder) < parseInt(child.getAttribute(id)) : dragOrder < child.getAttribute(id))
+            for (let i = children.length - 1; i >= 0; i--)
             {
-                child.parentNode.insertBefore(sortable.indicator, child)
-                this._setIcon(dragging, sortable)
-                found = true
-                break
+                const child = children[i]
+                let childDragOrder = child.getAttribute(id)
+                childDragOrder = sortable.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
+                if (dragOrder > childDragOrder)
+                {
+                    child.parentNode.insertBefore(sortable.indicator, child)
+                    this._setIcon(dragging, sortable)
+                    found = true
+                    break
+                }
+            }
+        }
+        else
+        {
+            for (let child of children)
+            {
+                let childDragOrder = child.getAttribute(id)
+                childDragOrder = sortable.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
+                if (dragOrder < childDragOrder)
+                {
+                    child.parentNode.insertBefore(sortable.indicator, child)
+                    this._setIcon(dragging, sortable)
+                    found = true
+                    break
+                }
             }
         }
         if (!found)
