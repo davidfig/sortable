@@ -88,10 +88,30 @@
             
                 <li class="parent  " data-name="Sortable.create"><a href="Sortable.html#.create">create</a></li>
             
-                <li class="parent  " data-name="Sortable#_setIcon"><a href="Sortable.html#_setIcon">_setIcon</a></li>
-            
             </ul>
             <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li class="parent" data-name="Sortable#event:add"><a href="Sortable.html#event:add">add</a></li>
+            
+                <li class="parent" data-name="Sortable#event:add-pending"><a href="Sortable.html#event:add-pending">add-pending</a></li>
+            
+                <li class="parent" data-name="Sortable#event:clicked"><a href="Sortable.html#event:clicked">clicked</a></li>
+            
+                <li class="parent" data-name="Sortable#event:order"><a href="Sortable.html#event:order">order</a></li>
+            
+                <li class="parent" data-name="Sortable#event:order-pending"><a href="Sortable.html#event:order-pending">order-pending</a></li>
+            
+                <li class="parent" data-name="Sortable#event:pickup"><a href="Sortable.html#event:pickup">pickup</a></li>
+            
+                <li class="parent" data-name="Sortable#event:remove"><a href="Sortable.html#event:remove">remove</a></li>
+            
+                <li class="parent" data-name="Sortable#event:remove-pending"><a href="Sortable.html#event:remove-pending">remove-pending</a></li>
+            
+                <li class="parent" data-name="Sortable#event:update"><a href="Sortable.html#event:update">update</a></li>
+            
+                <li class="parent" data-name="Sortable#event:update-pending"><a href="Sortable.html#event:update-pending">update-pending</a></li>
             
             </ul>
         </li>
@@ -906,7 +926,7 @@
 
         
         <div class="tag-source">
-            <a href="src_sortable.js.html#line675">sortable.js:675</a>
+            <a href="src_sortable.js.html#line676">sortable.js:676</a>
         </div>
         
     </div>
@@ -988,150 +1008,6 @@
             <td class="description last">
                 
                 <p>see constructor for options</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="_setIcon">
-            <a class="share-icon" href="#_setIcon"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-                _setIcon
-            </span>
-            <span class="signature">(dragging, sortable)</span>
-            
-            
-            
-            
-        </h4>
-
-        
-        <div class="tag-source">
-            <a href="src_sortable.js.html#line423">sortable.js:423</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>set icon if available</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>dragging</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">HTMLElement</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>sortable</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Sortable.html">Sortable</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
         </tr>
 	
 	
@@ -1853,6 +1729,1510 @@
     
 
     
+        <h3 class="subsection-title">Events</h3>
+
+        <dl class="list-events">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:add">
+            <a class="share-icon" href="#event:add"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                add
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line710">sortable.js:710</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when an element is added to this sortable</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>added</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>where element was added</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:add-pending">
+            <a class="share-icon" href="#event:add-pending"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                add-pending
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line738">sortable.js:738</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when element is added but not dropped yet</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>being dragged</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>current</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>sortable with element placeholder</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:clicked">
+            <a class="share-icon" href="#event:clicked"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                clicked
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line689">sortable.js:689</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when an element is clicked but not moved beyond the options.threshold</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>clicked</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>containing element</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:order">
+            <a class="share-icon" href="#event:order"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                order
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line703">sortable.js:703</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when a sortable is reordered</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>that was reordered</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>where element was placed</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:order-pending">
+            <a class="share-icon" href="#event:order-pending"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                order-pending
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line731">sortable.js:731</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when order was changed but element was not dropped yet</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>being dragged</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>current</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>sortable with element placeholder</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:pickup">
+            <a class="share-icon" href="#event:pickup"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                pickup
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line696">sortable.js:696</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when an element is picked up because it was moved beyond the options.threshold</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>being dragged</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>current</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>sortable with element placeholder</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:remove">
+            <a class="share-icon" href="#event:remove"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                remove
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line717">sortable.js:717</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when an element is removed from this sortable</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>removed</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>where element was removed</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:remove-pending">
+            <a class="share-icon" href="#event:remove-pending"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                remove-pending
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line745">sortable.js:745</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when element is removed but not dropped yet</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>being dragged</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>current</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>sortable with element placeholder</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:update">
+            <a class="share-icon" href="#event:update"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                update
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line724">sortable.js:724</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when the sortable is updated with an add, remove, or order change</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>changed</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>with element</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:update-pending">
+            <a class="share-icon" href="#event:update-pending"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                update-pending
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line752">sortable.js:752</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when an element is added, removed, or reorder but element has not dropped yet</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>being dragged</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>current</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>sortable with element placeholder</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    
 </article>
 
 </section>
@@ -1865,7 +3245,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Apr 10 2018 11:52:52 GMT+0800 (DST)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Apr 10 2018 12:12:33 GMT+0800 (DST)
             </div>
         </footer>
     </div>

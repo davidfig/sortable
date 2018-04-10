@@ -419,6 +419,7 @@ class Sortable extends Events
      * set icon if available
      * @param {HTMLElement} dragging
      * @param {Sortable} sortable
+     * @private
      */
     _setIcon(dragging, sortable)
     {
@@ -429,7 +430,7 @@ class Sortable extends Events
         }
         if (dragging.original === sortable)
         {
-            sortable.emit('reorder-pending', dragging, sortable)
+            sortable.emit('order-pending', dragging, sortable)
             sortable.emit('update-pending', sortable)
         }
         else
@@ -625,7 +626,7 @@ class Sortable extends Events
                     this.indicator = null
                     if (this.dragging.original === this)
                     {
-                        this.emit('reorder', this.dragging, this)
+                        this.emit('order', this.dragging, this)
                         this.emit('update', this.dragging, this)
                     }
                     else
@@ -684,3 +685,73 @@ class Sortable extends Events
 }
 
 module.exports = Sortable
+
+/**
+ * fires when an element is clicked but not moved beyond the options.threshold
+ * @event Sortable#clicked
+ * @property {HTMLElement} element clicked
+ * @property {Sortable} sortable containing element
+ */
+
+/**
+ * fires when an element is picked up because it was moved beyond the options.threshold
+ * @event Sortable#pickup
+ * @property {HTMLElement} element being dragged
+ * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
+ * fires when a sortable is reordered
+ * @event Sortable#order
+ * @property {HTMLElement} element that was reordered
+ * @property {Sortable} sortable where element was placed
+ */
+
+/**
+ * fires when an element is added to this sortable
+ * @event Sortable#add
+ * @property {HTMLElement} element added
+ * @property {Sortable} sortable where element was added
+ */
+
+/**
+ * fires when an element is removed from this sortable
+ * @event Sortable#remove
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was removed
+ */
+
+/**
+ * fires when the sortable is updated with an add, remove, or order change
+ * @event Sortable#update
+ * @property {HTMLElement} element changed
+ * @property {Sortable} sortable with element
+ */
+
+/**
+ * fires when order was changed but element was not dropped yet
+ * @event Sortable#order-pending
+ * @property {HTMLElement} element being dragged
+ * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
+ * fires when element is added but not dropped yet
+ * @event Sortable#add-pending
+ * @property {HTMLElement} element being dragged
+ * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
+ * fires when element is removed but not dropped yet
+ * @event Sortable#remove-pending
+ * @property {HTMLElement} element being dragged
+ * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
+ * fires when an element is added, removed, or reorder but element has not dropped yet
+ * @event Sortable#update-pending
+ * @property {HTMLElement} element being dragged
+ * @property {Sortable} current sortable with element placeholder
+ */
