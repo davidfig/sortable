@@ -1,29 +1,47 @@
 const Events = require('eventemitter3')
 
 const toGlobal = require('./toGlobal')
+const icons = require('./icons')
 
 /**
  * Options for Sortable
  * @typedef {object} Sortable~DefaultOptions
  * @property {string} [options.name=sortable] dragging is allowed between Sortables with the same name
- * @property {string} [options.dragClass] if set then drag only items with this className under element, otherwise drag all children
+ * @property {string} [options.dragClass] if set then drag only items with this className under element; otherwise drag all children
+ * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
+ * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
  * @property {boolean} [options.sort=true] allow sorting within list
- * @property {string} [options.sortId=data-order] for non-sorting lists, use this data id to figure out sort order
- * @property {boolean} [alwaysInList] place element inside closest related Sortable object, even if outside object's element
+ * @property {string} [options.sortId=data-order] for ordered lists, use this data id to figure out sort order
+ * @property {boolean} [options.sortIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
+ * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
  * @property {object} [options.childrenStyles] styles to apply to children elements of Sortable
+ * @property {boolean} [options.useIcons=true] show icons when dragging
+ * @property {object} [options.icons] default set of icons
+ * @property {string} [options.icons.reorder]
+ * @property {string} [options.icons.move]
+ * @property {string} [options.icons.copy]
+ * @property {string} [options.icons.delete]
  */
 const defaults = {
     name: 'sortable',
     sort: true,
     sortId: 'data-order',
+    sortIdIsNumber: true,
     threshold: 10,
+    alwaysInList: true,
+    dragClass: null,
+    orderClass: null,
+    returnHome: true,
+    deepSearch: false,
     dragStyle: {
         boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
         opacity: 0.85
     },
     childrenStyles: {
         cursor: 'pointer'
-    }
+    },
+    useIcons: true,
+    icons
 }
 
 class Sortable extends Events
@@ -35,11 +53,21 @@ class Sortable extends Events
      * @param {string} [options.name=sortable] dragging is allowed between Sortables with the same name
      * @param {boolean} [options.sort=true] allow sorting within list
      * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise use all children
+     * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
      * @param {string} [options.sortId=data-order] for non-sorting lists, use this data id to figure out sort order
-     * @param {boolean} [alwaysInList] place element inside closest related Sortable object, even if outside object's element
+     * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
      * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
-     * @fires dropped
-     * @fires dragging-order-changed
+     * @param {object} [options.icons] default set of icons
+     * @param {string} [options.icons.reorder] source of image
+     * @param {string} [options.icons.move] source of image
+     * @param {string} [options.icons.copy] source of image
+     * @param {string} [options.icons.delete] source of image
+     * @fires order
+     * @fires add
+     * @fires remove
+     * @fires order-pending
+     * @fires add-pending
+     * @fires remove-pending
      */
     constructor(element, options)
     {
@@ -49,7 +77,9 @@ class Sortable extends Events
         {
             this.options[option] = typeof this.options[option] !== 'undefined' ? options[option] : defaults[option]
         }
-        for (let child of element.children)
+        this.element = element
+        const elements = this._getChildren(this)
+        for (let child of elements)
         {
             if (!this.options.dragClass || child.className === this.options.dragClass)
             {
@@ -67,7 +97,6 @@ class Sortable extends Events
         document.body.addEventListener('touchcancel', (e) => this._dragUp(e))
         document.body.addEventListener('mouseup', (e) => this._dragUp(e))
         document.body.addEventListener('mousecancel', (e) => this._dragUp(e))
-        this.element = element
 
         if (!Sortable.list)
         {
@@ -110,6 +139,17 @@ class Sortable extends Events
         }
         this.dragging.parentNode.insertBefore(this.indicator, this.dragging)
         document.body.appendChild(this.dragging)
+        if (this.options.useIcons)
+        {
+            const image = new Image()
+            image.src = this.options.icons.reorder
+            image.style.position = 'absolute'
+            image.style.transform = 'translate(-50%, -50%)'
+            image.style.left = pos.x + this.dragging.offsetWidth + 'px'
+            image.style.top = pos.y + this.dragging.offsetHeight + 'px'
+            document.body.appendChild(image)
+            this.dragging.icon = image
+        }
         this.dragging.pickup = true
     }
 
@@ -197,7 +237,7 @@ class Sortable extends Events
      * from https://stackoverflow.com/a/21220004/1955997
      * @private
      */
-    static _percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
+    _percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
     {
         const sa = (xa2 - xa1) * (ya2 - ya1)
         const sb = (xb2 - xb1) * (yb2 - yb1)
@@ -212,15 +252,85 @@ class Sortable extends Events
      * @param {HTMLElement} dragging element
      * @private
      */
-    static _placeInList(sortable, place)
+    _placeInList(sortable, place)
     {
         if (sortable.options.sort)
         {
-            Sortable._placeInSortableList(sortable, place)
+            this._placeInSortableList(sortable, place)
         }
         else
         {
-            Sortable._placeInOrderedList(sortable, place)
+            this._placeInOrderedList(sortable, place)
+        }
+    }
+
+    _traverseChildren(base, search, results)
+    {
+        for (let child of base.children)
+        {
+            if (search.length)
+            {
+                if (search.indexOf(child.className) !== -1)
+                {
+                    results.push(child)
+                }
+            }
+            else
+            {
+                results.push(child)
+            }
+            this._traverseChildren(child, search, results)
+        }
+    }
+
+    /**
+     * find children in div
+     * @param {Sortable} sortable
+     * @param {boolean} [order] search for dragOrder as well
+     * @private
+     */
+    _getChildren(sortable, order)
+    {
+        if (sortable.options.deepSearch)
+        {
+            let search = []
+            if (order && sortable.options.orderClass)
+            {
+                if (sortable.options.dragClass)
+                {
+                    search.push(sortable.options.dragClass)
+                }
+                if (order && sortable.options.orderClass)
+                {
+                    search.push(sortable.options.orderClass)
+                }
+            }
+            else if (!order && sortable.options.dragClass)
+            {
+                search.push(sortable.options.dragClass)
+            }
+            const results = []
+            this._traverseChildren(sortable.element, search, results)
+            return results
+        }
+        else
+        {
+            if (sortable.options.dragClass)
+            {
+                let list = []
+                for (let child of sortable.element.children)
+                {
+                    if (child.className === sortable.options.dragClass || ((order || !sortable.options.orderClass) || (order && sortable.options.orderClass && child.className === sortable.options.orderClass)))
+                    {
+                        list.push(child)
+                    }
+                }
+                return list
+            }
+            else
+            {
+                return sortable.element.children
+            }
         }
     }
 
@@ -230,18 +340,19 @@ class Sortable extends Events
      * @param {HTMLElement} dragging
      * @private
      */
-    static _placeInOrderedList(sortable, dragging)
+    _placeInOrderedList(sortable, dragging)
     {
         const id = sortable.options.sortId
         dragging.indicator.remove()
         sortable.indicator = dragging.indicator
         const dragOrder = sortable.indicator.getAttribute(id)
         let found
-        for (let child of sortable.element.children)
+        const elements = this._getChildren(sortable, true)
+        for (let child of elements)
         {
-            if (dragOrder < child.getAttribute(id))
+            if (sortable.options.sortIdIsNumber ? parseInt(dragOrder) < parseInt(child.getAttribute(id)) : dragOrder < child.getAttribute(id))
             {
-                sortable.element.insertBefore(sortable.indicator, child)
+                child.parentNode.insertBefore(sortable.indicator, child)
                 found = true
                 break
             }
@@ -255,21 +366,54 @@ class Sortable extends Events
     /**
      * find last child that is of type dragClass (if set)
      * @param {Sortable} sortable
-     * @param {HTMLElement} element
      * @private
      */
-    static _getLastChild(sortable, element)
+    _getLastChild(sortable)
     {
-        let i = element.children.length - 1
-        if (i < 0)
+        if (sortable.options.deepSearch)
         {
-            return null
+            const search = []
+            if (sortable.options.dragClass)
+            {
+                search.push(sortable.options.dragClass)
+            }
+            const results = []
+            this._traverseChildren(sortable.element, search, results)
+            if (results.length)
+            {
+                return results[results.length - 1]
+            }
+            else
+            {
+                return null
+            }
         }
-        while (i > 0 && sortable.options.dragClass && element.children[i].className !== sortable.options.dragClass)
+        else
         {
-            i--
+            if (sortable.options.dragClass)
+            {
+                for (let i = sortable.element.children.length - 1; i >= 0; i--)
+                {
+                    const child = sortable.element.children[i]
+                    if (child.className === sortable.options.dragClass)
+                    {
+                        return child
+                    }
+                }
+                return null
+            }
+            else
+            {
+                if (sortable.element.children.length)
+                {
+                    return sortable.element.children[sortable.element.children.length - 1]
+                }
+                else
+                {
+                    return null
+                }
+            }
         }
-        return element.children[i]
     }
 
     /**
@@ -278,12 +422,12 @@ class Sortable extends Events
      * @param {HTMLElement} dragging
      * @private
      */
-    static _placeInSortableList(sortable, dragging)
+    _placeInSortableList(sortable, dragging)
     {
         const element = sortable.element
         sortable.element.appendChild(dragging.indicator)
         sortable.indicator = dragging.indicator
-        const lastChild = Sortable._getLastChild(sortable, element)
+        const lastChild = this._getLastChild(sortable)
         if (!lastChild)
         {
             element.appendChild(sortable.indicator)
@@ -307,7 +451,17 @@ class Sortable extends Events
                 const xa2 = dragging.offsetLeft + dragging.offsetWidth
                 const ya2 = dragging.offsetTop + dragging.offsetHeight
                 let largest = 0, closest, isBefore = true, indicator
-                for (let child of element.children)
+                const search = []
+                if (sortable.options.dragClass)
+                {
+                    search.push(sortable.options.dragClass)
+                }
+                if (sortable.options.orderClass)
+                {
+                    search.push(sortable.options.orderClass)
+                }
+                const elements = this._getChildren(sortable, true)
+                for (let child of elements)
                 {
                     if (child === sortable.indicator)
                     {
@@ -318,7 +472,7 @@ class Sortable extends Events
                     const yb1 = pos.y
                     const xb2 = pos.x + child.offsetWidth
                     const yb2 = pos.y + child.offsetHeight
-                    const percentage = Sortable._percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
+                    const percentage = this._percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
                     if (percentage > largest)
                     {
                         largest = percentage
@@ -365,6 +519,11 @@ class Sortable extends Events
             }
             this.dragging.style.left = e.pageX + this.offset.x + 'px'
             this.dragging.style.top = e.pageY + this.offset.y + 'px'
+            if (this.dragging.icon)
+            {
+                this.dragging.icon.style.left = e.pageX + this.offset.x + this.dragging.offsetWidth + 'px'
+                this.dragging.icon.style.top = e.pageY + this.offset.y + this.dragging.offsetHeight + 'px'
+            }
             const list = []
             for (let sortable of Sortable.list)
             {
@@ -375,14 +534,14 @@ class Sortable extends Events
             }
             if (list.length === 1)
             {
-                Sortable._placeInList(this, this.dragging)
+                this._placeInList(this, this.dragging)
             }
             else
             {
                 const closest = this._findClosest(e, this.dragging, list)
                 if (closest)
                 {
-                    Sortable._placeInList(closest, this.dragging)
+                    this._placeInList(closest, this.dragging)
                 }
                 else
                 {
@@ -405,14 +564,26 @@ class Sortable extends Events
         {
             if (this.dragging.pickup)
             {
-                this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
+                if (this.indicator.parentNode)
+                {
+                    this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
+                }
+                else
+                {
+                    this.emit('removed', this.dragging, this)
+                    this.dragging.remove()
+                }
                 this.dragging.style.position = ''
                 this.dragging.style.zIndex = ''
                 this.dragging.style.boxShadow = ''
                 this.dragging.style.opacity = ''
                 this.indicator.remove()
                 this.indicator = null
-                this.emit('dropped', this.dragging)
+                if (this.dragging.icon)
+                {
+                    this.dragging.icon.remove()
+                }
+                this.emit('dropped', this.dragging, this)
             }
             this.dragging = null
             e.preventDefault()
@@ -426,6 +597,21 @@ class Sortable extends Events
     static get defaults()
     {
         return defaults
+    }
+
+    /**
+     * create multiple sortable elements
+     * @param {HTMLElements[]} elements
+     * @param {object} options - see constructor for options
+     */
+    static create(elements, options)
+    {
+        const results = []
+        for (let element of elements)
+        {
+            results.push(new Sortable(element, options))
+        }
+        return results
     }
 }
 

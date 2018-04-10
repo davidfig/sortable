@@ -99,6 +99,20 @@
             flex-direction: row;
             margin-bottom: 1em;
         }
+
+        .example-6-in {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            margin-bottom: 1em;
+        }
+
+        .example-6-out > div {
+            display: flex;
+            justify-content: center;
+        }
+
     </style>
     <script src="index.js"></script>
 </head>
@@ -125,9 +139,13 @@
                 <div class="entry">cabbage</div>
                 <div class="entry">green beans</div>
             </div>
+            <div>
+                <div class="entry">rice</div>
+                <div class="entry">bread</div>
+            </div>
         </div>
         <div class="separator"></div>
-        <div class="example-title">Sortable Between Lists (First Sortable and Second Ordered)</div>
+        <div class="example-title">Sortable List and Ordered List (removable)</div>
         <div class="example-subtitle">alwaysInList = false</div>
         <div id="example-3">
             <div>
@@ -142,7 +160,7 @@
             </div>
         </div>
         <div class="separator"></div>
-        <div class="example-title">Horizontal Sortable Between Lists (First Sortable and Second Ordered)</div>
+        <div class="example-title">Horizontal Sortable Between Lists</div>
         <div id="example-4">
             <div>
                 <div class="entry" data-order=1>1. egg</div>
@@ -156,7 +174,8 @@
             </div>
         </div>
         <div class="separator"></div>
-        <div class="example-title">Sortable Lists With Non-Draggable Members (First Sortable and Second Ordered)</div>
+        <div class="example-title">Lists With Only Order Members (First Sortable and Second Ordered)</div>
+        <div class="example-subtitle">options.orderClass</div>
         <div id="example-5">
             <div>
                 <div class="entry" data-order=1>1. cars</div>
@@ -164,12 +183,36 @@
                 <div class="entry" data-order=4>4. bicycles</div>
             </div>
             <div>
-                <div class="entry" data-order=3>3. skateboards</div>
-                <div class="skip" data-order=5>5. feet</div>
+                <div class="skip" data-order=3>3. skateboards</div>
+                <div class="entry" data-order=5>5. feet</div>
                 <div class="entry" data-order=6>6. scooters</div>
             </div>
         </div>
+        <div class="separator"></div>
+        <div class="example-title">Second List has Bucketed Members (First Sortable and Second Ordered and Deep)</div>
+        <div class="example-subtitle">options.deepClass and placeholders (see HTML)</div>
+        <div id="example-6">
+            <div class="example-6-in">
+                <div class="entry" data-order=5>5. coffee</div>
+                <div class="entry" data-order=11>11. vodka</div>
+                <div class="entry" data-order=4>4. soda</div>
+            </div>
+            <div class="example-6-out">
+                <div>
+                    <div class="skip" data-order=1>1. non-alcoholic</div>
+                    <div class="entry" data-order=2>2. juice</div>
+                    <div class="entry" data-order=3>3. milk</div>
+                    <div data-order=9.9></div> <!-- placeholder to ensure proper bucket ordering -->
+                </div>
+                <div>
+                    <div class="skip" data-order=10>10. alcoholic</div>
+                    <div class="entry" data-order=12>12. beer</div>
+                    <div class="entry" data-order=13>13. wine</div>
+                    <div data-order=20></div> <!-- placeholder to ensure proper bucket ordering -->
+                </div>
+            </div>
+        </div>
+        <div class="separator"></div>
     </div>
-    <div class="separator"></div>
     <pre><code class="javascript" id="code"></code></pre>
 </body>
