@@ -639,11 +639,11 @@ class Sortable extends Events
                 }
                 else
                 {
-                    this.emit('remove', this.dragging, this)
-                    this.indicator.remove()
-                    this.indicator = null
                     this.dragging.remove()
                     this.dragging.original = null
+                    this.indicator.remove()
+                    this.indicator = null
+                    this.emit('remove', this.dragging, this)
                 }
                 if (this.dragging.icon)
                 {

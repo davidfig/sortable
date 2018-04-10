@@ -1,8 +1,8 @@
 {
   "name": "yy-sortable",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Vanilla drag-and-drop sortable list(s)",
-  "main": "dist/sortable.js",
+  "main": "src/sortable.js",
   "scripts": {
     "test": "./node_modules/.bin/budo docs/code.js:index.js --dir docs --live",
     "build-demo": "./node_modules/.bin/browserify docs/code.js -o docs/index.js",
