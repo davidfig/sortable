@@ -17477,7 +17477,7 @@ class Sortable extends Events
         const elements = this._getChildren(this)
         for (let child of elements)
         {
-            if (!this.options.dragClass || child.className === this.options.dragClass)
+            if (!this.options.dragClass || this._containsClassName(child, this.options.dragClass))
             {
                 child.__isSortable = true
                 child.addEventListener('mousedown', (e) => this._dragStart(e))
@@ -17501,6 +17501,26 @@ class Sortable extends Events
             Sortable.list = []
         }
         Sortable.list.push(this)
+    }
+
+    /**
+     * Whether element contains classname
+     * @param {HTMLElement} e
+     * @param {string} name
+     * @returns {boolean}
+     * @private
+     */
+    _containsClassName(e, name)
+    {
+        const list = e.className.split(' ')
+        for (let entry of list)
+        {
+            if (entry === name)
+            {
+                return true
+            }
+        }
+        return false
     }
 
     /**
@@ -17769,7 +17789,7 @@ class Sortable extends Events
                 let list = []
                 for (let child of sortable.element.children)
                 {
-                    if (child.className === sortable.options.dragClass || ((order || !sortable.options.orderClass) || (order && sortable.options.orderClass && child.className === sortable.options.orderClass)))
+                    if (this._containsClassName(child, sortable.options.dragClass) || ((order || !sortable.options.orderClass) || (order && sortable.options.orderClass && this._containsClassName(child, sortable.options.orderClass))))
                     {
                         list.push(child)
                     }
@@ -17868,7 +17888,7 @@ class Sortable extends Events
                 for (let i = sortable.element.children.length - 1; i >= 0; i--)
                 {
                     const child = sortable.element.children[i]
-                    if (child.className === sortable.options.dragClass)
+                    if (this._containsClassName(child, sortable.options.dragClass))
                     {
                         return child
                     }
