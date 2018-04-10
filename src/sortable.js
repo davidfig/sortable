@@ -149,6 +149,27 @@ class Sortable extends Events
         return Math.min(topLeft, topRight, bottomLeft, bottomRight)
     }
 
+
+    /**
+     * determine whether these is overlap between two elements
+     * @param {HTMLElement} dragging
+     * @param {HTMLElement} element
+     * @private
+     */
+    _inside(dragging, element)
+    {
+        const x1 = dragging.offsetLeft
+        const y1 = dragging.offsetTop
+        const w1 = dragging.offsetWidth
+        const h1 = dragging.offsetHeight
+        const pos = toGlobal(element)
+        const x2 = pos.x
+        const y2 = pos.y
+        const w2 = element.offsetWidth
+        const h2 = element.offsetHeight
+        return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
+    }
+
     /**
      * find closest Sortable to screen location
      * @param {UIEvent} e
@@ -158,24 +179,10 @@ class Sortable extends Events
      */
     _findClosest(e, dragging, list)
     {
-        function inside(element)
-        {
-            const x1 = dragging.offsetLeft
-            const y1 = dragging.offsetTop
-            const w1 = dragging.offsetWidth
-            const h1 = dragging.offsetHeight
-            const pos = toGlobal(element)
-            const x2 = pos.x
-            const y2 = pos.y
-            const w2 = element.offsetWidth
-            const h2 = element.offsetHeight
-            return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
-        }
-
         let min = Infinity, found
         for (let related of list)
         {
-            if (inside(related.element))
+            if (this._inside(dragging, related.element))
             {
                 return related
             }
@@ -561,7 +568,18 @@ class Sortable extends Events
             }
             if (list.length === 1)
             {
-                this._placeInList(this, this.dragging)
+                if (this.options.alwaysInList || this._inside(this.dragging, this.element))
+                {
+                    this._placeInList(this, this.dragging)
+                }
+                else
+                {
+                    this.dragging.indicator.remove()
+                    if (this.dragging.icon)
+                    {
+                        this.dragging.icon.src = this.options.icons.delete
+                    }
+                }
             }
             else
             {

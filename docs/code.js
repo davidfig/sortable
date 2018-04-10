@@ -28,6 +28,9 @@ function test()
     const seven = document.getElementById('example-7')
     new Sortable(seven.children[0], { name: 'list-7', dragClass: 'entry' })
     new Sortable(seven.children[1], { name: 'list-7', dragClass: 'entry', sort: false, reverseOrder: true })
+
+    const eight = document.getElementById('example-8')
+    new Sortable(eight, { name: 'list-8', alwaysInList: false })
 }
 
 window.onload = function ()
