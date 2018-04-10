@@ -17479,6 +17479,7 @@ class Sortable extends Events
         {
             if (!this.options.dragClass || child.className === this.options.dragClass)
             {
+                child.__isSortable = true
                 child.addEventListener('mousedown', (e) => this._dragStart(e))
                 child.addEventListener('touchstart', (e) => this._dragStart(e))
                 for (let option in this.options.childrenStyles)
@@ -17500,6 +17501,49 @@ class Sortable extends Events
             Sortable.list = []
         }
         Sortable.list.push(this)
+    }
+
+    /**
+     * add an element as a child of the sortable element; can also be used to swap between sortables
+     * NOTE: this will not work with deep-type elements; use attachElement instead
+     * @param {HTMLElement} element
+     * @param {number} index
+     */
+    add(element, index)
+    {
+        this.attachElement(element)
+        if (typeof index === 'undefined' || index >= this.element.children.length)
+        {
+            this.element.appendChild(element)
+        }
+        else
+        {
+            this.element.insertBefore(element, this.element.children[index + 1])
+        }
+    }
+
+    /**
+     * attaches an HTML element to the sortable; can also be used to swap between sortables
+     * NOTE: you need to manually insert the element into this.element (this is useful when you have a deep structure)
+     * @param {HTMLElement} element
+     */
+    attachElement(element)
+    {
+        if (element.__isSortable)
+        {
+            element.original = this
+        }
+        else
+        {
+            element.__isSortable = true
+            element.addEventListener('mousedown', (e) => this._dragStart(e))
+            element.addEventListener('touchstart', (e) => this._dragStart(e))
+            for (let option in this.options.childrenStyles)
+            {
+                element.style[option] = this.options.childrenStyles[option]
+            }
+            element.original = this
+        }
     }
 
     /**
