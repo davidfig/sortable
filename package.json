@@ -2,12 +2,12 @@
   "name": "yy-sortable",
   "version": "0.5.0",
   "description": "Vanilla drag-and-drop sortable list(s)",
-  "main": "dist/sortable.js",
+  "main": "src/sortable.js",
   "scripts": {
     "test": "./node_modules/.bin/budo docs/code.js:index.js --dir docs --live",
     "build-demo": "./node_modules/.bin/browserify docs/code.js -o docs/index.js",
     "docs": "rm -rf ./docs/jsdoc && ./node_modules/.bin/jsdoc -c .jsdoc.json",
-    "transpile": "./node_modules/.bin/babel src/* --out-dir dist --source-maps inline",
+    "transpile": "./node_modules/.bin/babel src --out-dir dist --source-maps inline",
     "icons": "node scripts/images.js",
     "prepublishOnly": "npm run icons && npm run transpile && npm run build-demo && npm run docs"
   },

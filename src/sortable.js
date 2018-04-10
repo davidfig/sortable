@@ -1,48 +1,7 @@
 const Events = require('eventemitter3')
 
 const toGlobal = require('./toGlobal')
-const icons = require('./icons')
-
-/**
- * Options for Sortable
- * @typedef {object} Sortable~DefaultOptions
- * @property {string} [options.name=sortable] dragging is allowed between Sortables with the same name
- * @property {string} [options.dragClass] if set then drag only items with this className under element; otherwise drag all children
- * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
- * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
- * @property {boolean} [options.sort=true] allow sorting within list
- * @property {string} [options.sortId=data-order] for ordered lists, use this data id to figure out sort order
- * @property {boolean} [options.sortIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
- * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
- * @property {object} [options.childrenStyles] styles to apply to children elements of Sortable
- * @property {boolean} [options.useIcons=true] show icons when dragging
- * @property {object} [options.icons] default set of icons
- * @property {string} [options.icons.reorder]
- * @property {string} [options.icons.move]
- * @property {string} [options.icons.copy]
- * @property {string} [options.icons.delete]
- */
-const defaults = {
-    name: 'sortable',
-    sort: true,
-    sortId: 'data-order',
-    sortIdIsNumber: true,
-    threshold: 10,
-    alwaysInList: true,
-    dragClass: null,
-    orderClass: null,
-    returnHome: true,
-    deepSearch: false,
-    dragStyle: {
-        boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
-        opacity: 0.85
-    },
-    childrenStyles: {
-        cursor: 'pointer'
-    },
-    useIcons: true,
-    icons
-}
+const defaults = require('./options')
 
 class Sortable extends Events
 {
@@ -62,12 +21,16 @@ class Sortable extends Events
      * @param {string} [options.icons.move] source of image
      * @param {string} [options.icons.copy] source of image
      * @param {string} [options.icons.delete] source of image
+     * @fires clicked
+     * @fires pickup
      * @fires order
      * @fires add
      * @fires remove
+     * @fires update
      * @fires order-pending
      * @fires add-pending
      * @fires remove-pending
+     * @fires update-pending
      */
     constructor(element, options)
     {
@@ -153,6 +116,7 @@ class Sortable extends Events
             this.dragging.icon = image
         }
         this.dragging.pickup = true
+        this.emit('pickup', this.dragging, this)
     }
 
     /**
@@ -432,6 +396,18 @@ class Sortable extends Events
             dragging.icon.src = dragging.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
             dragging.current = sortable
         }
+        if (dragging.original === sortable)
+        {
+            sortable.emit('reorder-pending', dragging, sortable)
+            sortable.emit('update-pending', sortable)
+        }
+        else
+        {
+            sortable.emit('add-pending', dragging, sortable)
+            dragging.original.emit('remove-pending', dragging, dragging.original)
+            sortable.emit('update-pending')
+            dragging.original.emit('update-pending')
+        }
     }
 
     /**
@@ -465,8 +441,6 @@ class Sortable extends Events
             }
             else
             {
-                sortable.element.appendChild(dragging.indicator)
-                sortable.indicator = dragging.indicator
                 const xa1 = dragging.offsetLeft
                 const ya1 = dragging.offsetTop
                 const xa2 = dragging.offsetLeft + dragging.offsetWidth
@@ -515,6 +489,12 @@ class Sortable extends Events
                         this._setIcon(dragging, sortable)
                         sortable.emit('dragging-order-change', sortable)
                     }
+                }
+                else
+                {
+                    sortable.element.appendChild(dragging.indicator)
+                    sortable.indicator = dragging.indicator
+                    this._setIcon(dragging, sortable)
                 }
             }
         }
@@ -591,28 +571,45 @@ class Sortable extends Events
         {
             if (this.dragging.pickup)
             {
-                if (this.indicator.parentNode)
-                {
-                    this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
-                    this.dragging.original = this.dragging.current
-                }
-                else
-                {
-                    this.emit('removed', this.dragging, this)
-                    this.dragging.remove()
-                    this.dragging.original = null
-                }
                 this.dragging.style.position = ''
                 this.dragging.style.zIndex = ''
                 this.dragging.style.boxShadow = ''
                 this.dragging.style.opacity = ''
-                this.indicator.remove()
-                this.indicator = null
+                if (this.indicator.parentNode)
+                {
+                    this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
+                    this.dragging.original = this.dragging.current
+                    this.indicator.remove()
+                    this.indicator = null
+                    if (this.dragging.original === this)
+                    {
+                        this.emit('reorder', this.dragging, this)
+                        this.emit('update', this.dragging, this)
+                    }
+                    else
+                    {
+                        this.dragging.original.emit('remove', this.dragging, this.dragging.original)
+                        this.dragging.original.emit('update', this.dragging, this.dragging.original)
+                        this.emit('add', this.dragging, this)
+                        this.emit('update', this.dragging, this)
+                    }
+                }
+                else
+                {
+                    this.emit('remove', this.dragging, this)
+                    this.indicator.remove()
+                    this.indicator = null
+                    this.dragging.remove()
+                    this.dragging.original = null
+                }
                 if (this.dragging.icon)
                 {
                     this.dragging.icon.remove()
                 }
-                this.emit('dropped', this.dragging, this)
+            }
+            else
+            {
+                this.emit('clicked', this.dragging, this)
             }
             this.dragging = null
             e.preventDefault()
