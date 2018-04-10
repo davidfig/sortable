@@ -7,6 +7,7 @@ Features include:
 * optional removing when dragging off lists (options.alwaysInList)
 * better movement algorithm (I compare the percentage of div covered to determine when to swap)
 * search descendents for a className when determining where to sort or how to order (options.deepSearch)
+* custom icons to show what is happening during drag
 
 ## Rationale
 I tried many of the existing drag-and-drop libraries but could not find all the features I wanted in one neat package.

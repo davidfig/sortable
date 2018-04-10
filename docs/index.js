@@ -3,26 +3,28 @@ const Sortable = require('../src/sortable')
 
 function test()
 {
-    new Sortable(document.getElementById('example-1'), {
-        name: 'list-1',
-        alwaysInList: true
-    })
+    new Sortable(document.getElementById('example-1'))
 
     const two = document.getElementById('example-2')
     new Sortable(two.children[0], { name: 'list-2' })
     new Sortable(two.children[1], { name: 'list-2' })
+    new Sortable(two.children[2], { name: 'list-2' })
 
     const three = document.getElementById('example-3')
-    new Sortable(three.children[0], { name: 'list-3' })
-    new Sortable(three.children[1], { name: 'list-3', sort: false })
+    new Sortable(three.children[0], { name: 'list-3', alwaysInList: false })
+    new Sortable(three.children[1], { name: 'list-3', sort: false, alwaysInList: false })
 
     const four = document.getElementById('example-4')
     new Sortable(four.children[0], { name: 'list-4' })
-    new Sortable(four.children[1], { name: 'list-4', sort: false })
+    new Sortable(four.children[1], { name: 'list-4' })
 
     const five = document.getElementById('example-5')
     new Sortable(five.children[0], { name: 'list-5', dragClass: 'entry' })
-    new Sortable(five.children[1], { name: 'list-5', dragClass: 'entry', sort: false })
+    new Sortable(five.children[1], { name: 'list-5', dragClass: 'entry', sort: false, orderClass: 'skip' })
+
+    const six = document.getElementById('example-6')
+    new Sortable(six.children[0], { name: 'list-6', dragClass: 'entry' })
+    new Sortable(six.children[1], { name: 'list-6', dragClass: 'entry', deepSearch: true, sort: false })
 }
 
 window.onload = function ()
@@ -31,7 +33,7 @@ window.onload = function ()
     require('fork-me-github')('https://github.com/davidfig/sortable')
     require('./highlight')()
 }
-},{"../src/sortable":183,"./highlight":2,"fork-me-github":4}],2:[function(require,module,exports){
+},{"../src/sortable":184,"./highlight":2,"fork-me-github":4}],2:[function(require,module,exports){
 // shows the code in the demo
 module.exports = function highlight()
 {
@@ -17373,48 +17375,78 @@ module.exports = function(hljs) {
   };
 };
 },{}],183:[function(require,module,exports){
+module.exports={copy:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABXklEQVQ4ja2VPWsCQRCGHw8hlVjbm2C6BMTmigR/hySQwP4gyyvSJdjYna29EEhjEU0tln4cp0Y4NoW7ybq3Z87EF6bY2eGZWZiZhXwqK/uzioAAXoAxIJWNlU+omFy6BAYGJMsGKvag7oFNDpi2DXBnAgpWZW/Ame/7VCqVVLb1ek2v17Pdn8AV8G46i+YzwzCULk2n00PPL2oQwAPQsFNPJhO63e73eblcpqpWaihGoIG3rqgwDAmCgGazCYCUEiEEAJ1Ox05wYwLrWal936fdbqf8/X7fBtYBPHYNe54FPEIXQNk7AWhPHrAAPk7AGgMLXeGreRNFEbPZjNVqhZQyL3CPIciYhlar5ezJarVqxwr46cMn4BFHL87nc4bDYaqc7XZrHgeK4R49M7JUKlEomGE7JUlCHMewm+drrNHT+vdycKlG/vVV+w2mpRfsMzAyICPlO2rBupT7C/gC9G7LXmZLz0YAAAAASUVORK5CYII=',move:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABDUlEQVQ4ja2VMW6DMBSGP9IsTCxcoWo6IJZMHCaIhQv0HlwBMcRjb8BeRsYgbpGhmaCLX+VS45o0n/SE8LN/vd/YD/Aj0nE3e6AEFDAAs45Bj5V6jhevQGeIrEWn5zrJgZuHmMQNOLkq2yJmih6WYntPmy77P/a09FmYpqkrXwI8acE3IFnbC0EpRRAE9H1vS1+BdynzaGayLCMMw18r4jimrmsAmqZZpr81omX54zjOLqZpmvM8t9mOdn/Z3EqgnwPwLINrlquqIkkSiqKwWR6AF3lReHzltm3XrM7A2VR/2LER/nuwP7A0i3uv3ieWqyc8tDkIB0/7nauyJdJgz8DFELnosU0N1ob3L+ALRMrs/Hdy9wQAAAAASUVORK5CYII=',delete:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAB40lEQVQ4jaWVwU4TURSGv3OnQp1CJgMxbEkmEN1p0rBxAV2AxPgOmC58CRY8BpEFUZ/BRE0XwsIESRNhVS1h4RICNJXOpFPbOS5oh1LaodJ/d2/O/eb/T3LOwBAquK5TcF1nmFrpd/kVUnXbziOypJAV1TkAFTkSKKK6kw6C7Rw07wR+nJh4YkXRO2DhDjP7LWNev6rVSgOBnzKZNVTfAuPXFcLY1BQAjYsLUO1+EqrIm5e+/+EWsO3sRwc2PjMTA3PHx1et8LwYGJ6cxFBjWU9fXF7+jIHtnn3rjrnq+4l5P2cyN+Kng+B5DpopgLpt5+np2e/NzURgjxbqtp0nCLZS7VhLPb3h0cpKIqHUc1bVRWDLAChkex/Ynkd5Y4OHs7PUSiUqe3vYnsev9XVsz7v1ATEmC5AquK7TDMO5fi7+HB5CFBGentI4OwOgenDQ37LqfMF1HZOY6x4yy5VKVUWORiaJlJcrlaoBECiOytMoKgJcRVbdGRUoIrsxMB0E28D+vWHwvc0YPHqrvs/fapUHjkMUhqCKSafju65JqRvLenZj9DrqXg5j09OJrhrn55C0HDr6Mjn5OGq13jPE+jKWtdZxNhAI1wtWVRfFmCyq81fVUtYoKorI7qAFO5T+5xfwD0HCxifvFsyRAAAAAElFTkSuQmCC',reorder:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABWklEQVQ4ja2VMW7CQBBFn5BdIcElnIg07lwnPQUNddJYPoMLbuDaHS3pKHyDpAsSFwhxyQVAQqEA/RTxWhvHYIP40i92NPr7Z3dnFtqhX/BqOEAEvAIrQAVXRSwqclrhAVhYIqe4KHLP4gXYtxAz3APP55xdImaLDqpiTrVMz/OUpqlc1y1jvu8rz3PFcVxX/p8zjapi6/VakjSfz0vRIAgkSUmS1DmNADqF4FNp1XEIw5DtdgtAt9tlNBqdOiYbj/bCfhoClCSJJCkIgjLW4PDTOOwDd20sNOAe6Hca0y5EB9gAXzfQWgEbc9VLGsoej8eEYQjAcDjkeDwymUw4HA4mZWkcArw1bZ9lGbvdDoBer8d0OrXFAN7txb+HHcex8jyX7/tlzHVdpWkqz/OqN/xBzbC4tvW+qWk9g5sOB4NBtfwTXJxzVoUZsDN+O8DuhhkXDtg6tP4CfgAjHd1NvsCHcAAAAABJRU5ErkJggg=='}
+},{}],184:[function(require,module,exports){
 const Events = require('eventemitter3')
 
 const toGlobal = require('./toGlobal')
+const icons = require('./icons')
 
 /**
  * Options for Sortable
- * @typedef {object} DefaultOptions
+ * @typedef {object} Sortable~DefaultOptions
  * @property {string} [options.name=sortable] dragging is allowed between Sortables with the same name
- * @property {string} [options.dragClass] if set then drag only items with this className under element, otherwise drag all children
+ * @property {string} [options.dragClass] if set then drag only items with this className under element; otherwise drag all children
+ * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
+ * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
  * @property {boolean} [options.sort=true] allow sorting within list
- * @property {string} [options.sortId=data-order] for non-sorting lists, use this data id to figure out sort order
- * @property {boolean} [alwaysInList] place element inside closest related Sortable object, even if outside object's element
+ * @property {string} [options.sortId=data-order] for ordered lists, use this data id to figure out sort order
+ * @property {boolean} [options.sortIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
+ * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
  * @property {object} [options.childrenStyles] styles to apply to children elements of Sortable
+ * @property {boolean} [options.useIcons=true] show icons when dragging
+ * @property {object} [options.icons] default set of icons
+ * @property {string} [options.icons.reorder]
+ * @property {string} [options.icons.move]
+ * @property {string} [options.icons.copy]
+ * @property {string} [options.icons.delete]
  */
 const defaults = {
     name: 'sortable',
     sort: true,
     sortId: 'data-order',
+    sortIdIsNumber: true,
     threshold: 10,
+    alwaysInList: true,
+    dragClass: null,
+    orderClass: null,
+    returnHome: true,
+    deepSearch: false,
     dragStyle: {
         boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
         opacity: 0.85
     },
     childrenStyles: {
         cursor: 'pointer'
-    }
+    },
+    useIcons: true,
+    icons
 }
 
-module.exports = class Sortable extends Events
+class Sortable extends Events
 {
     /**
      * Create sortable list
      * @param {HTMLElement} element
-     * @param {DefaultOptions} [options]
-    //  * @param {string} [options.name=sortable] dragging is allowed between Sortables with the same name
-    //  * @param {boolean} [options.sort=true] allow sorting within list
-    //  * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise use all children
-    //  * @param {string} [options.sortId=data-order] for non-sorting lists, use this data id to figure out sort order
-    //  * @param {boolean} [alwaysInList] place element inside closest related Sortable object, even if outside object's element
-    //  * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
-     * @fires dropped
-     * @fires dragging-order-changed
+     * @param {object} [options]
+     * @param {string} [options.name=sortable] dragging is allowed between Sortables with the same name
+     * @param {boolean} [options.sort=true] allow sorting within list
+     * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise use all children
+     * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
+     * @param {string} [options.sortId=data-order] for non-sorting lists, use this data id to figure out sort order
+     * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
+     * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
+     * @param {object} [options.icons] default set of icons
+     * @param {string} [options.icons.reorder] source of image
+     * @param {string} [options.icons.move] source of image
+     * @param {string} [options.icons.copy] source of image
+     * @param {string} [options.icons.delete] source of image
+     * @fires order
+     * @fires add
+     * @fires remove
+     * @fires order-pending
+     * @fires add-pending
+     * @fires remove-pending
      */
     constructor(element, options)
     {
@@ -17424,7 +17456,10 @@ module.exports = class Sortable extends Events
         {
             this.options[option] = typeof this.options[option] !== 'undefined' ? options[option] : defaults[option]
         }
-        for (let child of element.children)
+        this.element = element
+        this.element.sortable = this
+        const elements = this._getChildren(this)
+        for (let child of elements)
         {
             if (!this.options.dragClass || child.className === this.options.dragClass)
             {
@@ -17434,6 +17469,7 @@ module.exports = class Sortable extends Events
                 {
                     child.style[option] = this.options.childrenStyles[option]
                 }
+                child.original = this
             }
         }
         document.body.addEventListener('mousemove', (e) => this._dragMove(e))
@@ -17442,7 +17478,6 @@ module.exports = class Sortable extends Events
         document.body.addEventListener('touchcancel', (e) => this._dragUp(e))
         document.body.addEventListener('mouseup', (e) => this._dragUp(e))
         document.body.addEventListener('mousecancel', (e) => this._dragUp(e))
-        this.element = element
 
         if (!Sortable.list)
         {
@@ -17485,6 +17520,17 @@ module.exports = class Sortable extends Events
         }
         this.dragging.parentNode.insertBefore(this.indicator, this.dragging)
         document.body.appendChild(this.dragging)
+        if (this.options.useIcons)
+        {
+            const image = new Image()
+            image.src = this.options.icons.reorder
+            image.style.position = 'absolute'
+            image.style.transform = 'translate(-50%, -50%)'
+            image.style.left = pos.x + this.dragging.offsetWidth + 'px'
+            image.style.top = pos.y + this.dragging.offsetHeight + 'px'
+            document.body.appendChild(image)
+            this.dragging.icon = image
+        }
         this.dragging.pickup = true
     }
 
@@ -17519,30 +17565,34 @@ module.exports = class Sortable extends Events
     /**
      * find closest Sortable to screen location
      * @param {UIEvent} e
+     * @param {HTMLElement} dragging
      * @param {Sortable[]} list of related Sortables
      * @private
      */
-    _findClosest(e, list)
+    _findClosest(e, dragging, list)
     {
         function inside(element)
         {
-            const x1 = e.pageX
-            const y1 = e.pageY
-            const x2 = element.offsetLeft
-            const y2 = element.offsetTop
-            const h1 = element.offsetWidth
-            const w1 = element.offsetHeight
-            return x2 >= x1 && x2 <= x1 + w1 && y2 >= y1 && y2 <= y1 + h1
+            const x1 = dragging.offsetLeft
+            const y1 = dragging.offsetTop
+            const w1 = dragging.offsetWidth
+            const h1 = dragging.offsetHeight
+            const pos = toGlobal(element)
+            const x2 = pos.x
+            const y2 = pos.y
+            const w2 = element.offsetWidth
+            const h2 = element.offsetHeight
+            return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
         }
 
         let min = Infinity, found
         for (let related of list)
         {
-            if (inside(related))
+            if (inside(related.element))
             {
                 return related
             }
-            else
+            else if (related.options.alwaysInList)
             {
                 const calculate = this._distanceToClosestCorner(e, related.element)
                 if (calculate < min)
@@ -17568,7 +17618,7 @@ module.exports = class Sortable extends Events
      * from https://stackoverflow.com/a/21220004/1955997
      * @private
      */
-    static _percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
+    _percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
     {
         const sa = (xa2 - xa1) * (ya2 - ya1)
         const sb = (xb2 - xb1) * (yb2 - yb1)
@@ -17583,15 +17633,85 @@ module.exports = class Sortable extends Events
      * @param {HTMLElement} dragging element
      * @private
      */
-    static _placeInList(sortable, place)
+    _placeInList(sortable, dragging)
     {
         if (sortable.options.sort)
         {
-            Sortable._placeInSortableList(sortable, place)
+            this._placeInSortableList(sortable, dragging)
         }
         else
         {
-            Sortable._placeInOrderedList(sortable, place)
+            this._placeInOrderedList(sortable, dragging)
+        }
+    }
+
+    _traverseChildren(base, search, results)
+    {
+        for (let child of base.children)
+        {
+            if (search.length)
+            {
+                if (search.indexOf(child.className) !== -1)
+                {
+                    results.push(child)
+                }
+            }
+            else
+            {
+                results.push(child)
+            }
+            this._traverseChildren(child, search, results)
+        }
+    }
+
+    /**
+     * find children in div
+     * @param {Sortable} sortable
+     * @param {boolean} [order] search for dragOrder as well
+     * @private
+     */
+    _getChildren(sortable, order)
+    {
+        if (sortable.options.deepSearch)
+        {
+            let search = []
+            if (order && sortable.options.orderClass)
+            {
+                if (sortable.options.dragClass)
+                {
+                    search.push(sortable.options.dragClass)
+                }
+                if (order && sortable.options.orderClass)
+                {
+                    search.push(sortable.options.orderClass)
+                }
+            }
+            else if (!order && sortable.options.dragClass)
+            {
+                search.push(sortable.options.dragClass)
+            }
+            const results = []
+            this._traverseChildren(sortable.element, search, results)
+            return results
+        }
+        else
+        {
+            if (sortable.options.dragClass)
+            {
+                let list = []
+                for (let child of sortable.element.children)
+                {
+                    if (child.className === sortable.options.dragClass || ((order || !sortable.options.orderClass) || (order && sortable.options.orderClass && child.className === sortable.options.orderClass)))
+                    {
+                        list.push(child)
+                    }
+                }
+                return list
+            }
+            else
+            {
+                return sortable.element.children
+            }
         }
     }
 
@@ -17601,18 +17721,20 @@ module.exports = class Sortable extends Events
      * @param {HTMLElement} dragging
      * @private
      */
-    static _placeInOrderedList(sortable, dragging)
+    _placeInOrderedList(sortable, dragging)
     {
         const id = sortable.options.sortId
         dragging.indicator.remove()
         sortable.indicator = dragging.indicator
         const dragOrder = sortable.indicator.getAttribute(id)
         let found
-        for (let child of sortable.element.children)
+        const elements = this._getChildren(sortable, true)
+        for (let child of elements)
         {
-            if (dragOrder < child.getAttribute(id))
+            if (sortable.options.sortIdIsNumber ? parseInt(dragOrder) < parseInt(child.getAttribute(id)) : dragOrder < child.getAttribute(id))
             {
-                sortable.element.insertBefore(sortable.indicator, child)
+                child.parentNode.insertBefore(sortable.indicator, child)
+                this._setIcon(dragging, sortable)
                 found = true
                 break
             }
@@ -17620,27 +17742,75 @@ module.exports = class Sortable extends Events
         if (!found)
         {
             sortable.element.appendChild(sortable.indicator)
+            this._setIcon(dragging, sortable)
         }
     }
 
     /**
      * find last child that is of type dragClass (if set)
      * @param {Sortable} sortable
-     * @param {HTMLElement} element
      * @private
      */
-    static _getLastChild(sortable, element)
+    _getLastChild(sortable)
     {
-        let i = element.children.length - 1
-        if (i < 0)
+        if (sortable.options.deepSearch)
         {
-            return null
+            const search = []
+            if (sortable.options.dragClass)
+            {
+                search.push(sortable.options.dragClass)
+            }
+            const results = []
+            this._traverseChildren(sortable.element, search, results)
+            if (results.length)
+            {
+                return results[results.length - 1]
+            }
+            else
+            {
+                return null
+            }
         }
-        while (i > 0 && sortable.options.dragClass && element.children[i].className !== sortable.options.dragClass)
+        else
         {
-            i--
+            if (sortable.options.dragClass)
+            {
+                for (let i = sortable.element.children.length - 1; i >= 0; i--)
+                {
+                    const child = sortable.element.children[i]
+                    if (child.className === sortable.options.dragClass)
+                    {
+                        return child
+                    }
+                }
+                return null
+            }
+            else
+            {
+                if (sortable.element.children.length)
+                {
+                    return sortable.element.children[sortable.element.children.length - 1]
+                }
+                else
+                {
+                    return null
+                }
+            }
         }
-        return element.children[i]
+    }
+
+    /**
+     * set icon if available
+     * @param {HTMLElement} dragging
+     * @param {Sortable} sortable
+     */
+    _setIcon(dragging, sortable)
+    {
+        if (dragging.icon)
+        {
+            dragging.icon.src = dragging.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
+            dragging.current = sortable
+        }
     }
 
     /**
@@ -17649,25 +17819,28 @@ module.exports = class Sortable extends Events
      * @param {HTMLElement} dragging
      * @private
      */
-    static _placeInSortableList(sortable, dragging)
+    _placeInSortableList(sortable, dragging)
     {
         const element = sortable.element
         sortable.element.appendChild(dragging.indicator)
         sortable.indicator = dragging.indicator
-        const lastChild = Sortable._getLastChild(sortable, element)
+        const lastChild = this._getLastChild(sortable)
         if (!lastChild)
         {
             element.appendChild(sortable.indicator)
+            this._setIcon(dragging, sortable)
         }
         else
         {
             if (dragging.offsetTop >= element.offsetTop + element.offsetHeight)
             {
                 element.appendChild(sortable.indicator)
+                this._setIcon(dragging, sortable)
             }
             else if (dragging.offsetTop + dragging.offsetHeight < element.offsetTop)
             {
                 element.insertBefore(sortable.indicator, element.firstChild)
+                this._setIcon(dragging, sortable)
             }
             else
             {
@@ -17678,7 +17851,17 @@ module.exports = class Sortable extends Events
                 const xa2 = dragging.offsetLeft + dragging.offsetWidth
                 const ya2 = dragging.offsetTop + dragging.offsetHeight
                 let largest = 0, closest, isBefore = true, indicator
-                for (let child of element.children)
+                const search = []
+                if (sortable.options.dragClass)
+                {
+                    search.push(sortable.options.dragClass)
+                }
+                if (sortable.options.orderClass)
+                {
+                    search.push(sortable.options.orderClass)
+                }
+                const elements = this._getChildren(sortable, true)
+                for (let child of elements)
                 {
                     if (child === sortable.indicator)
                     {
@@ -17689,7 +17872,7 @@ module.exports = class Sortable extends Events
                     const yb1 = pos.y
                     const xb2 = pos.x + child.offsetWidth
                     const yb2 = pos.y + child.offsetHeight
-                    const percentage = Sortable._percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
+                    const percentage = this._percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
                     if (percentage > largest)
                     {
                         largest = percentage
@@ -17702,11 +17885,13 @@ module.exports = class Sortable extends Events
                     if (isBefore)
                     {
                         element.insertBefore(sortable.indicator, closest.nextSibling)
+                        this._setIcon(dragging, sortable)
                         sortable.emit('dragging-order-change', sortable)
                     }
                     else
                     {
                         element.insertBefore(sortable.indicator, closest)
+                        this._setIcon(dragging, sortable)
                         sortable.emit('dragging-order-change', sortable)
                     }
                 }
@@ -17736,6 +17921,11 @@ module.exports = class Sortable extends Events
             }
             this.dragging.style.left = e.pageX + this.offset.x + 'px'
             this.dragging.style.top = e.pageY + this.offset.y + 'px'
+            if (this.dragging.icon)
+            {
+                this.dragging.icon.style.left = e.pageX + this.offset.x + this.dragging.offsetWidth + 'px'
+                this.dragging.icon.style.top = e.pageY + this.offset.y + this.dragging.offsetHeight + 'px'
+            }
             const list = []
             for (let sortable of Sortable.list)
             {
@@ -17746,11 +17936,23 @@ module.exports = class Sortable extends Events
             }
             if (list.length === 1)
             {
-                Sortable._placeInList(this, this.dragging)
+                this._placeInList(this, this.dragging)
             }
             else
             {
-                Sortable._placeInList(this._findClosest(e, list), this.dragging)
+                const closest = this._findClosest(e, this.dragging, list)
+                if (closest)
+                {
+                    this._placeInList(closest, this.dragging)
+                }
+                else
+                {
+                    this.dragging.indicator.remove()
+                    if (this.dragging.icon)
+                    {
+                        this.dragging.icon.src = this.options.icons.delete
+                    }
+                }
             }
             e.preventDefault()
             e.stopPropagation()
@@ -17768,14 +17970,28 @@ module.exports = class Sortable extends Events
         {
             if (this.dragging.pickup)
             {
-                this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
+                if (this.indicator.parentNode)
+                {
+                    this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
+                    this.dragging.original = this.dragging.current
+                }
+                else
+                {
+                    this.emit('removed', this.dragging, this)
+                    this.dragging.remove()
+                    this.dragging.original = null
+                }
                 this.dragging.style.position = ''
                 this.dragging.style.zIndex = ''
                 this.dragging.style.boxShadow = ''
                 this.dragging.style.opacity = ''
                 this.indicator.remove()
                 this.indicator = null
-                this.emit('dropped', this.dragging)
+                if (this.dragging.icon)
+                {
+                    this.dragging.icon.remove()
+                }
+                this.emit('dropped', this.dragging, this)
             }
             this.dragging = null
             e.preventDefault()
@@ -17790,8 +18006,25 @@ module.exports = class Sortable extends Events
     {
         return defaults
     }
+
+    /**
+     * create multiple sortable elements
+     * @param {HTMLElements[]} elements
+     * @param {object} options - see constructor for options
+     */
+    static create(elements, options)
+    {
+        const results = []
+        for (let element of elements)
+        {
+            results.push(new Sortable(element, options))
+        }
+        return results
+    }
 }
-},{"./toGlobal":184,"eventemitter3":3}],184:[function(require,module,exports){
+
+module.exports = Sortable
+},{"./icons":183,"./toGlobal":185,"eventemitter3":3}],185:[function(require,module,exports){
 // from https://stackoverflow.com/a/26230989/1955997
 module.exports = function toGlobal(e)
 {

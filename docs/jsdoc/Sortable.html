@@ -84,6 +84,12 @@
             </ul>
             <ul class="methods itemMembers">
             
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Sortable.create"><a href="Sortable.html#.create">create</a></li>
+            
+                <li class="parent  " data-name="Sortable#_setIcon"><a href="Sortable.html#_setIcon">_setIcon</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -123,7 +129,7 @@
             <span class="">
                 new Sortable
             </span>
-            <span class="signature">(element, <span class="optional">options</span>, <span class="optional">alwaysInList</span>)</span>
+            <span class="signature">(element, <span class="optional">options</span>)</span>
             
             
             
@@ -132,7 +138,7 @@
 
         
         <div class="tag-source">
-            <a href="src_sortable.js.html#line44">sortable.js:44</a>
+            <a href="src_sortable.js.html#line72">sortable.js:72</a>
         </div>
         
     </div>
@@ -356,6 +362,40 @@
 	
         <tr>
             
+                <td class="name"><code>deepSearch</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>if dragClass and deepSearch then search all descendents of element for dragClass</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>sortId</code></td>
             
             
@@ -389,12 +429,6 @@
         </tr>
 	
 	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
 	
         <tr>
             
@@ -411,6 +445,12 @@
             </td>
             
             
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
             
             <td class="description last">
                 
@@ -421,20 +461,104 @@
                         
                     
                 
-                <p>place element inside closest related Sortable object, even if outside object's element</p></td>
+                <p>place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables</p></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>options.childrenStyles</code></td>
+                <td class="name"><code>childrenStyles</code></td>
             
             
             <td class="type">
             
                 
 <span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>styles to apply to children elements of Sortable</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>icons</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>default set of icons</p>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>reorder</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
             
@@ -451,7 +575,109 @@
                         
                     
                 
-                <p>styles to apply to children elements of Sortable</p></td>
+                <p>source of image</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>move</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>source of image</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>copy</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>source of image</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>delete</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>source of image</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -486,9 +712,17 @@
     
     <h5>Fires:</h5>
     <ul>
-        <li>event:dropped</li>
+        <li>event:order</li>
     
-        <li>event:dragging-order-changed</li>
+        <li>event:add</li>
+    
+        <li>event:remove</li>
+    
+        <li>event:order-pending</li>
+    
+        <li>event:add-pending</li>
+    
+        <li>event:remove-pending</li>
     </ul>
     
 
@@ -573,6 +807,298 @@
         </dl>
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl class="list-methods">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".create">
+            <a class="share-icon" href="#.create"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                Sortable.create
+            </span>
+            <span class="signature">(elements, options)</span>
+            
+            <span class="access-signature">static</span>
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line636">sortable.js:636</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>create multiple sortable elements</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>elements</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;HTMLElements></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>see constructor for options</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_setIcon">
+            <a class="share-icon" href="#_setIcon"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                _setIcon
+            </span>
+            <span class="signature">(dragging, sortable)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_sortable.js.html#line428">sortable.js:428</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>set icon if available</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>dragging</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
     
 
     
@@ -701,7 +1227,77 @@
                 </td>
             
             
-            <td class="description last"><p>if set then drag only items with this className under element, otherwise drag all children</p></td>
+            <td class="description last"><p>if set then drag only items with this className under element; otherwise drag all children</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.orderClass</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.deepSearch</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>if dragClass and deepSearch then search all descendents of element for dragClass</p></td>
         </tr>
 	
 	
@@ -775,14 +1371,14 @@
                 </td>
             
             
-            <td class="description last"><p>for non-sorting lists, use this data id to figure out sort order</p></td>
+            <td class="description last"><p>for ordered lists, use this data id to figure out sort order</p></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>alwaysInList</code></td>
+                <td class="name"><code>options.sortIdIsNumber</code></td>
             
             
             <td class="type">
@@ -807,10 +1403,49 @@
             
                 <td class="default">
                 
+                    true
+                
                 </td>
             
             
-            <td class="description last"><p>place element inside closest related Sortable object, even if outside object's element</p></td>
+            <td class="description last"><p>use parseInt on options.sortId to properly sort numbers</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.alwaysInList</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last"><p>place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables</p></td>
         </tr>
 	
 	
@@ -846,6 +1481,228 @@
             
             
             <td class="description last"><p>styles to apply to children elements of Sortable</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.useIcons</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last"><p>show icons when dragging</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.icons</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>default set of icons</p>
+                <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>reorder</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>move</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>copy</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>delete</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -895,7 +1752,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Apr 09 2018 22:28:54 GMT+0800 (DST)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Apr 10 2018 10:38:17 GMT+0800 (DST)
             </div>
         </footer>
     </div>

@@ -78,6 +78,7 @@ class Sortable extends Events
             this.options[option] = typeof this.options[option] !== 'undefined' ? options[option] : defaults[option]
         }
         this.element = element
+        this.element.sortable = this
         const elements = this._getChildren(this)
         for (let child of elements)
         {
@@ -89,6 +90,7 @@ class Sortable extends Events
                 {
                     child.style[option] = this.options.childrenStyles[option]
                 }
+                child.original = this
             }
         }
         document.body.addEventListener('mousemove', (e) => this._dragMove(e))
@@ -252,15 +254,15 @@ class Sortable extends Events
      * @param {HTMLElement} dragging element
      * @private
      */
-    _placeInList(sortable, place)
+    _placeInList(sortable, dragging)
     {
         if (sortable.options.sort)
         {
-            this._placeInSortableList(sortable, place)
+            this._placeInSortableList(sortable, dragging)
         }
         else
         {
-            this._placeInOrderedList(sortable, place)
+            this._placeInOrderedList(sortable, dragging)
         }
     }
 
@@ -353,6 +355,7 @@ class Sortable extends Events
             if (sortable.options.sortIdIsNumber ? parseInt(dragOrder) < parseInt(child.getAttribute(id)) : dragOrder < child.getAttribute(id))
             {
                 child.parentNode.insertBefore(sortable.indicator, child)
+                this._setIcon(dragging, sortable)
                 found = true
                 break
             }
@@ -360,6 +363,7 @@ class Sortable extends Events
         if (!found)
         {
             sortable.element.appendChild(sortable.indicator)
+            this._setIcon(dragging, sortable)
         }
     }
 
@@ -417,6 +421,20 @@ class Sortable extends Events
     }
 
     /**
+     * set icon if available
+     * @param {HTMLElement} dragging
+     * @param {Sortable} sortable
+     */
+    _setIcon(dragging, sortable)
+    {
+        if (dragging.icon)
+        {
+            dragging.icon.src = dragging.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
+            dragging.current = sortable
+        }
+    }
+
+    /**
      * place indicator in an sortable list
      * @param {Sortable} sortable
      * @param {HTMLElement} dragging
@@ -431,16 +449,19 @@ class Sortable extends Events
         if (!lastChild)
         {
             element.appendChild(sortable.indicator)
+            this._setIcon(dragging, sortable)
         }
         else
         {
             if (dragging.offsetTop >= element.offsetTop + element.offsetHeight)
             {
                 element.appendChild(sortable.indicator)
+                this._setIcon(dragging, sortable)
             }
             else if (dragging.offsetTop + dragging.offsetHeight < element.offsetTop)
             {
                 element.insertBefore(sortable.indicator, element.firstChild)
+                this._setIcon(dragging, sortable)
             }
             else
             {
@@ -485,11 +506,13 @@ class Sortable extends Events
                     if (isBefore)
                     {
                         element.insertBefore(sortable.indicator, closest.nextSibling)
+                        this._setIcon(dragging, sortable)
                         sortable.emit('dragging-order-change', sortable)
                     }
                     else
                     {
                         element.insertBefore(sortable.indicator, closest)
+                        this._setIcon(dragging, sortable)
                         sortable.emit('dragging-order-change', sortable)
                     }
                 }
@@ -546,6 +569,10 @@ class Sortable extends Events
                 else
                 {
                     this.dragging.indicator.remove()
+                    if (this.dragging.icon)
+                    {
+                        this.dragging.icon.src = this.options.icons.delete
+                    }
                 }
             }
             e.preventDefault()
@@ -567,11 +594,13 @@ class Sortable extends Events
                 if (this.indicator.parentNode)
                 {
                     this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
+                    this.dragging.original = this.dragging.current
                 }
                 else
                 {
                     this.emit('removed', this.dragging, this)
                     this.dragging.remove()
+                    this.dragging.original = null
                 }
                 this.dragging.style.position = ''
                 this.dragging.style.zIndex = ''
