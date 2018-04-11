@@ -17532,13 +17532,57 @@ class Sortable extends Events
     add(element, index)
     {
         this.attachElement(element)
-        if (typeof index === 'undefined' || index >= this.element.children.length)
+        if (this.options.sort)
         {
-            this.element.appendChild(element)
+            if (typeof index === 'undefined' || index >= this.element.children.length)
+            {
+                this.element.appendChild(element)
+            }
+            else
+            {
+                this.element.insertBefore(element, this.element.children[index + 1])
+            }
         }
         else
         {
-            this.element.insertBefore(element, this.element.children[index + 1])
+            const id = this.options.orderId
+            let dragOrder = element.getAttribute(id)
+            dragOrder = this.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder
+            let found
+            const children = this._getChildren(this, true)
+            if (this.options.reverseOrder)
+            {
+                for (let i = children.length - 1; i >= 0; i--)
+                {
+                    const child = children[i]
+                    let childDragOrder = child.getAttribute(id)
+                    childDragOrder = this.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
+                    if (dragOrder > childDragOrder)
+                    {
+                        child.parentNode.insertBefore(element, child)
+                        found = true
+                        break
+                    }
+                }
+            }
+            else
+            {
+                for (let child of children)
+                {
+                    let childDragOrder = child.getAttribute(id)
+                    childDragOrder = this.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
+                    if (dragOrder < childDragOrder)
+                    {
+                        child.parentNode.insertBefore(element, child)
+                        found = true
+                        break
+                    }
+                }
+            }
+            if (!found)
+            {
+                this.element.appendChild(element)
+            }
         }
     }
 
