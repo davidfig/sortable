@@ -18007,13 +18007,13 @@ class Sortable extends Events
                     {
                         element.insertBefore(sortable.indicator, closest.nextSibling)
                         this._setIcon(dragging, sortable)
-                        sortable.emit('dragging-order-change', sortable)
+                        sortable.emit('order-pending', sortable)
                     }
                     else
                     {
                         element.insertBefore(sortable.indicator, closest)
                         this._setIcon(dragging, sortable)
-                        sortable.emit('dragging-order-change', sortable)
+                        sortable.emit('order-pending', sortable)
                     }
                 }
                 else
@@ -18065,6 +18065,7 @@ class Sortable extends Events
             {
                 if (this.options.alwaysInList || this._inside(this.dragging, this.element))
                 {
+                    this.dragging.sortable = this
                     this._placeInList(this, this.dragging)
                 }
                 else
@@ -18081,10 +18082,12 @@ class Sortable extends Events
                 const closest = this._findClosest(e, this.dragging, list)
                 if (closest)
                 {
+                    this.dragging.sortable = closest
                     this._placeInList(closest, this.dragging)
                 }
                 else
                 {
+                    this.dragging.sortable = null
                     this.dragging.indicator.remove()
                     if (this.dragging.icon)
                     {
@@ -18127,8 +18130,8 @@ class Sortable extends Events
                     {
                         this.dragging.original.emit('remove', this.dragging, this.dragging.original)
                         this.dragging.original.emit('update', this.dragging, this.dragging.original)
-                        this.emit('add', this.dragging, this)
-                        this.emit('update', this.dragging, this)
+                        this.dragging.sortable.emit('add', this.dragging, this)
+                        this.dragging.sortable.emit('update', this.dragging, this)
                     }
                 }
                 else
@@ -18137,7 +18140,7 @@ class Sortable extends Events
                     this.dragging.original = null
                     this.indicator.remove()
                     this.indicator = null
-                    this.emit('remove', this.dragging, this)
+                    this.dragging.original.emit('remove', this.dragging, this)
                 }
                 if (this.dragging.icon)
                 {
