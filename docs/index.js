@@ -18108,10 +18108,10 @@ class Sortable extends Events
         {
             if (this.dragging.pickup)
             {
-                this.dragging.style.position = ''
-                this.dragging.style.zIndex = ''
-                this.dragging.style.boxShadow = ''
-                this.dragging.style.opacity = ''
+                this.dragging.style.position = 'unset'
+                this.dragging.style.zIndex = 'unset'
+                this.dragging.style.boxShadow = 'unset'
+                this.dragging.style.opacity = 'unset'
                 if (this.indicator.parentNode)
                 {
                     this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
