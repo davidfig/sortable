@@ -487,6 +487,10 @@ class Sortable extends Events
      */
     _setIcon(dragging, sortable)
     {
+        if (dragging.current && dragging.current !== sortable)
+        {
+            dragging.current.emit('remove-pending', dragging, dragging.current)
+        }
         if (dragging.icon)
         {
             dragging.icon.src = dragging.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
@@ -500,9 +504,7 @@ class Sortable extends Events
         else
         {
             sortable.emit('add-pending', dragging, sortable)
-            dragging.original.emit('remove-pending', dragging, dragging.original)
             sortable.emit('update-pending')
-            dragging.original.emit('update-pending')
         }
     }
 
