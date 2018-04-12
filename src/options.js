@@ -22,6 +22,7 @@ const icons = require('./icons')
  * @property {string} [options.icons.move]
  * @property {string} [options.icons.copy]
  * @property {string} [options.icons.delete]
+ * @property {string} [options.customIcon] source of custom image when over this sortable
  */
 module.exports = {
     name: 'sortable',

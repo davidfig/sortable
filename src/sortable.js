@@ -28,6 +28,7 @@ class Sortable extends Events
      * @param {string} [options.icons.copy] source of image
      * @param {string} [options.icons.cancel] source of image
      * @param {string} [options.icons.delete] source of image
+     * @param {string} [options.customIcon] source of custom image when over this sortable
      * @fires clicked
      * @fires pickup
      * @fires order
@@ -175,14 +176,26 @@ class Sortable extends Events
         else
         {
             element.__isSortable = true
-            element.addEventListener('mousedown', (e) => this._dragStart(e))
-            element.addEventListener('touchstart', (e) => this._dragStart(e))
+            element.dragStart = (e) => this._dragStart(e)
+            element.addEventListener('mousedown', element.dragStart)
+            element.addEventListener('touchstart', element.dragStart)
             for (let option in this.options.childrenStyles)
             {
                 element.style[option] = this.options.childrenStyles[option]
             }
             element.original = this
         }
+    }
+
+    /**
+     * removes an HTML element from the sortable and related keyboard/mouse events
+     * @param {HTMLElement} element
+     */
+    removeElement(element)
+    {
+        element.remove()
+        element.removeEventListener('mousedown', element.dragStart)
+        element.removeEventListener('touchstart', element.dragStart)
     }
 
     /**
@@ -542,7 +555,14 @@ class Sortable extends Events
         }
         if (dragging.icon)
         {
-            dragging.icon.src = dragging.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
+            if (sortable.options.customIcon)
+            {
+                dragging.icon.src = sortable.options.customIcon
+            }
+            else
+            {
+                dragging.icon.src = dragging.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
+            }
             dragging.current = sortable
         }
         if (dragging.original === sortable)
