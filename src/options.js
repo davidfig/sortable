@@ -8,12 +8,15 @@ const icons = require('./icons')
  * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
  * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
  * @property {boolean} [options.sort=true] allow sorting within list
+ * @property {boolean} [options.copy=false] create copy when dragging an item
+ * @property {boolean} [options.drop=true] allow drop from related sortables
  * @property {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
  * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
  * @property {object} [options.childrenStyles] styles to apply to children elements of Sortable
  * @property {boolean} [options.useIcons=true] show icons when dragging
+ * @property {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when not over a sortable
  * @property {object} [options.icons] default set of icons
  * @property {string} [options.icons.reorder]
  * @property {string} [options.icons.move]
@@ -23,6 +26,8 @@ const icons = require('./icons')
 module.exports = {
     name: 'sortable',
     sort: true,
+    copy: false,
+    drop: true,
     orderId: 'data-order',
     orderIdIsNumber: true,
     threshold: 10,

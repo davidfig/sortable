@@ -3,7 +3,7 @@ const fs = require('fs')
 
 let s = 'module.exports={'
 
-const files = [ 'copy', 'move', 'delete', 'reorder' ]
+const files = [ 'copy', 'move', 'delete', 'reorder', 'cancel' ]
 
 let converted = 0
 

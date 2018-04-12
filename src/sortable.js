@@ -11,6 +11,8 @@ class Sortable extends Events
      * @param {object} [options]
      * @param {string} [options.name=sortable] dragging is allowed between Sortables with the same name
      * @param {boolean} [options.sort=true] allow sorting within list
+     * @param {boolean} [options.copy=false] create a copy when dragging an item
+     * @param {boolean} [options.drop=true] allow drop from related sortables
      * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise use all children
      * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
      * @param {string} [options.orderId=data-order] for non-sorting lists, use this data id to figure out sort order
@@ -18,10 +20,13 @@ class Sortable extends Events
      * @param {string} [options.reverseOrder] reverse sort the orderId
      * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
      * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
+     * @param {boolean} [options.useIcons=true] show icons when dragging
+     * @param {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when not over a sortable
      * @param {object} [options.icons] default set of icons
      * @param {string} [options.icons.reorder] source of image
      * @param {string} [options.icons.move] source of image
      * @param {string} [options.icons.copy] source of image
+     * @param {string} [options.icons.cancel] source of image
      * @param {string} [options.icons.delete] source of image
      * @fires clicked
      * @fires pickup
@@ -689,7 +694,7 @@ class Sortable extends Events
                     this.dragging.indicator.remove()
                     if (this.dragging.icon)
                     {
-                        this.dragging.icon.src = this.options.icons.delete
+                        this.dragging.icon.src = this.options.useDeleteIcon ? this.options.icons.delete : this.options.icons.cancel
                     }
                 }
             }
@@ -707,7 +712,7 @@ class Sortable extends Events
                     this.dragging.indicator.remove()
                     if (this.dragging.icon)
                     {
-                        this.dragging.icon.src = this.options.icons.delete
+                        this.dragging.icon.src = this.options.useDeleteIcon ? this.options.icons.delete : this.options.icons.cancel
                     }
                 }
             }
