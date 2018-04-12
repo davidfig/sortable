@@ -1,4 +1,5 @@
-const Sortable = require('../src/sortable')
+import Sortable from '../src/sortable'
+import Highlight from './highlight'
 
 function test()
 {
@@ -31,11 +32,15 @@ function test()
 
     const eight = document.getElementById('example-8')
     new Sortable(eight, { name: 'list-8', alwaysInList: false })
+
+    const nine = document.getElementById('example-9')
+    new Sortable(nine.children[0], { name: 'list-9', copy: true })
+    new Sortable(nine.children[1], { name: 'list-9' })
+
 }
 
 window.onload = function ()
 {
     test()
-    require('fork-me-github')('https://github.com/davidfig/sortable')
-    require('./highlight')()
+    Highlight()
 }

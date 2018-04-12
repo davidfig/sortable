@@ -1,27 +1,22 @@
-const Events = require('eventemitter3')
+import Events from 'eventemitter3'
 
-const toGlobal = require('./toGlobal')
-const defaults = require('./options')
+import defaults from './defaults'
+import * as utils from './utils'
 
-class Sortable extends Events
+export default class Sortable extends Events
 {
     /**
      * Create sortable list
      * @param {HTMLElement} element
      * @param {object} [options]
      * @param {string} [options.name=sortable] dragging is allowed between Sortables with the same name
-     * @param {boolean} [options.sort=true] allow sorting within list
-     * @param {boolean} [options.copy=false] create a copy when dragging an item
      * @param {boolean} [options.drop=true] allow drop from related sortables
-     * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise use all children
+     * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise uses first-level children
      * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
-     * @param {string} [options.orderId=data-order] for non-sorting lists, use this data id to figure out sort order
-     * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.orderId to properly sort numbers
-     * @param {string} [options.reverseOrder] reverse sort the orderId
      * @param {boolean} [options.alwaysInList=true] place element inside closest related sortable; if set to false then the object is removed if dropped outside related sortables
      * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
      * @param {boolean} [options.useIcons=true] show icons when dragging
-     * @param {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when not over a sortable
+     * @param {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when no drop is available
      * @param {object} [options.icons] default set of icons
      * @param {string} [options.icons.reorder] source of image
      * @param {string} [options.icons.move] source of image
@@ -43,60 +38,85 @@ class Sortable extends Events
     constructor(element, options)
     {
         super()
-        this.options = options || {}
-        for (let option in defaults)
-        {
-            this.options[option] = typeof this.options[option] !== 'undefined' ? options[option] : defaults[option]
-        }
+        this.options = utils.options(options, defaults)
         this.element = element
-        this.element.sortable = this
         const elements = this._getChildren(this)
         for (let child of elements)
         {
-            if (!this.options.dragClass || this._containsClassName(child, this.options.dragClass))
+            if (!this.options.dragClass || utils.containsClassName(child, this.options.dragClass))
             {
-                child.__isSortable = true
-                child.addEventListener('mousedown', (e) => this._dragStart(e))
-                child.addEventListener('touchstart', (e) => this._dragStart(e))
-                for (let option in this.options.childrenStyles)
-                {
-                    child.style[option] = this.options.childrenStyles[option]
-                }
-                child.original = this
+                this.attachElement(child)
             }
         }
-        document.body.addEventListener('mousemove', (e) => this._dragMove(e))
-        document.body.addEventListener('touchmove', (e) => this._dragMove(e))
-        document.body.addEventListener('touchup', (e) => this._dragUp(e))
-        document.body.addEventListener('touchcancel', (e) => this._dragUp(e))
-        document.body.addEventListener('mouseup', (e) => this._dragUp(e))
-        document.body.addEventListener('mousecancel', (e) => this._dragUp(e))
-
-        if (!Sortable.list)
-        {
-            Sortable.list = []
+        this.events = {
+            dragOver: (e) => this._dragOver(e),
+            drop: (e) => this._drop(e)
         }
-        Sortable.list.push(this)
+        this.element.addEventListener('dragover', this.events.dragOver)
+        this.element.addEventListener('drop', this.events.drop)
+        this._addToGlobalTracker()
     }
 
     /**
-     * Whether element contains classname
-     * @param {HTMLElement} e
-     * @param {string} name
-     * @returns {boolean}
+     * add sortable to global list that tracks all sortables
      * @private
      */
-    _containsClassName(e, name)
+    _addToglobalTracker()
     {
-        const list = e.className.split(' ')
-        for (let entry of list)
+        if (!Sortable.tracker)
         {
-            if (entry === name)
-            {
-                return true
-            }
+            Sortable.tracker = {}
+            document.body.addEventListener('dragover', (e) => this._bodyDragOver(e))
+            document.body.addEventListener('drop', (e) => this._bodyDrop(e))
         }
-        return false
+        if (Sortable.tracker[this.options.name])
+        {
+            Sortable.list[this.options.name].list.push(this)
+            Sortable.list[this.options.name].counter = 0
+        }
+        else
+        {
+            Sortable.list[this.options.name] = [this]
+        }
+    }
+
+    /**
+     * removes all event handlers from this.element and children
+     */
+    destroy()
+    {
+        this.element.removeEventListener('dragover', this.events.dragOver)
+        this.element.removeEventListener('drop', this.events.drop)
+        const elements = this._getChildren(this)
+        for (let child of elements)
+        {
+            this.removeElement(child)
+        }
+    }
+
+    /**
+     * default drag over for the body
+     * @param {DragEvent} e
+     * @private
+     */
+    _bodyDragOver(e)
+    {
+        const name = e.dataTransfer.getData('text/sortable')
+        const sortable = Sortable.list[name]
+        if (sortable.options.alwaysInList)
+        { }
+        e.dataTransfer.dropEffect = 'none'
+        e.preventDefault()
+    }
+
+    /**
+     * default drop for the body
+     * @param {DragEvent} e
+     * @private
+     */
+    _bodyDrop(e)
+    {
+        e.preventDefault()
     }
 
     /**
@@ -169,31 +189,37 @@ class Sortable extends Events
      */
     attachElement(element)
     {
-        if (element.__isSortable)
+        if (element.__sortable)
         {
-            element.original = this
+            element.__sortable.original = this
         }
         else
         {
-            element.__isSortable = true
-            element.dragStart = (e) => this._dragStart(e)
-            element.addEventListener('mousedown', element.dragStart)
-            element.addEventListener('touchstart', element.dragStart)
+            element.__sortable = {
+                sortable: this,
+                original: this,
+                dragStart: (e) => this._dragStart(e)
+            }
+            if (!element.id)
+            {
+                element.id = '__sortable-' + this.options.name + '-' + Sortable.tracker[this.options.name].counter
+                Sortable.tracker[this.options.name].counter++
+            }
+            element.addEventListener('dragStart', element.__sortable.dragStart)
             for (let option in this.options.childrenStyles)
             {
                 element.style[option] = this.options.childrenStyles[option]
             }
-            element.original = this
         }
     }
 
     /**
-     * removes an HTML element from the sortable and related keyboard/mouse events
+     * removes all events from an HTML element
+     * NOTE: does not remove the element from its parent
      * @param {HTMLElement} element
      */
     removeElement(element)
     {
-        element.remove()
         element.removeEventListener('mousedown', element.dragStart)
         element.removeEventListener('touchstart', element.dragStart)
     }
@@ -205,10 +231,8 @@ class Sortable extends Events
      */
     _dragStart(e)
     {
-        this.dragging = e.currentTarget
-        this.dragging.pickup = false
-        this.dragging.start = { x: e.pageX, y: e.pageY }
-        this.dragging.style.cursor = 'no-cursor'
+        e.dataTransfer.setData('text/sortable-element', e.target.id)
+        e.dataTransfer.setData('text/sortable', this.options.name)
         e.preventDefault()
     }
 
@@ -221,7 +245,7 @@ class Sortable extends Events
     {
         this.indicator = this.dragging.cloneNode(true)
         this.dragging.indicator = this.indicator
-        const pos = toGlobal(this.dragging)
+        const pos = utils.toGlobal(this.dragging)
         this.dragging.style.position = 'absolute'
         this.offset = { x: pos.x - e.pageX, y: pos.y - e.pageY }
         this.dragging.style.left = pos.x + 'px'
@@ -232,6 +256,12 @@ class Sortable extends Events
         }
         this.dragging.parentNode.insertBefore(this.indicator, this.dragging)
         document.body.appendChild(this.dragging)
+        if (this.dragging.sortable.options.copy)
+        {
+            this.dragging.copy = this.dragging.sortable
+            this.indicator = this.dragging.indicator = this.indicator.cloneNode(true)
+            this.emit('copy-pending', this.dragging, this.dragging.sortable)
+        }
         if (this.options.useIcons)
         {
             const image = new Image()
@@ -245,55 +275,6 @@ class Sortable extends Events
         }
         this.dragging.pickup = true
         this.emit('pickup', this.dragging, this.dragging.sortable)
-    }
-
-    /**
-     * measure distance between two points
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @private
-     */
-    _distance(x1, y1, x2, y2)
-    {
-        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
-    }
-
-    /**
-     * find closest distance from UIEvent to a corner of an element
-     * @param {HTMLUListElement} e
-     * @param {HTMLElement} element
-     * @private
-     */
-    _distanceToClosestCorner(e, element)
-    {
-        const topLeft = this._distance(e.pageX, e.pageY, element.offsetLeft, element.offsetTop)
-        const topRight = this._distance(e.pageX, e.pageY, element.offsetLeft + element.offsetWidth, element.offsetTop)
-        const bottomLeft = this._distance(e.pageX, e.pageY, element.offsetLeft, element.offsetTop + element.offsetHeight)
-        const bottomRight = this._distance(e.pageX, e.pageY, element.offsetLeft + element.offsetWidth, element.offsetTop + element.offsetHeight)
-        return Math.min(topLeft, topRight, bottomLeft, bottomRight)
-    }
-
-
-    /**
-     * determine whether these is overlap between two elements
-     * @param {HTMLElement} dragging
-     * @param {HTMLElement} element
-     * @private
-     */
-    _inside(dragging, element)
-    {
-        const x1 = dragging.offsetLeft
-        const y1 = dragging.offsetTop
-        const w1 = dragging.offsetWidth
-        const h1 = dragging.offsetHeight
-        const pos = toGlobal(element)
-        const x2 = pos.x
-        const y2 = pos.y
-        const w2 = element.offsetWidth
-        const h2 = element.offsetHeight
-        return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
     }
 
     /**
@@ -355,13 +336,16 @@ class Sortable extends Events
      */
     _placeInList(sortable, dragging)
     {
-        if (sortable.options.sort)
+        if (!dragging.copy || dragging.copy !== sortable)
         {
-            this._placeInSortableList(sortable, dragging)
-        }
-        else
-        {
-            this._placeInOrderedList(sortable, dragging)
+            if (sortable.options.sort)
+            {
+                this._placeInSortableList(sortable, dragging)
+            }
+            else
+            {
+                this._placeInOrderedList(sortable, dragging)
+            }
         }
     }
 
@@ -421,7 +405,7 @@ class Sortable extends Events
                 let list = []
                 for (let child of sortable.element.children)
                 {
-                    if (this._containsClassName(child, sortable.options.dragClass) || ((order || !sortable.options.orderClass) || (order && sortable.options.orderClass && this._containsClassName(child, sortable.options.orderClass))))
+                    if (utils.containsClassName(child, sortable.options.dragClass) || ((order || !sortable.options.orderClass) || (order && sortable.options.orderClass && utils.containsClassName(child, sortable.options.orderClass))))
                     {
                         list.push(child)
                     }
@@ -520,7 +504,7 @@ class Sortable extends Events
                 for (let i = sortable.element.children.length - 1; i >= 0; i--)
                 {
                     const child = sortable.element.children[i]
-                    if (this._containsClassName(child, sortable.options.dragClass))
+                    if (utils.containsClassName(child, sortable.options.dragClass))
                     {
                         return child
                     }
@@ -629,7 +613,7 @@ class Sortable extends Events
                     {
                         indicator = true
                     }
-                    const pos = toGlobal(child)
+                    const pos = utils.toGlobal(child)
                     const xb1 = pos.x
                     const yb1 = pos.y
                     const xb2 = pos.x + child.offsetWidth
@@ -821,8 +805,6 @@ class Sortable extends Events
         return results
     }
 }
-
-module.exports = Sortable
 
 /**
  * fires when an element is clicked but not moved beyond the options.threshold

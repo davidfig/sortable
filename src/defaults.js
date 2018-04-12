@@ -1,4 +1,4 @@
-const icons = require('./icons')
+import icons from './icons'
 
 /**
  * Options for Sortable
