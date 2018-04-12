@@ -18,7 +18,7 @@ class Sortable extends Events
      * @param {string} [options.orderId=data-order] for non-sorting lists, use this data id to figure out sort order
      * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.orderId to properly sort numbers
      * @param {string} [options.reverseOrder] reverse sort the orderId
-     * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
+     * @param {boolean} [options.alwaysInList=true] place element inside closest related sortable; if set to false then the object is removed if dropped outside related sortables
      * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
      * @param {boolean} [options.useIcons=true] show icons when dragging
      * @param {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when not over a sortable
@@ -244,7 +244,7 @@ class Sortable extends Events
             this.dragging.icon = image
         }
         this.dragging.pickup = true
-        this.emit('pickup', this.dragging, this)
+        this.emit('pickup', this.dragging, this.dragging.sortable)
     }
 
     /**
