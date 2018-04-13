@@ -14,10 +14,10 @@ import icons from './icons'
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
  * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
+ * @property {boolean} [options.returnToOriginal=true] if alwaysInList=false and element is dropped where there are no sortables then the element is returned to its starting sortable
  * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
  * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
  * @property {boolean} [options.useIcons=true] show icons when dragging
- * @property {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when not over a sortable
  * @property {object} [options.icons] default set of icons
  * @property {string} [options.icons.reorder]
  * @property {string} [options.icons.move]
@@ -34,6 +34,7 @@ export default {
     orderIdIsNumber: true,
     threshold: 10,
     alwaysInList: true,
+    returnToOriginal: false,
     dragClass: null,
     orderClass: null,
     returnHome: true,

@@ -5,7 +5,9 @@
 </head>
 
 <body>
-    <div class="title">Example for <a href="https://github.com/davidfig/sortable/">github.com/davidfig/sortable/</a></div>
+    <div class="title">Example for
+        <a href="https://github.com/davidfig/sortable/">github.com/davidfig/sortable/</a>
+    </div>
     <div class="example-title">1. Sortable List</div>
     <div class="example">
         <div id="example-1-events" class="events"></div>
@@ -35,8 +37,7 @@
             </div>
         </div>
     </div>
-    <div class="example-title">3. Sortable List and Ordered List (removable)</div>
-    <div class="example-subtitle">alwaysInList = false</div>
+    <div class="example-title">3. Sortable List and Ordered List</div>
     <div class="example">
         <div id="example-3-events" class="events"></div>
         <div id="example-3">
@@ -100,13 +101,15 @@
                     <div class="skip" data-order=1>1. non-alcoholic</div>
                     <div class="entry" data-order=2>2. juice</div>
                     <div class="entry" data-order=3>3. milk</div>
-                    <div data-order=9.9></div> <!-- placeholder to ensure proper bucket ordering -->
+                    <div data-order=9.9></div>
+                    <!-- placeholder to ensure proper bucket ordering -->
                 </div>
                 <div>
                     <div class="skip" data-order=10>10. alcoholic</div>
                     <div class="entry" data-order=12>12. beer</div>
                     <div class="entry" data-order=13>13. wine</div>
-                    <div data-order=20></div> <!-- placeholder to ensure proper bucket ordering -->
+                    <div data-order=20></div>
+                    <!-- placeholder to ensure proper bucket ordering -->
                 </div>
             </div>
         </div>
@@ -129,20 +132,37 @@
         </div>
     </div>
     <div class="example-title">8. Removable Sortable List</div>
-    <div class="example-subtitle">alwaysInList = false</div>
+    <div class="example-subtitle">options.offList = 'cancel'</div>
     <div class="example">
         <div id="example-8-events" class="events"></div>
-        <ul id="example-8">
-            <li>gold fish</li>
-            <li>rainbow fish</li>
-            <li>stingray</li>
-            <li>shark</li>
-        </ul>
+        <div id="example-8">
+            <div>
+                <div class="entry">gold fish</div>
+                <div class="entry">rainbow fish</div>
+                <div class="entry">clown fish</div>
+            </div>
+            <div>
+                <div class="entry">stingray</div>
+                <div class="entry">shark</div>
+                <div class="entry">hammerhead</div>
+            </div>
+        </div>
     </div>
-    <div class="example-title">9. Copy List and Sortable Lists</div>
+    <div class="example-title">9. Removable Sortable List</div>
+    <div class="example-subtitle">options.offList = 'delete'</div>
     <div class="example">
         <div id="example-9-events" class="events"></div>
-        <div id="example-9">
+        <ul id="example-9">
+            <li>table</li>
+            <li>chairs</li>
+            <li>desk</li>
+            <li>stool</li>
+        </ul>
+    </div>
+    <div class="example-title">10. Copy List and Sortable Lists</div>
+    <div class="example">
+        <div id="example-10-events" class="events"></div>
+        <div id="example-10">
             <div>
                 <div class="entry">coffee</div>
                 <div class="entry">tea</div>

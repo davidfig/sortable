@@ -33,12 +33,18 @@ body {
     font-size: 1.25em;
 }
 
+.example > :nth-child(2)
+{
+    background: rgb(249, 249, 249);
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
 .example {
     user-select: none;
     display: flex;
     padding-bottom: 1em;
     border-bottom: solid 1px black;
-    margin-bottom: 1em;
 }
 
 .events {
@@ -79,24 +85,19 @@ li {
     margin-bottom: 1em;
 }
 
-#example-1, #example-8 {
+#example-1, #example-10 {
     width: fit-content;
     margin: 0 auto;
 }
 
-#example-2, #example-3, #example-5, #example-7, #example-9 {
+#example-2, #example-3, #example-5, #example-7, #example-8, #example-10 {
     display: flex;
     justify-content: space-around;
-    background: rgb(249, 249, 249);
     margin: 0 auto;
 }
 
-#example-2 > div, #example-3 > div, #example-4 > div, #example-6, #example-4, #example-9 > div {
+#example-2 > div, #example-3 > div, #example-4 > div, #example-6, #example-4, #example-8 > div, #example-9, #example-10 > div {
     margin: 0 auto;
-}
-
-#example-4 {
-    background: rgb(249, 249, 249);
 }
 
 #example-4 > div, .example-6-in {

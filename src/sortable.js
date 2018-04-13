@@ -19,11 +19,10 @@ export default class Sortable extends Events
      * @param {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
      * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
      * @param {string} [options.reverseOrder] reverse sort the orderId
-     * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
+     * @param {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
      * @param {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
      * @param {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
      * @param {boolean} [options.useIcons=true] show icons when dragging
-     * @param {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when not over a sortable
      * @param {object} [options.icons] default set of icons
      * @param {string} [options.icons.reorder]
      * @param {string} [options.icons.move]
@@ -224,6 +223,8 @@ export default class Sortable extends Events
                 original: this,
                 dragStart: (e) => this._dragStart(e)
             }
+
+            // ensure every element has an id
             if (!element.id)
             {
                 element.id = '__sortable-' + this.options.name + '-' + Sortable.tracker[this.options.name].counter
@@ -273,11 +274,18 @@ export default class Sortable extends Events
                 {
                     this._updateDragging(e, element)
                     this._setIcon(element, null)
-                    if (!element.__sortable.display)
+                    if (element.__sortable.original.options.offList === 'delete')
                     {
-                        element.__sortable.display = element.style.display || 'unset'
-                        element.style.display = 'none'
-                        element.__sortable.original.emit('delete-pending', element, element.__sortable.original)
+                        if (!element.__sortable.display)
+                        {
+                            element.__sortable.display = element.style.display || 'unset'
+                            element.style.display = 'none'
+                            element.__sortable.original.emit('delete-pending', element, element.__sortable.original)
+                        }
+                    }
+                    else
+                    {
+                        this._replaceInList(element.__sortable.original, element)
                     }
                 }
             }
@@ -345,6 +353,7 @@ export default class Sortable extends Events
             document.body.appendChild(image)
             dragging.icon = image
         }
+        e.dataTransfer.clearData()
         e.dataTransfer.setData(this.options.name, this.options.name)
         e.dataTransfer.setData(e.target.id, e.target.id)
         e.dataTransfer.setDragImage(document.createElement('canvas'), 0, 0)
@@ -443,20 +452,17 @@ export default class Sortable extends Events
         let min = Infinity, found
         for (let related of list)
         {
-            if (related.options.alwaysInList)
+            if (utils.inside(e.pageX, e.pageY, related.element))
             {
-                if (utils.inside(e.pageX, e.pageY, related.element))
+                return related
+            }
+            else if (related.options.offList === 'closest')
+            {
+                const calculate = utils.distanceToClosestCorner(e.pageX, e.pageY, related.element)
+                if (calculate < min)
                 {
-                    return related
-                }
-                else if (related.options.alwaysInList)
-                {
-                    const calculate = utils.distanceToClosestCorner(e.pageX, e.pageY, related.element)
-                    if (calculate < min)
-                    {
-                        min = calculate
-                        found = related
-                    }
+                    min = calculate
+                    found = related
                 }
             }
         }
@@ -488,6 +494,30 @@ export default class Sortable extends Events
             this._placeInOrderedList(sortable, element)
         }
         this._setIcon(element, sortable)
+    }
+
+    /**
+     * replace item in list at original index position
+     */
+    _replaceInList(sortable, element)
+    {
+        const children = sortable._getChildren()
+        if (children.length)
+        {
+            const index = element.__sortable.index
+            if (index < children.length)
+            {
+                children[index].parentNode.insertBefore(element, children[index])
+            }
+            else
+            {
+                children[0].appendChild(element)
+            }
+        }
+        else
+        {
+            sortable.element.appendChild(element)
+        }
     }
 
     _getIndex(child)
@@ -719,7 +749,7 @@ export default class Sortable extends Events
             if (!sortable)
             {
                 sortable = element.__sortable.original
-                dragging.icon.src = sortable.options.useDeleteIcon ? sortable.options.icons.delete : sortable.options.icons.cancel
+                dragging.icon.src = sortable.options.offList === 'delete' ? sortable.options.icons.delete : sortable.options.icons.cancel
             }
             else
             {

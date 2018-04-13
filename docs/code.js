@@ -14,8 +14,8 @@ function test()
     events(two, [a2, b2, c2])
 
     const three = document.getElementById('example-3')
-    const a3 = new Sortable(three.children[0], { name: 'list-3', alwaysInList: false, useDeleteIcon: true })
-    const b3 = new Sortable(three.children[1], { name: 'list-3', sort: false, alwaysInList: false, useDeleteIcon: true })
+    const a3 = new Sortable(three.children[0], { name: 'list-3' })
+    const b3 = new Sortable(three.children[1], { name: 'list-3', sort: false })
     events(three, [a3, b3])
 
     const four = document.getElementById('example-4')
@@ -39,13 +39,18 @@ function test()
     events(seven, [a7, b7])
 
     const eight = document.getElementById('example-8')
-    const a8 = new Sortable(eight, { name: 'list-8', alwaysInList: false })
-    events(eight, [a8])
+    const a8 = new Sortable(eight.children[0], { name: 'list-8' })//, offList: 'cancel' })
+    const b8 = new Sortable(eight.children[1], { name: 'list-8' })//, offList: 'cancel' })
+    events(eight, [a8, b8])
 
     const nine = document.getElementById('example-9')
-    const a9 = new Sortable(nine.children[0], { name: 'list-9', copy: true })
-    const b9 = new Sortable(nine.children[1], { name: 'list-9' })
-    events(nine, [a9, b9])
+    const a9 = new Sortable(nine, { name: 'list-9', offList: 'delete' })
+    events(nine, [a9])
+
+    const ten = document.getElementById('example-10')
+    const a10 = new Sortable(ten.children[0], { name: 'list-10', copy: true })
+    const b10 = new Sortable(ten.children[1], { name: 'list-10' })
+    events(ten, [a10, b10])
 }
 
 /**
