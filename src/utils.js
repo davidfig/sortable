@@ -165,6 +165,7 @@ function percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
 
 module.exports = {
     containsClassName,
+    distance,
     distanceToClosestCorner,
     inside,
     toGlobal,

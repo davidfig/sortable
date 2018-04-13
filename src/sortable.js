@@ -3,10 +3,6 @@ const Events = require('eventemitter3')
 const defaults = require('./defaults')
 const utils = require('./utils')
 
-/**
- * Sortable Class
- * @class
- */
 class Sortable extends Events
 {
     /**
@@ -733,6 +729,65 @@ class Sortable extends Events
     }
 
     /**
+     * search for where to place using percentage
+     * @param {Sortable} sortable
+     * @param {HTMLElement} dragging
+     * @returns {number} 0 = not found; 1 = nothing to do; 2 = moved
+     */
+    _placeByPercentage(sortable, dragging)
+    {
+        const cursor = dragging.__sortable.dragging
+        const xa1 = cursor.offsetLeft
+        const ya1 = cursor.offsetTop
+        const xa2 = cursor.offsetLeft + cursor.offsetWidth
+        const ya2 = cursor.offsetTop + cursor.offsetHeight
+        let largest = 0, closest, isBefore, indicator
+        const element = sortable.element
+        const elements = sortable._getChildren(true)
+        for (let child of elements)
+        {
+            if (child === dragging)
+            {
+                indicator = true
+            }
+            const pos = utils.toGlobal(child)
+            const xb1 = pos.x
+            const yb1 = pos.y
+            const xb2 = pos.x + child.offsetWidth
+            const yb2 = pos.y + child.offsetHeight
+            const percentage = utils.percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
+            if (percentage > largest)
+            {
+                largest = percentage
+                closest = child
+                isBefore = indicator
+            }
+        }
+        if (closest)
+        {
+            if (closest === dragging)
+            {
+                return 1
+            }
+            if (isBefore && closest.nextSibling)
+            {
+                element.insertBefore(dragging, closest.nextSibling)
+                sortable.emit('order-pending', sortable)
+            }
+            else
+            {
+                element.insertBefore(dragging, closest)
+                sortable.emit('order-pending', sortable)
+            }
+            return 2
+        }
+        else
+        {
+            return 0
+        }
+    }
+
+    /**
      * search for where to place using distance
      * @param {Sortable} sortable
      * @param {HTMLElement} dragging
@@ -742,19 +797,24 @@ class Sortable extends Events
      */
     _placeByDistance(sortable, dragging, x, y)
     {
-        let distance = Infinity, closest, isBefore, indicator
+        if (utils.inside(x, y, dragging))
+        {
+            return true
+        }
+        let index = -1
+        if (dragging.__sortable.current === sortable)
+        {
+            index = sortable._getIndex(dragging)
+            sortable.element.appendChild(dragging)
+        }
+        let distance = Infinity, closest
         const element = sortable.element
         const elements = sortable._getChildren(true)
         for (let child of elements)
         {
-            if (child === dragging)
-            {
-                indicator = true
-            }
             if (utils.inside(x, y, child))
             {
                 closest = child
-                isBefore = indicator
                 break
             }
             else
@@ -764,21 +824,13 @@ class Sortable extends Events
                 {
                     closest = child
                     distance = measure
-                    isBefore = indicator
                 }
             }
         }
-        if (closest === dragging)
+        element.insertBefore(dragging, closest)
+        if (index === sortable._getIndex(dragging))
         {
             return true
-        }
-        if (isBefore)
-        {
-            element.insertBefore(dragging, closest.nextSibling)
-        }
-        else
-        {
-            element.insertBefore(dragging, closest)
         }
         sortable.emit('order-pending', dragging, sortable)
     }
@@ -806,6 +858,7 @@ class Sortable extends Events
         }
         else
         {
+            // const percentage = this._placeByPercentage(sortable, dragging)
             if (this._placeByDistance(sortable, dragging, x, y))
             {
                 return
@@ -936,4 +989,4 @@ class Sortable extends Events
  * @property {Sortable} current sortable with element placeholder
  */
 
- module.exports = Sortable
+module.exports = Sortable

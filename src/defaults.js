@@ -13,10 +13,10 @@ const icons = require('./icons')
  * @property {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
- * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
- * @property {boolean} [options.returnToOriginal=true] if alwaysInList=false and element is dropped where there are no sortables then the element is returned to its starting sortable
+ * @property {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
  * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
  * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
+ * @property {number} [options.threshold=10] minimum movement distance in pixels before calculating a movement
  * @property {boolean} [options.useIcons=true] show icons when dragging
  * @property {object} [options.icons] default set of icons
  * @property {string} [options.icons.reorder]
@@ -32,7 +32,7 @@ module.exports = {
     copy: false,
     orderId: 'data-order',
     orderIdIsNumber: true,
-    threshold: 10,
+    threshold: 5,
     dragClass: null,
     orderClass: null,
     offList: 'closest',
