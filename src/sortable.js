@@ -1,9 +1,13 @@
 import Events from 'eventemitter3'
 
-import defaults from './defaults'
-import * as utils from './utils'
+const defaults = require('./defaults')
+const utils = require('./utils')
 
-export default class Sortable extends Events
+/**
+ * Sortable Class
+ * @class
+ */
+class Sortable extends Events
 {
     /**
      * Create sortable list
@@ -79,7 +83,7 @@ export default class Sortable extends Events
     {
         if (this.options.cursorHover)
         {
-            utils.style(e.target, 'cursor', this.options.cursorDown)
+            utils.style(e.currentTarget, 'cursor', this.options.cursorDown)
         }
     }
 
@@ -95,6 +99,7 @@ export default class Sortable extends Events
         {
             this.removeElement(child)
         }
+        // todo: remove Sortable.tracker and related event handlers if no more sortables
     }
 
     /**
@@ -237,6 +242,9 @@ export default class Sortable extends Events
     {
         if (!Sortable.tracker)
         {
+            Sortable.dragImage = document.createElement('div')
+            Sortable.dragImage.id = 'sortable-dragImage'
+            document.body.appendChild(Sortable.dragImage)
             Sortable.tracker = {}
             document.body.addEventListener('dragover', (e) => this._bodyDragOver(e))
             document.body.addEventListener('drop', (e) => this._bodyDrop(e))
@@ -351,13 +359,13 @@ export default class Sortable extends Events
      */
     _dragStart(e)
     {
-        const sortable = e.target.__sortable.original
-        const dragging = e.target.cloneNode(true)
+        const sortable = e.currentTarget.__sortable.original
+        const dragging = e.currentTarget.cloneNode(true)
         for (let style in sortable.options.dragStyle)
         {
             dragging.style[style] = sortable.options.dragStyle[style]
         }
-        const pos = utils.toGlobal(e.target)
+        const pos = utils.toGlobal(e.currentTarget)
         dragging.style.left = pos.x + 'px'
         dragging.style.top = pos.y + 'px'
         const offset = { x: pos.x - e.pageX, y: pos.y - e.pageY }
@@ -375,14 +383,14 @@ export default class Sortable extends Events
         }
         if (sortable.options.cursorHover)
         {
-            utils.style(e.target, 'cursor', sortable.options.cursorHover)
+            utils.style(e.currentTarget, 'cursor', sortable.options.cursorHover)
         }
-        let target = e.target
+        let target = e.currentTarget
         if (sortable.options.copy)
         {
-            target = e.target.cloneNode(true)
-            target.id = e.target.id + '-copy-' + e.target.__sortable.copy
-            e.target.__sortable.copy++
+            target = e.currentTarget.cloneNode(true)
+            target.id = e.currentTarget.id + '-copy-' + e.currentTarget.__sortable.copy
+            e.currentTarget.__sortable.copy++
             sortable.attachElement(target)
             target.__sortable.isCopy = true
             target.__sortable.original = this
@@ -393,7 +401,7 @@ export default class Sortable extends Events
         e.dataTransfer.clearData()
         e.dataTransfer.setData(sortable.options.name, sortable.options.name)
         e.dataTransfer.setData(target.id, target.id)
-        e.dataTransfer.setDragImage(document.createElement('div'), 0, 0)
+        e.dataTransfer.setDragImage(Sortable.dragImage, 0, 0)
         target.__sortable.current = this
         target.__sortable.index = sortable.options.copy ? -1 : sortable._getIndex(target)
         target.__sortable.dragging = dragging
@@ -474,7 +482,7 @@ export default class Sortable extends Events
             }
             else
             {
-                if (element.__sortable.index !== this._getIndex(e.target))
+                if (element.__sortable.index !== this._getIndex(e.currentTarget))
                 {
                     this.emit('order', element, this)
                     this.emit('update', element, this)
@@ -549,6 +557,7 @@ export default class Sortable extends Events
 
     /**
      * replace item in list at original index position
+     * @private
      */
     _replaceInList(sortable, element)
     {
@@ -901,3 +910,5 @@ export default class Sortable extends Events
  * @property {HTMLElement} element being dragged
  * @property {Sortable} current sortable with element placeholder
  */
+
+ module.exports = Sortable

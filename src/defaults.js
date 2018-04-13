@@ -1,4 +1,4 @@
-import icons from './icons'
+const icons = require('./icons')
 
 /**
  * Options for Sortable
@@ -25,7 +25,7 @@ import icons from './icons'
  * @property {string} [options.icons.delete]
  * @property {string} [options.customIcon] source of custom image when over this sortable
  */
-export default {
+module.exports = {
     name: 'sortable',
     sort: true,
     drop: true,

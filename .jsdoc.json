@@ -16,8 +16,8 @@
     "linenums": true,
     "source": {
         "include": [
-            "./src",
-            "./node_modules/eventemitter3"
+            "./src/sortable.js",
+            "./src/defaults.js"
         ],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"

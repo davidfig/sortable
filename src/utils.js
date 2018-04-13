@@ -3,9 +3,8 @@
  * @param {HTMLElement} e
  * @param {string} name
  * @returns {boolean}
- * @private
  */
-export function containsClassName(e, name)
+function containsClassName(e, name)
 {
     if (e.className)
     {
@@ -28,7 +27,7 @@ export function containsClassName(e, name)
  * @param {number} x2
  * @param {number} y2
  */
-export function distance(x1, y1, x2, y2)
+function distance(x1, y1, x2, y2)
 {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 }
@@ -39,7 +38,7 @@ export function distance(x1, y1, x2, y2)
  * @param {number} y
  * @param {HTMLElement} element
  */
-export function distanceToClosestCorner(x, y, element)
+function distanceToClosestCorner(x, y, element)
 {
     const pos = toGlobal(element)
     const topLeft = distance(x, y, pos.x, pos.y)
@@ -55,7 +54,7 @@ export function distanceToClosestCorner(x, y, element)
      * @param {HTMLElement} dragging
  * @param {HTMLElement} element
  */
-export function inside(x, y, element)
+function inside(x, y, element)
 {
     const pos = toGlobal(element)
     const x1 = pos.x
@@ -70,7 +69,7 @@ export function inside(x, y, element)
  * @param {HTMLElement} e
  * @returns {PointLike}
  */
-export function toGlobal(e)
+function toGlobal(e)
 {
     const box = e.getBoundingClientRect()
 
@@ -101,7 +100,7 @@ export function toGlobal(e)
  * @param {object} defaults
  * @returns {object} options+defaults
  */
-export function options(options, defaults)
+function options(options, defaults)
 {
     options = options || {}
     for (let option in defaults)
@@ -117,7 +116,7 @@ export function options(options, defaults)
  * @param {string} style
  * @param {(string|string[])} value - single value or list of possible values (test each one in order to see if it works)
  */
-export function style(element, style, value)
+function style(element, style, value)
 {
     if (Array.isArray(value))
     {
@@ -134,4 +133,35 @@ export function style(element, style, value)
     {
         element.style[style] = value
     }
+}
+
+/**
+ * calculate percentage of overlap between two boxes
+ * from https://stackoverflow.com/a/21220004/1955997
+ * @param {number} xa1
+ * @param {number} ya1
+ * @param {number} xa2
+ * @param {number} xa2
+ * @param {number} xb1
+ * @param {number} yb1
+ * @param {number} xb2
+ * @param {number} yb2
+ */
+function percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
+{
+    const sa = (xa2 - xa1) * (ya2 - ya1)
+    const sb = (xb2 - xb1) * (yb2 - yb1)
+    const si = Math.max(0, Math.min(xa2, xb2) - Math.max(xa1, xb1)) * Math.max(0, Math.min(ya2, yb2) - Math.max(ya1, yb1))
+    const union = sa + sb - si
+    return si / union
+}
+
+module.exports = {
+    containsClassName,
+    distanceToClosestCorner,
+    inside,
+    toGlobal,
+    options,
+    style,
+    percentage
 }
