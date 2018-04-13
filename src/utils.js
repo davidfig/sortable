@@ -35,37 +35,34 @@ export function distance(x1, y1, x2, y2)
 
 /**
  * find closest distance from UIEvent to a corner of an element
- * @param {HTMLUListElement} e
+ * @param {number} x
+ * @param {number} y
  * @param {HTMLElement} element
  */
-export function distanceToClosestCorner(e, element)
+export function distanceToClosestCorner(x, y, element)
 {
-    const topLeft = distance(e.pageX, e.pageY, element.offsetLeft, element.offsetTop)
-    const topRight = distance(e.pageX, e.pageY, element.offsetLeft + element.offsetWidth, element.offsetTop)
-    const bottomLeft = distance(e.pageX, e.pageY, element.offsetLeft, element.offsetTop + element.offsetHeight)
-    const bottomRight = distance(e.pageX, e.pageY, element.offsetLeft + element.offsetWidth, element.offsetTop + element.offsetHeight)
+    const pos = toGlobal(element)
+    const topLeft = distance(x, y, pos.x, pos.y)
+    const topRight = distance(x, y, pos.x + element.offsetWidth, pos.y)
+    const bottomLeft = distance(x, y, pos.x, pos.y + element.offsetHeight)
+    const bottomRight = distance(x, y, pos.x + element.offsetWidth, pos.y + element.offsetHeight)
     return Math.min(topLeft, topRight, bottomLeft, bottomRight)
 }
 
 
 /**
- * determine whether these is overlap between two elements
- * @param {HTMLElement} dragging
+ * determine whether the mouse is inside an element
+     * @param {HTMLElement} dragging
  * @param {HTMLElement} element
  */
-export function inside(dragging, element)
+export function inside(x, y, element)
 {
-    const x1 = dragging.offsetLeft
-    const y1 = dragging.offsetTop
-    const w1 = dragging.offsetWidth
-    const h1 = dragging.offsetHeight
     const pos = toGlobal(element)
-    const x2 = pos.x
-    const y2 = pos.y
-    const w2 = element.offsetWidth
-    const h2 = element.offsetHeight
-    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
-}
+    const x1 = pos.x
+    const y1 = pos.y
+    const w1 = element.offsetWidth
+    const h1 = element.offsetHeight
+    return x >= x1 && x <= x1 + w1 && y >= y1 && y <= y1 + h1}
 
 /**
  * determines global location of a div
@@ -112,4 +109,29 @@ export function options(options, defaults)
         options[option] = typeof options[option] !== 'undefined' ? options[option] : defaults[option]
     }
     return options
+}
+
+/**
+ * set a style on an element
+ * @param {HTMLElement} element
+ * @param {string} style
+ * @param {(string|string[])} value - single value or list of possible values (test each one in order to see if it works)
+ */
+export function style(element, style, value)
+{
+    if (Array.isArray(value))
+    {
+        for (let entry of value)
+        {
+            element.style[style] = entry
+            if (element.style[style] === entry)
+            {
+                break
+            }
+        }
+    }
+    else
+    {
+        element.style[style] = value
+    }
 }

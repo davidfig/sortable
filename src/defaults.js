@@ -14,7 +14,8 @@ import icons from './icons'
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
  * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
- * @property {object} [options.childrenStyles] styles to apply to children elements of Sortable
+ * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
+ * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
  * @property {boolean} [options.useIcons=true] show icons when dragging
  * @property {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when not over a sortable
  * @property {object} [options.icons] default set of icons
@@ -24,7 +25,7 @@ import icons from './icons'
  * @property {string} [options.icons.delete]
  * @property {string} [options.customIcon] source of custom image when over this sortable
  */
-module.exports = {
+export default {
     name: 'sortable',
     sort: true,
     copy: false,
@@ -39,11 +40,12 @@ module.exports = {
     deepSearch: false,
     dragStyle: {
         boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
-        opacity: 0.85
+        opacity: 0.85,
+        position: 'absolute',
+        pointerEvents: 'none'
     },
-    childrenStyles: {
-        cursor: 'pointer'
-    },
+    cursorHover: ['grab', '-webkit-grab', 'pointer'],
+    cursorDown: ['grabbing', '-webkit-grabbing', 'pointer'],
     useIcons: true,
     icons
 }

@@ -1,133 +1,23 @@
 <head>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/ascetic.min.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        .title {
-            margin-top: 1%;
-            margin-left: 15%;
-            font-size: 200%;
-        }
-
-        #code {
-            left: 15%;
-            width: 80%;
-            position: absolute;
-            word-wrap: break-word;
-            z-index: -1;
-        }
-
-        .hljs {
-            display: block;
-            overflow-x: auto;
-            padding: 0.5em;
-            background: rgba(0, 0, 100, 0.02);
-        }
-
-        .hljs-comment {
-            color: blue;
-        }
-
-        .font {
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            font-size: 1.25em;
-        }
-
-        .examples {
-            user-select: none;
-        }
-
-        li, .entry {
-            list-style-type: none;
-            padding: 0.5em;
-            width: 10em;
-            background: rgb(230,230,230);
-            margin: 0.25em;
-        }
-
-        .skip {
-            padding: 0.5em;
-            width: 10em;
-            background: rgb(255,200,200);
-            margin: 0.25em;
-        }
-
-        .example-title {
-            text-align: center;
-            font-weight: bold;
-            margin: 1em 1em 0;
-        }
-
-        .example-subtitle {
-            text-align: center;
-            font-size: 0.85em;
-            margin-bottom: 1em;
-        }
-
-        .separator {
-            margin: 2em;
-            width: calc(100% - 4em);
-            border-top: solid 1px black;
-        }
-
-        #example-1, #example-8 {
-            width: fit-content;
-            margin: 0 auto;
-        }
-
-        #example-2, #example-3, #example-5, #example-7, #example-9 {
-            display: flex;
-            justify-content: space-around;
-            background: rgb(249, 249, 249);
-        }
-
-        #example-2 > div, #example-3 > div, #example-4 > div {
-            margin: 0 auto;
-        }
-
-        #example-4 {
-            background: rgb(249, 249, 249);
-        }
-
-        #example-4 > div {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            flex-direction: row;
-            margin-bottom: 1em;
-        }
-
-        .example-6-in {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            flex-direction: row;
-            margin-bottom: 1em;
-        }
-
-        .example-6-out > div {
-            display: flex;
-            justify-content: center;
-        }
-
-    </style>
+    <link rel="stylesheet" href="index.css">
     <script src="index.js"></script>
 </head>
 
 <body>
     <div class="title">Example for <a href="https://github.com/davidfig/sortable/">github.com/davidfig/sortable/</a></div>
     <div class="example-title">1. Sortable List</div>
-    <div class="examples">
+    <div class="example">
+        <div id="example-1-events" class="events"></div>
         <ul id="example-1">
             <li>pencil</li>
             <li>pen</li>
             <li>eraser</li>
         </ul>
-        <div class="separator"></div>
-        <div class="example-title">2. Sortable Between Lists</div>
+    </div>
+    <div class="example-title">2. Sortable Between Lists</div>
+    <div class="example">
+        <div id="example-2-events" class="events"></div>
         <div id="example-2">
             <div>
                 <div class="entry">apple</div>
@@ -144,9 +34,11 @@
                 <div class="entry">bread</div>
             </div>
         </div>
-        <div class="separator"></div>
-        <div class="example-title">3. Sortable List and Ordered List (removable)</div>
-        <div class="example-subtitle">alwaysInList = false</div>
+    </div>
+    <div class="example-title">3. Sortable List and Ordered List (removable)</div>
+    <div class="example-subtitle">alwaysInList = false</div>
+    <div class="example">
+        <div id="example-3-events" class="events"></div>
         <div id="example-3">
             <div>
                 <div class="entry" data-order=1>1. computer</div>
@@ -159,8 +51,10 @@
                 <div class="entry" data-order=6>6. monitor</div>
             </div>
         </div>
-        <div class="separator"></div>
-        <div class="example-title">4. Horizontal Sortable Between Lists</div>
+    </div>
+    <div class="example-title">4. Horizontal Sortable Between Lists</div>
+    <div class="example">
+        <div id="example-4-events" class="events"></div>
         <div id="example-4">
             <div>
                 <div class="entry">egg</div>
@@ -173,9 +67,11 @@
                 <div class="entry">meat</div>
             </div>
         </div>
-        <div class="separator"></div>
-        <div class="example-title">5. Lists With Only Order Members (First Sortable and Second Ordered)</div>
-        <div class="example-subtitle">options.orderClass</div>
+    </div>
+    <div class="example-title">5. Lists With Only Order Members (First Sortable and Second Ordered)</div>
+    <div class="example-subtitle">options.orderClass</div>
+    <div class="example">
+        <div id="example-5-events" class="events"></div>
         <div id="example-5">
             <div>
                 <div class="entry" data-order=1>1. cars</div>
@@ -188,9 +84,11 @@
                 <div class="entry" data-order=6>6. scooters</div>
             </div>
         </div>
-        <div class="separator"></div>
-        <div class="example-title">6. Second List has Bucketed Members (First Sortable and Second Ordered and Deep)</div>
-        <div class="example-subtitle">options.deepClass and placeholders (see HTML)</div>
+    </div>
+    <div class="example-title">6. Second List has Bucketed Members (First Sortable and Second Ordered and Deep)</div>
+    <div class="example-subtitle">options.deepClass and placeholders (see HTML)</div>
+    <div class="example">
+        <div id="example-6-events" class="events"></div>
         <div id="example-6">
             <div class="example-6-in">
                 <div class="entry" data-order=5>5. water</div>
@@ -212,9 +110,11 @@
                 </div>
             </div>
         </div>
-        <div class="separator"></div>
-        <div class="example-title">7. Sortable List and Reverse-Ordered List</div>
-        <div class="example-subtitle">reverseOrder = false</div>
+    </div>
+    <div class="example-title">7. Sortable List and Reverse-Ordered List</div>
+    <div class="example-subtitle">reverseOrder = false</div>
+    <div class="example">
+        <div id="example-7-events" class="events"></div>
         <div id="example-7">
             <div>
                 <div class="entry" data-order=1>1. camel</div>
@@ -227,17 +127,21 @@
                 <div class="entry" data-order=3>3. mouse</div>
             </div>
         </div>
-        <div class="separator"></div>
-        <div class="example-title">8. Removable Sortable List</div>
-        <div class="example-subtitle">alwaysInList = false</div>
+    </div>
+    <div class="example-title">8. Removable Sortable List</div>
+    <div class="example-subtitle">alwaysInList = false</div>
+    <div class="example">
+        <div id="example-8-events" class="events"></div>
         <ul id="example-8">
             <li>gold fish</li>
             <li>rainbow fish</li>
             <li>stingray</li>
             <li>shark</li>
         </ul>
-        <div class="separator"></div>
-        <div class="example-title">9. Copy List and Sortable Lists</div>
+    </div>
+    <div class="example-title">9. Copy List and Sortable Lists</div>
+    <div class="example">
+        <div id="example-9-events" class="events"></div>
         <div id="example-9">
             <div>
                 <div class="entry">coffee</div>
@@ -249,7 +153,6 @@
                 <div class="entry">cookies</div>
             </div>
         </div>
-        <div class="separator"></div>
     </div>
     <pre><code class="javascript" id="code"></code></pre>
 </body>
