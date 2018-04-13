@@ -76,7 +76,7 @@ function events(div, sortables) {
     function on(name, i) {
         var letters = 'ABCDEF';
         sortables[i].on(name, function () {
-            events.innerHTML += '<div>' + letters[i] + ': ' + name + '</div>';
+            events.innerHTML += '<div>' + letters[i] + ': ' + name + '</div>\n';
             events.scrollTop = events.scrollHeight;
         });
     }
@@ -17483,15 +17483,7 @@ module.exports = function(hljs) {
 },{}],183:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _icons = require('./icons');
-
-var _icons2 = _interopRequireDefault(_icons);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var icons = require('./icons');
 
 /**
  * Options for Sortable
@@ -17518,7 +17510,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @property {string} [options.icons.delete]
  * @property {string} [options.customIcon] source of custom image when over this sortable
  */
-exports.default = {
+module.exports = {
     name: 'sortable',
     sort: true,
     drop: true,
@@ -17539,7 +17531,7 @@ exports.default = {
     cursorHover: ['grab', '-webkit-grab', 'pointer'],
     cursorDown: ['grabbing', '-webkit-grabbing', 'pointer'],
     useIcons: true,
-    icons: _icons2.default
+    icons: icons
 };
 
 },{"./icons":184}],184:[function(require,module,exports){
@@ -17550,25 +17542,11 @@ module.exports = { copy: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAU
 },{}],185:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _eventemitter = require('eventemitter3');
 
 var _eventemitter2 = _interopRequireDefault(_eventemitter);
-
-var _defaults = require('./defaults');
-
-var _defaults2 = _interopRequireDefault(_defaults);
-
-var _utils = require('./utils');
-
-var utils = _interopRequireWildcard(_utils);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17577,6 +17555,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var defaults = require('./defaults');
+var utils = require('./utils');
+
+/**
+ * Sortable Class
+ * @class
+ */
 
 var Sortable = function (_Events) {
     _inherits(Sortable, _Events);
@@ -17622,7 +17608,7 @@ var Sortable = function (_Events) {
 
         var _this = _possibleConstructorReturn(this, (Sortable.__proto__ || Object.getPrototypeOf(Sortable)).call(this));
 
-        _this.options = utils.options(options, _defaults2.default);
+        _this.options = utils.options(options, defaults);
         _this.element = element;
         _this._addToGlobalTracker();
         var elements = _this._getChildren();
@@ -17704,7 +17690,7 @@ var Sortable = function (_Events) {
         key: '_mouseDown',
         value: function _mouseDown(e) {
             if (this.options.cursorHover) {
-                utils.style(e.target, 'cursor', this.options.cursorDown);
+                utils.style(e.currentTarget, 'cursor', this.options.cursorDown);
             }
         }
 
@@ -17728,6 +17714,7 @@ var Sortable = function (_Events) {
 
                     this.removeElement(child);
                 }
+                // todo: remove Sortable.tracker and related event handlers if no more sortables
             } catch (err) {
                 _didIteratorError3 = true;
                 _iteratorError3 = err;
@@ -17865,8 +17852,8 @@ var Sortable = function (_Events) {
     }, {
         key: 'removeElement',
         value: function removeElement(element) {
-            element.removeEventListener('mousedown', element.dragStart);
-            element.removeEventListener('touchstart', element.dragStart);
+            element.removeEventListener('mousedown', element.dragMove);
+            element.removeEventListener('touchstart', element.dragMove);
         }
 
         /**
@@ -17880,6 +17867,9 @@ var Sortable = function (_Events) {
             var _this3 = this;
 
             if (!Sortable.tracker) {
+                Sortable.dragImage = document.createElement('div');
+                Sortable.dragImage.id = 'sortable-dragImage';
+                document.body.appendChild(Sortable.dragImage);
                 Sortable.tracker = {};
                 document.body.addEventListener('dragover', function (e) {
                     return _this3._bodyDragOver(e);
@@ -17989,12 +17979,12 @@ var Sortable = function (_Events) {
     }, {
         key: '_dragStart',
         value: function _dragStart(e) {
-            var sortable = e.target.__sortable.original;
-            var dragging = e.target.cloneNode(true);
+            var sortable = e.currentTarget.__sortable.original;
+            var dragging = e.currentTarget.cloneNode(true);
             for (var style in sortable.options.dragStyle) {
                 dragging.style[style] = sortable.options.dragStyle[style];
             }
-            var pos = utils.toGlobal(e.target);
+            var pos = utils.toGlobal(e.currentTarget);
             dragging.style.left = pos.x + 'px';
             dragging.style.top = pos.y + 'px';
             var offset = { x: pos.x - e.pageX, y: pos.y - e.pageY };
@@ -18010,13 +18000,13 @@ var Sortable = function (_Events) {
                 dragging.icon = image;
             }
             if (sortable.options.cursorHover) {
-                utils.style(e.target, 'cursor', sortable.options.cursorHover);
+                utils.style(e.currentTarget, 'cursor', sortable.options.cursorHover);
             }
-            var target = e.target;
+            var target = e.currentTarget;
             if (sortable.options.copy) {
-                target = e.target.cloneNode(true);
-                target.id = e.target.id + '-copy-' + e.target.__sortable.copy;
-                e.target.__sortable.copy++;
+                target = e.currentTarget.cloneNode(true);
+                target.id = e.currentTarget.id + '-copy-' + e.currentTarget.__sortable.copy;
+                e.currentTarget.__sortable.copy++;
                 sortable.attachElement(target);
                 target.__sortable.isCopy = true;
                 target.__sortable.original = this;
@@ -18027,7 +18017,7 @@ var Sortable = function (_Events) {
             e.dataTransfer.clearData();
             e.dataTransfer.setData(sortable.options.name, sortable.options.name);
             e.dataTransfer.setData(target.id, target.id);
-            e.dataTransfer.setDragImage(document.createElement('div'), 0, 0);
+            e.dataTransfer.setDragImage(Sortable.dragImage, 0, 0);
             target.__sortable.current = this;
             target.__sortable.index = sortable.options.copy ? -1 : sortable._getIndex(target);
             target.__sortable.dragging = dragging;
@@ -18094,7 +18084,7 @@ var Sortable = function (_Events) {
                     }
                     this.emit('update', element, this);
                 } else {
-                    if (element.__sortable.index !== this._getIndex(e.target)) {
+                    if (element.__sortable.index !== this._getIndex(e.currentTarget)) {
                         this.emit('order', element, this);
                         this.emit('update', element, this);
                     }
@@ -18173,7 +18163,6 @@ var Sortable = function (_Events) {
                 element.style.display = element.__sortable.display === 'unset' ? '' : element.__sortable.display;
                 element.__sortable.display = null;
             }
-
             if (this.options.sort) {
                 this._placeInSortableList(sortable, x, y, element);
             } else {
@@ -18184,6 +18173,7 @@ var Sortable = function (_Events) {
 
         /**
          * replace item in list at original index position
+         * @private
          */
 
     }, {
@@ -18379,6 +18369,74 @@ var Sortable = function (_Events) {
         }
 
         /**
+         * search for where to place using distance
+         * @param {Sortable} sortable
+         * @param {HTMLElement} dragging
+         * @param {number} x
+         * @param {number} y
+         * @return {boolean} false=nothing to do
+         */
+
+    }, {
+        key: '_placeByDistance',
+        value: function _placeByDistance(sortable, dragging, x, y) {
+            var distance = Infinity,
+                closest = void 0,
+                isBefore = void 0,
+                indicator = void 0;
+            var element = sortable.element;
+            var elements = sortable._getChildren(true);
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
+
+            try {
+                for (var _iterator9 = elements[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var child = _step9.value;
+
+                    if (child === dragging) {
+                        indicator = true;
+                    }
+                    if (utils.inside(x, y, child)) {
+                        closest = child;
+                        isBefore = indicator;
+                        break;
+                    } else {
+                        var measure = utils.distanceToClosestCorner(x, y, child);
+                        if (measure < distance) {
+                            closest = child;
+                            distance = measure;
+                            isBefore = indicator;
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError9 = true;
+                _iteratorError9 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                        _iterator9.return();
+                    }
+                } finally {
+                    if (_didIteratorError9) {
+                        throw _iteratorError9;
+                    }
+                }
+            }
+
+            if (closest === dragging) {
+                return true;
+            }
+            if (isBefore) {
+                element.insertBefore(dragging, closest.nextSibling);
+            } else {
+                element.insertBefore(dragging, closest);
+            }
+            sortable.emit('order-pending', dragging, sortable);
+        }
+
+        /**
          * place indicator in an sortable list
          * @param {number} x
          * @param {number} y
@@ -18399,63 +18457,8 @@ var Sortable = function (_Events) {
                 }
                 element.appendChild(dragging);
             } else {
-                var distance = Infinity,
-                    closest = void 0,
-                    isBefore = void 0,
-                    indicator = void 0;
-                var _elements = sortable._getChildren(true);
-                var _iteratorNormalCompletion9 = true;
-                var _didIteratorError9 = false;
-                var _iteratorError9 = undefined;
-
-                try {
-                    for (var _iterator9 = _elements[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                        var child = _step9.value;
-
-                        if (child === dragging) {
-                            indicator = true;
-                        }
-                        if (utils.inside(x, y, child)) {
-                            if (child === dragging) {
-                                return;
-                            }
-                            closest = child;
-                            isBefore = indicator;
-                            break;
-                        } else {
-                            var measure = utils.distanceToClosestCorner(x, y, child);
-                            if (measure < distance) {
-                                closest = child;
-                                distance = measure;
-                                isBefore = indicator;
-                            }
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError9 = true;
-                    _iteratorError9 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                            _iterator9.return();
-                        }
-                    } finally {
-                        if (_didIteratorError9) {
-                            throw _iteratorError9;
-                        }
-                    }
-                }
-
-                if (closest) {
-                    if (closest === dragging) {
-                        return;
-                    }
-                    if (isBefore) {
-                        element.insertBefore(dragging, closest.nextSibling);
-                    } else {
-                        element.insertBefore(dragging, closest);
-                    }
-                    sortable.emit('order-pending', dragging, sortable);
+                if (this._placeByDistance(sortable, dragging, x, y)) {
+                    return;
                 }
             }
             if (dragging.__sortable.current !== sortable) {
@@ -18536,7 +18539,7 @@ var Sortable = function (_Events) {
     }, {
         key: 'defaults',
         get: function get() {
-            return _defaults2.default;
+            return defaults;
         }
     }]);
 
@@ -18620,28 +18623,16 @@ var Sortable = function (_Events) {
  * @property {Sortable} current sortable with element placeholder
  */
 
-
-exports.default = Sortable;
+module.exports = Sortable;
 
 },{"./defaults":183,"./utils":186,"eventemitter3":3}],186:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.containsClassName = containsClassName;
-exports.distance = distance;
-exports.distanceToClosestCorner = distanceToClosestCorner;
-exports.inside = inside;
-exports.toGlobal = toGlobal;
-exports.options = options;
-exports.style = style;
 /**
  * Whether element contains classname
  * @param {HTMLElement} e
  * @param {string} name
  * @returns {boolean}
- * @private
  */
 function containsClassName(e, name) {
     if (e.className) {
@@ -18799,5 +18790,39 @@ function style(element, style, value) {
         element.style[style] = value;
     }
 }
+
+/**
+ * calculate percentage of overlap between two boxes
+ * from https://stackoverflow.com/a/21220004/1955997
+ * @param {number} xa1
+ * @param {number} ya1
+ * @param {number} xa2
+ * @param {number} xa2
+ * @param {number} xb1
+ * @param {number} yb1
+ * @param {number} xb2
+ * @param {number} yb2
+ */
+function percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2) {
+    var sa = (xa2 - xa1) * (ya2 - ya1);
+    var sb = (xb2 - xb1) * (yb2 - yb1);
+    var si = Math.max(0, Math.min(xa2, xb2) - Math.max(xa1, xb1)) * Math.max(0, Math.min(ya2, yb2) - Math.max(ya1, yb1));
+    var union = sa + sb - si;
+    if (union !== 0) {
+        return si / union;
+    } else {
+        return 0;
+    }
+}
+
+module.exports = {
+    containsClassName: containsClassName,
+    distanceToClosestCorner: distanceToClosestCorner,
+    inside: inside,
+    toGlobal: toGlobal,
+    options: options,
+    style: style,
+    percentage: percentage
+};
 
 },{}]},{},[1]);
