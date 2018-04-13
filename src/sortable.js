@@ -35,11 +35,13 @@ class Sortable extends Events
      * @fires remove
      * @fires update
      * @fires delete
+     * @fires copy
      * @fires order-pending
      * @fires add-pending
      * @fires remove-pending
      * @fires update-pending
      * @fires delete-pending
+     * @fires copy-pending
      */
     constructor(element, options)
     {
@@ -490,6 +492,10 @@ class Sortable extends Events
                 {
                     this.emit('order', element, this)
                 }
+                if (element.__sortable.isCopy)
+                {
+                    this.emit('copy', element, this)
+                }
                 this.emit('update', element, this)
             }
             else
@@ -723,6 +729,10 @@ class Sortable extends Events
             }
             dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
             sortable.emit('add-pending', dragging, sortable)
+            if (dragging.__sortable.isCopy)
+            {
+                sortable.emit('copy-pending', dragging, sortable)
+            }
             dragging.__sortable.current = sortable
             sortable.emit('update-pending', dragging, sortable)
         }
@@ -853,6 +863,10 @@ class Sortable extends Events
                 dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
                 dragging.__sortable.current = sortable
                 sortable.emit('add-pending', dragging, sortable)
+                if (dragging.__sortable.isCopy)
+                {
+                    sortable.emit('copy-pending', dragging, sortable)
+                }
             }
             element.appendChild(dragging)
         }
@@ -867,6 +881,10 @@ class Sortable extends Events
         if (dragging.__sortable.current !== sortable)
         {
             sortable.emit('add-pending', dragging, sortable)
+            if (dragging.__sortable.isCopy)
+            {
+                sortable.emit('copy-pending', dragging, sortable)
+            }
             dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
             dragging.__sortable.current = sortable
         }
@@ -948,6 +966,13 @@ class Sortable extends Events
  */
 
 /**
+ * fires when a copy of an element is dropped
+ * @event Sortable#copy
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
  * fires when the sortable is updated with an add, remove, or order change
  * @event Sortable#update
  * @property {HTMLElement} element changed
@@ -987,6 +1012,13 @@ class Sortable extends Events
  * @event Sortable#update-pending
  * @property {HTMLElement} element being dragged
  * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
+ * fires when a copy of an element is about to drop
+ * @event Sortable#copy-pending
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
  */
 
 module.exports = Sortable

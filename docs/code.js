@@ -84,11 +84,13 @@ function events(div, sortables)
         on('delete-pending', i)
         on('order-pending', i)
         on('update-pending', i)
+        on('copy-pending', i)
         on('add', i)
         on('remove', i)
         on('delete', i)
         on('order', i)
         on('update', i)
+        on('copy', i)
     }
 }
 
