@@ -792,19 +792,24 @@ class Sortable extends Events
      */
     _placeByDistance(sortable, dragging, x, y)
     {
-        let distance = Infinity, closest, isBefore, indicator
+        if (utils.inside(x, y, dragging))
+        {
+            return true
+        }
+        let index = -1
+        if (dragging.__sortable.current === sortable)
+        {
+            index = sortable._getIndex(dragging)
+            sortable.element.appendChild(dragging)
+        }
+        let distance = Infinity, closest
         const element = sortable.element
         const elements = sortable._getChildren(true)
         for (let child of elements)
         {
-            if (child === dragging)
-            {
-                indicator = true
-            }
             if (utils.inside(x, y, child))
             {
                 closest = child
-                isBefore = indicator
                 break
             }
             else
@@ -814,21 +819,13 @@ class Sortable extends Events
                 {
                     closest = child
                     distance = measure
-                    isBefore = indicator
                 }
             }
         }
-        if (closest === dragging)
+        element.insertBefore(dragging, closest)
+        if (index === sortable._getIndex(dragging))
         {
             return true
-        }
-        if (isBefore)
-        {
-            element.insertBefore(dragging, closest.nextSibling)
-        }
-        else
-        {
-            element.insertBefore(dragging, closest)
         }
         sortable.emit('order-pending', dragging, sortable)
     }
@@ -856,8 +853,8 @@ class Sortable extends Events
         }
         else
         {
-            const percentage = this._placeByPercentage(sortable, dragging)
-            if (percentage === 1 || (percentage === 0 && this._placeByDistance(sortable, dragging, x, y)))
+            // const percentage = this._placeByPercentage(sortable, dragging)
+            if (this._placeByDistance(sortable, dragging, x, y))
             {
                 return
             }
@@ -987,4 +984,4 @@ class Sortable extends Events
  * @property {Sortable} current sortable with element placeholder
  */
 
- module.exports = Sortable
+module.exports = Sortable
