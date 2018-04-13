@@ -1,0 +1,196 @@
+<head>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/ascetic.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <div class="title">Example for
+        <a href="https://github.com/davidfig/sortable/">github.com/davidfig/sortable/</a>
+    </div>
+    <div class="example-title">1. Sortable List</div>
+    <div class="example">
+        <div id="example-1-events" class="events"></div>
+        <ul id="example-1">
+            <li>pencil</li>
+            <li>pen</li>
+            <li>eraser</li>
+        </ul>
+    </div>
+    <div class="example-title">2. Sortable Between Lists</div>
+    <div class="example">
+        <div id="example-2-events" class="events"></div>
+        <div id="example-2">
+            <div>
+                <div class="entry">apple</div>
+                <div class="entry">orange</div>
+                <div class="entry">pear</div>
+            </div>
+            <div>
+                <div class="entry">asparagus</div>
+                <div class="entry">cabbage</div>
+                <div class="entry">green beans</div>
+            </div>
+            <div>
+                <div class="entry">rice</div>
+                <div class="entry">bread</div>
+            </div>
+        </div>
+    </div>
+    <div class="example-title">3. Sortable List and Ordered List</div>
+    <div class="example">
+        <div id="example-3-events" class="events"></div>
+        <div id="example-3">
+            <div>
+                <div class="entry" data-order=1>1. computer</div>
+                <div class="entry" data-order=2>2. mouse</div>
+                <div class="entry" data-order=4>4. keyboard</div>
+            </div>
+            <div>
+                <div class="entry" data-order=3>3. game pad</div>
+                <div class="entry" data-order=5>5. speakers</div>
+                <div class="entry" data-order=6>6. monitor</div>
+            </div>
+        </div>
+    </div>
+    <div class="example-title">4. Horizontal Sortable Between Lists</div>
+    <div class="example">
+        <div id="example-4-events" class="events"></div>
+        <div id="example-4">
+            <div>
+                <div class="entry long">egg</div>
+                <div class="entry small">milk</div>
+                <div class="entry small">cheese</div>
+            </div>
+            <div>
+                <div class="entry long">soup</div>
+                <div class="entry small">dessert</div>
+                <div class="entry long">meat</div>
+            </div>
+        </div>
+    </div>
+    <div class="example-title">5. Lists With Only Order Members (First Sortable and Second Ordered)</div>
+    <div class="example-subtitle">B: options.orderClass</div>
+    <div class="example">
+        <div id="example-5-events" class="events"></div>
+        <div id="example-5">
+            <div>
+                <div class="entry" data-order=1>1. cars</div>
+                <div class="skip" data-order=2>2. motorcycles</div>
+                <div class="entry" data-order=4>4. bicycles</div>
+            </div>
+            <div>
+                <div class="skip" data-order=3>3. skateboards</div>
+                <div class="entry" data-order=5>5. feet</div>
+                <div class="entry" data-order=6>6. scooters</div>
+            </div>
+        </div>
+    </div>
+    <div class="example-title">6. Second List has Bucketed Members (First Sortable and Second Ordered and Deep)</div>
+    <div class="example-subtitle">B: options.deepClass and placeholders (see HTML)</div>
+    <div class="example">
+        <div id="example-6-events" class="events"></div>
+        <div id="example-6">
+            <div class="example-6-in">
+                <div class="entry" data-order=5>5. water</div>
+                <div class="entry" data-order=11>11. vodka</div>
+                <div class="entry" data-order=4>4. soda</div>
+            </div>
+            <div class="example-6-out">
+                <div>
+                    <div class="skip" data-order=1>1. non-alcoholic</div>
+                    <div class="entry" data-order=2>2. juice</div>
+                    <div class="entry" data-order=3>3. milk</div>
+                    <div data-order=9.9></div>
+                    <!-- placeholder to ensure proper bucket ordering -->
+                </div>
+                <div>
+                    <div class="skip" data-order=10>10. alcoholic</div>
+                    <div class="entry" data-order=12>12. beer</div>
+                    <div class="entry" data-order=13>13. wine</div>
+                    <div data-order=20></div>
+                    <!-- placeholder to ensure proper bucket ordering -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="example-title">7. Sortable List and Reverse-Ordered List</div>
+    <div class="example-subtitle">B: reverseOrder = false</div>
+    <div class="example">
+        <div id="example-7-events" class="events"></div>
+        <div id="example-7">
+            <div>
+                <div class="entry" data-order=1>1. camel</div>
+                <div class="entry" data-order=2>2. horse</div>
+                <div class="entry" data-order=4>4. sheep</div>
+            </div>
+            <div>
+                <div class="entry" data-order=6>6. elephant</div>
+                <div class="entry" data-order=5>5. racoon</div>
+                <div class="entry" data-order=3>3. mouse</div>
+            </div>
+        </div>
+    </div>
+    <div class="example-title">8. Cancelable Sortable List</div>
+    <div class="example-subtitle">B: options.offList = 'cancel'</div>
+    <div class="example">
+        <div id="example-8-events" class="events"></div>
+        <div id="example-8">
+            <div>
+                <div class="entry">gold fish</div>
+                <div class="entry">rainbow fish</div>
+                <div class="entry">clown fish</div>
+            </div>
+            <div>
+                <div class="entry">stingray</div>
+                <div class="entry">shark</div>
+                <div class="entry">hammerhead</div>
+            </div>
+        </div>
+    </div>
+    <div class="example-title">9. Deletable Sortable List</div>
+    <div class="example-subtitle">B: options.offList = 'delete'</div>
+    <div class="example">
+        <div id="example-9-events" class="events"></div>
+        <ul id="example-9">
+            <li>table</li>
+            <li>chairs</li>
+            <li>desk</li>
+            <li>stool</li>
+        </ul>
+    </div>
+    <div class="example-title">10. Sortable List and Undroppable List</div>
+    <div class="example-subtitle">B: options.drop = false</div>
+    <div class="example">
+        <div id="example-10-events" class="events"></div>
+        <div id="example-10">
+            <div>
+                <div class="entry">coffee</div>
+                <div class="entry">tea</div>
+                <div class="entry">hot water</div>
+            </div>
+            <div>
+                <div class="entry">biscuits</div>
+                <div class="entry">cookies</div>
+            </div>
+        </div>
+    </div>
+    <div class="example-title">11. Sortable List and Copyable List</div>
+    <div class="example-subtitle">B: options.copy = true</div>
+    <div class="example">
+        <div id="example-11-events" class="events"></div>
+        <div id="example-11">
+            <div>
+                <div class="entry">apple</div>
+                <div class="entry">google</div>
+                <div class="entry">microsoft</div>
+            </div>
+            <div>
+                <div class="entry">phone</div>
+                <div class="entry">PC</div>
+                <div class="entry">tablet</div>
+            </div>
+        </div>
+    </div>
+    <pre><code class="javascript" id="code"></code></pre>
+</body>
