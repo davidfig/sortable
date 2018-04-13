@@ -66,6 +66,19 @@ li {
     margin: 0.25em 2em;
 }
 
+.long {
+    padding: 0.5em;
+    width: 10em;
+    background: rgb(230,230,230);
+    margin: 0.25em 0.25em;
+}
+
+.small {
+    width: 5em;
+    overflow: hidden;
+    margin: 0.25em 0.25em;
+}
+
 .skip {
     padding: 0.5em;
     width: 10em;

@@ -70,7 +70,7 @@ function events(div, sortables)
         const letters = 'ABCDEF'
         sortables[i].on(name, () =>
         {
-            events.innerHTML += '<div>' + letters[i] + ': ' + name + '</div>'
+            events.innerHTML += '<div>' + letters[i] + ': ' + name + '</div>\n'
             events.scrollTop = events.scrollHeight
         })
     }

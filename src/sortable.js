@@ -230,8 +230,8 @@ class Sortable extends Events
      */
     removeElement(element)
     {
-        element.removeEventListener('mousedown', element.dragStart)
-        element.removeEventListener('touchstart', element.dragStart)
+        element.removeEventListener('mousedown', element.dragMove)
+        element.removeEventListener('touchstart', element.dragMove)
     }
 
     /**
@@ -543,7 +543,6 @@ class Sortable extends Events
             element.style.display = element.__sortable.display === 'unset' ? '' : element.__sortable.display
             element.__sortable.display = null
         }
-
         if (this.options.sort)
         {
             this._placeInSortableList(sortable, x, y, element)
@@ -718,6 +717,116 @@ class Sortable extends Events
     }
 
     /**
+     * search for where to place using distance
+     * @param {Sortable} sortable
+     * @param {HTMLElement} dragging
+     * @param {number} x
+     * @param {number} y
+     * @return {boolean} false=nothing to do
+     */
+    _placeByDistance(sortable, dragging, x, y)
+    {
+        let distance = Infinity, closest, isBefore, indicator
+        const element = sortable.element
+        const elements = sortable._getChildren(true)
+        for (let child of elements)
+        {
+            if (child === dragging)
+            {
+                indicator = true
+            }
+            if (utils.inside(x, y, child))
+            {
+                closest = child
+                isBefore = indicator
+                break
+            }
+            else
+            {
+                const measure = utils.distanceToClosestCorner(x, y, child)
+                if (measure < distance)
+                {
+                    closest = child
+                    distance = measure
+                    isBefore = indicator
+                }
+            }
+        }
+        if (closest === dragging)
+        {
+            return true
+        }
+        if (isBefore)
+        {
+            element.insertBefore(dragging, closest.nextSibling)
+        }
+        else
+        {
+            element.insertBefore(dragging, closest)
+        }
+        sortable.emit('order-pending', dragging, sortable)
+    }
+
+    /**
+     * search for where to place using percentage
+     * @param {Sortable} sortable
+     * @param {HTMLElement} dragging
+     * @returns {number} 0 = not found; 1 = nothing to do; 2 = moved
+     */
+    _placeByPercentage(sortable, dragging)
+    {
+        const cursor = dragging.__sortable.dragging
+        const xa1 = cursor.offsetLeft
+        const ya1 = cursor.offsetTop
+        const xa2 = cursor.offsetLeft + cursor.offsetWidth
+        const ya2 = cursor.offsetTop + cursor.offsetHeight
+        let largest = 0, closest, isBefore, indicator
+        const element = sortable.element
+        const elements = sortable._getChildren(true)
+        for (let child of elements)
+        {
+            if (child === dragging)
+            {
+                indicator = true
+            }
+            const pos = utils.toGlobal(child)
+            const xb1 = pos.x
+            const yb1 = pos.y
+            const xb2 = pos.x + child.offsetWidth
+            const yb2 = pos.y + child.offsetHeight
+            const percentage = utils.percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
+            if (percentage > largest)
+            {
+                largest = percentage
+                closest = child
+                isBefore = indicator
+            }
+        }
+        if (closest)
+        {
+            if (closest === dragging)
+            {
+                return 1
+            }
+            if (isBefore && closest.nextSibling)
+            {
+                element.insertBefore(dragging, closest.nextSibling)
+                sortable.emit('order-pending', sortable)
+            }
+            else
+            {
+                element.insertBefore(dragging, closest)
+                sortable.emit('order-pending', sortable)
+            }
+            return 2
+        }
+        else
+        {
+            return 0
+        }
+    }
+
+    /**
      * place indicator in an sortable list
      * @param {number} x
      * @param {number} y
@@ -740,51 +849,18 @@ class Sortable extends Events
         }
         else
         {
-            let distance = Infinity, closest, isBefore, indicator
-            const elements = sortable._getChildren(true)
-            for (let child of elements)
-            {
-                if (child === dragging)
-                {
-                    indicator = true
-                }
-                if (utils.inside(x, y, child))
-                {
-                    if (child === dragging)
-                    {
-                        return
-                    }
-                    closest = child
-                    isBefore = indicator
-                    break
-                }
-                else
-                {
-                    const measure = utils.distanceToClosestCorner(x, y, child)
-                    if (measure < distance)
-                    {
-                        closest = child
-                        distance = measure
-                        isBefore = indicator
-                    }
-                }
-            }
-            if (closest)
-            {
-                if (closest === dragging)
+            // const percentage = this._placeByPercentage(sortable, dragging, x, y)
+            // if (percentage === 1)
+            // {
+            //     return
+            // }
+            // else if (percentage === 0)
+            // {
+                if (this._placeByDistance(sortable, dragging, x, y))
                 {
                     return
                 }
-                if (isBefore)
-                {
-                    element.insertBefore(dragging, closest.nextSibling)
-                }
-                else
-                {
-                    element.insertBefore(dragging, closest)
-                }
-                sortable.emit('order-pending', dragging, sortable)
-            }
+            // }
         }
         if (dragging.__sortable.current !== sortable)
         {

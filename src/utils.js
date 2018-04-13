@@ -153,7 +153,14 @@ function percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
     const sb = (xb2 - xb1) * (yb2 - yb1)
     const si = Math.max(0, Math.min(xa2, xb2) - Math.max(xa1, xb1)) * Math.max(0, Math.min(ya2, yb2) - Math.max(ya1, yb1))
     const union = sa + sb - si
-    return si / union
+    if (union !== 0)
+    {
+        return si / union
+    }
+    else
+    {
+        return 0
+    }
 }
 
 module.exports = {
