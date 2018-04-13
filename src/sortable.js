@@ -10,25 +10,37 @@ export default class Sortable extends Events
      * @param {HTMLElement} element
      * @param {object} [options]
      * @param {string} [options.name=sortable] dragging is allowed between Sortables with the same name
-     * @param {boolean} [options.drop=true] allow drop from related sortables
-     * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise uses first-level children
+     * @param {string} [options.dragClass] if set then drag only items with this className under element; otherwise drag all children
+     * @param {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
      * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
-     * @param {boolean} [options.alwaysInList=true] place element inside closest dropable sortable; if set to false then the object is removed if dropped outside related sortables
+     * @param {boolean} [options.sort=true] allow sorting within list
+     * @param {boolean} [options.copy=false] create copy when dragging an item
+     * @param {boolean} [options.drop=true] allow drop from related sortables
+     * @param {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
+     * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
+     * @param {string} [options.reverseOrder] reverse sort the orderId
+     * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
+     * @param {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
+     * @param {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
+     * @param {boolean} [options.useIcons=true] show icons when dragging
+     * @param {boolean} [options.useDeleteIcon=false] use delete icon instead of cancel icon when not over a sortable
      * @param {object} [options.icons] default set of icons
-     * @param {string} [options.icons.reorder] source of image
-     * @param {string} [options.icons.move] source of image
-     * @param {string} [options.icons.copy] source of image
-     * @param {string} [options.icons.delete] source of image
+     * @param {string} [options.icons.reorder]
+     * @param {string} [options.icons.move]
+     * @param {string} [options.icons.copy]
+     * @param {string} [options.icons.delete]
      * @param {string} [options.customIcon] source of custom image when over this sortable
      * @fires pickup
      * @fires order
      * @fires add
      * @fires remove
      * @fires update
+     * @fires delete
      * @fires order-pending
      * @fires add-pending
      * @fires remove-pending
      * @fires update-pending
+     * @fires delete-pending
      */
     constructor(element, options)
     {
@@ -254,13 +266,19 @@ export default class Sortable extends Events
             }
             else
             {
-                e.dataTransfer.dropEffect = 'none'
+                e.dataTransfer.dropEffect = 'move'
                 const id = e.dataTransfer.types[1]
                 const element = document.getElementById(id)
                 if (element)
                 {
                     this._updateDragging(e, element)
                     this._setIcon(element, null)
+                    if (!element.__sortable.display)
+                    {
+                        element.__sortable.display = element.style.display || 'unset'
+                        element.style.display = 'none'
+                        element.__sortable.original.emit('delete-pending', element, element.__sortable.original)
+                    }
                 }
             }
             e.preventDefault()
@@ -278,12 +296,23 @@ export default class Sortable extends Events
         if (name)
         {
             const sortable = this._findClosest(e, Sortable.tracker[name].list)
-            if (sortable)
+            const id = e.dataTransfer.types[1]
+            const element = document.getElementById(id)
+            if (element)
             {
-                const id = e.dataTransfer.types[1]
-                const element = document.getElementById(id)
+                if (sortable)
+                {
+                    e.preventDefault()
+                }
                 this._removeDragging(element.__sortable.dragging)
-                e.preventDefault()
+                if (element.__sortable.display)
+                {
+                    element.remove()
+                    element.style.display = element.__sortable.display
+                    element.__sortable.display = null
+                    element.__sortable.original.emit('delete', element, element.__sortable.original)
+                    element.__sortable.original = null
+                }
             }
         }
     }
@@ -444,6 +473,12 @@ export default class Sortable extends Events
      */
     _placeInList(sortable, x, y, element)
     {
+        if (element.__sortable.display)
+        {
+            element.style.display = element.__sortable.display === 'unset' ? '' : element.__sortable.display
+            element.__sortable.display = null
+        }
+
         if (this.options.sort)
         {
             this._placeInSortableList(sortable, x, y, element)
@@ -723,6 +758,13 @@ export default class Sortable extends Events
  */
 
 /**
+ * fires when an element is removed from all sortables
+ * @event Sortable#delete
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
  * fires when the sortable is updated with an add, remove, or order change
  * @event Sortable#update
  * @property {HTMLElement} element changed
@@ -748,6 +790,13 @@ export default class Sortable extends Events
  * @event Sortable#remove-pending
  * @property {HTMLElement} element being dragged
  * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
+ * fires when an element is about to be removed from all sortables
+ * @event Sortable#delete-pending
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
  */
 
 /**

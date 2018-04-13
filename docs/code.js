@@ -14,8 +14,8 @@ function test()
     events(two, [a2, b2, c2])
 
     const three = document.getElementById('example-3')
-    const a3 = new Sortable(three.children[0], { name: 'list-3', alwaysInList: false })
-    const b3 = new Sortable(three.children[1], { name: 'list-3', sort: false, alwaysInList: false })
+    const a3 = new Sortable(three.children[0], { name: 'list-3', alwaysInList: false, useDeleteIcon: true })
+    const b3 = new Sortable(three.children[1], { name: 'list-3', sort: false, alwaysInList: false, useDeleteIcon: true })
     events(three, [a3, b3])
 
     const four = document.getElementById('example-4')
@@ -71,10 +71,12 @@ function events(div, sortables)
     {
         on('add-pending', i)
         on('remove-pending', i)
+        on('delete-pending', i)
         on('order-pending', i)
         on('update-pending', i)
         on('add', i)
         on('remove', i)
+        on('delete', i)
         on('order', i)
         on('update', i)
     }
