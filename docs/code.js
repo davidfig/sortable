@@ -51,6 +51,11 @@ function test()
     const a10 = new Sortable(ten.children[0], { name: 'list-10' })
     const b10 = new Sortable(ten.children[1], { name: 'list-10', drop: false })
     events(ten, [a10, b10])
+
+    const eleven = document.getElementById('example-11')
+    const a11 = new Sortable(eleven.children[0], { name: 'list-11' })
+    const b11 = new Sortable(eleven.children[1], { name: 'list-11', copy: true })
+    events(eleven, [a11, b11])
 }
 
 /**

@@ -14,8 +14,8 @@ export default class Sortable extends Events
      * @param {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
      * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
      * @param {boolean} [options.sort=true] allow sorting within list
-     * @param {boolean} [options.copy=false] create copy when dragging an item
-     * @param {boolean} [options.drop=true] allow drop from related sortables
+     * @param {boolean} [options.drop=true] allow drop from related sortables (doesn't impact reordering this sortable's children until the children are moved to a differen sortable)
+     * @param {boolean} [options.copy=false] create copy when dragging an item (this disables sort=true for this sortable)
      * @param {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
      * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
      * @param {string} [options.reverseOrder] reverse sort the orderId
@@ -209,6 +209,10 @@ export default class Sortable extends Events
                 element.id = '__sortable-' + this.options.name + '-' + Sortable.tracker[this.options.name].counter
                 Sortable.tracker[this.options.name].counter++
             }
+            if (this.options.copy)
+            {
+                element.__sortable.copy = 0
+            }
             element.addEventListener('dragstart', element.__sortable.dragStart)
             element.setAttribute('draggable', true)
         }
@@ -277,9 +281,10 @@ export default class Sortable extends Events
     /**
      * handle no drop
      * @param {UIEvent} e
+     * @param {boolean} [cancel] force cancel (for options.copy)
      * @private
      */
-    _noDrop(e)
+    _noDrop(e, cancel)
     {
         e.dataTransfer.dropEffect = 'move'
         const id = e.dataTransfer.types[1]
@@ -287,19 +292,22 @@ export default class Sortable extends Events
         if (element)
         {
             this._updateDragging(e, element)
-            this._setIcon(element, null)
-            if (element.__sortable.original.options.offList === 'delete')
+            this._setIcon(element, null, cancel)
+            if (!cancel)
             {
-                if (!element.__sortable.display)
+                if (element.__sortable.original.options.offList === 'delete')
                 {
-                    element.__sortable.display = element.style.display || 'unset'
-                    element.style.display = 'none'
-                    element.__sortable.original.emit('delete-pending', element, element.__sortable.original)
+                    if (!element.__sortable.display)
+                    {
+                        element.__sortable.display = element.style.display || 'unset'
+                        element.style.display = 'none'
+                        element.__sortable.original.emit('delete-pending', element, element.__sortable.original)
+                    }
                 }
-            }
-            else
-            {
-                this._replaceInList(element.__sortable.original, element)
+                else
+                {
+                    this._replaceInList(element.__sortable.original, element)
+                }
             }
         }
     }
@@ -323,7 +331,7 @@ export default class Sortable extends Events
                 {
                     e.preventDefault()
                 }
-                this._removeDragging(element.__sortable.dragging)
+                this._removeDragging(element)
                 if (element.__sortable.display)
                 {
                     element.remove()
@@ -343,20 +351,21 @@ export default class Sortable extends Events
      */
     _dragStart(e)
     {
+        const sortable = e.target.__sortable.original
         const dragging = e.target.cloneNode(true)
-        for (let style in this.options.dragStyle)
+        for (let style in sortable.options.dragStyle)
         {
-            dragging.style[style] = this.options.dragStyle[style]
+            dragging.style[style] = sortable.options.dragStyle[style]
         }
         const pos = utils.toGlobal(e.target)
         dragging.style.left = pos.x + 'px'
         dragging.style.top = pos.y + 'px'
         const offset = { x: pos.x - e.pageX, y: pos.y - e.pageY }
         document.body.appendChild(dragging)
-        if (this.options.useIcons)
+        if (sortable.options.useIcons)
         {
             const image = new Image()
-            image.src = this.options.icons.reorder
+            image.src = sortable.options.icons.reorder
             image.style.position = 'absolute'
             image.style.transform = 'translate(-50%, -50%)'
             image.style.left = dragging.offsetLeft + dragging.offsetWidth + 'px'
@@ -364,18 +373,31 @@ export default class Sortable extends Events
             document.body.appendChild(image)
             dragging.icon = image
         }
-        e.dataTransfer.clearData()
-        e.dataTransfer.setData(this.options.name, this.options.name)
-        e.dataTransfer.setData(e.target.id, e.target.id)
-        e.dataTransfer.setDragImage(document.createElement('canvas'), 0, 0)
-        e.target.__sortable.current = this
-        e.target.__sortable.index = this._getIndex(e.target)
-        e.target.__sortable.dragging = dragging
-        e.target.__sortable.offset = offset
-        if (this.options.cursorHover)
+        if (sortable.options.cursorHover)
         {
-            utils.style(e.target, 'cursor', this.options.cursorHover)
+            utils.style(e.target, 'cursor', sortable.options.cursorHover)
         }
+        let target = e.target
+        if (sortable.options.copy)
+        {
+            target = e.target.cloneNode(true)
+            target.id = e.target.id + '-copy-' + e.target.__sortable.copy
+            e.target.__sortable.copy++
+            sortable.attachElement(target)
+            target.__sortable.isCopy = true
+            target.__sortable.original = this
+            target.__sortable.display = target.style.display || 'unset'
+            target.style.display = 'none'
+            document.body.appendChild(target)
+        }
+        e.dataTransfer.clearData()
+        e.dataTransfer.setData(sortable.options.name, sortable.options.name)
+        e.dataTransfer.setData(target.id, target.id)
+        e.dataTransfer.setDragImage(document.createElement('div'), 0, 0)
+        target.__sortable.current = this
+        target.__sortable.index = sortable.options.copy ? -1 : sortable._getIndex(target)
+        target.__sortable.dragging = dragging
+        target.__sortable.offset = offset
     }
 
     _dragOver(e)
@@ -385,10 +407,14 @@ export default class Sortable extends Events
         {
             const id = e.dataTransfer.types[1]
             const element = document.getElementById(id)
-            if (this.options.drop || element.__sortable.original === this)
+            if (element.__sortable.isCopy && element.__sortable.original === this)
+            {
+                this._noDrop(e, true)
+            }
+            else if (this.options.drop || element.__sortable.original === this)
             {
                 this._placeInList(this, e.pageX, e.pageY, element)
-                e.dataTransfer.dropEffect = 'move'
+                e.dataTransfer.dropEffect = element.__sortable.isCopy ? 'copy' : 'move'
                 this._updateDragging(e, element)
             }
             else
@@ -416,13 +442,16 @@ export default class Sortable extends Events
         }
     }
 
-    _removeDragging(dragging)
+    _removeDragging(element)
     {
+        const dragging = element.__sortable.dragging
         dragging.remove()
         if (dragging.icon)
         {
             dragging.icon.remove()
         }
+        element.__sortable.dragging = null
+        element.__sortable.isCopy = false
     }
 
     _drop(e)
@@ -451,8 +480,7 @@ export default class Sortable extends Events
                     this.emit('update', element, this)
                 }
             }
-            this._removeDragging(element.__sortable.dragging)
-            element.__sortable.dragging = null
+            this._removeDragging(element)
             e.preventDefault()
             e.stopPropagation()
         }
@@ -470,7 +498,8 @@ export default class Sortable extends Events
         let min = Infinity, found
         for (let related of list)
         {
-            if (!related.options.drop && element.__sortable.original !== related)
+            if ((!related.options.drop && element.__sortable.original !== related) ||
+                (element.__sortable.isCopy && element.__sortable.original === related))
             {
                 continue
             }
@@ -761,9 +790,10 @@ export default class Sortable extends Events
      * set icon if available
      * @param {HTMLElement} dragging
      * @param {Sortable} sortable
+     * @param {boolean} [cancel] force cancel (for options.copy)
      * @private
      */
-    _setIcon(element, sortable)
+    _setIcon(element, sortable, cancel)
     {
         const dragging = element.__sortable.dragging
         if (dragging && dragging.icon)
@@ -771,11 +801,25 @@ export default class Sortable extends Events
             if (!sortable)
             {
                 sortable = element.__sortable.original
-                dragging.icon.src = sortable.options.offList === 'delete' ? sortable.options.icons.delete : sortable.options.icons.cancel
+                if (cancel)
+                {
+                    dragging.icon.src = sortable.options.icons.cancel
+                }
+                else
+                {
+                    dragging.icon.src = sortable.options.offList === 'delete' ? sortable.options.icons.delete : sortable.options.icons.cancel
+                }
             }
             else
             {
-                dragging.icon.src = element.__sortable.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
+                if (element.__sortable.isCopy)
+                {
+                    dragging.icon.src = sortable.options.icons.copy
+                }
+                else
+                {
+                    dragging.icon.src = element.__sortable.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
+                }
             }
         }
     }

@@ -8,8 +8,8 @@ import icons from './icons'
  * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
  * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
  * @property {boolean} [options.sort=true] allow sorting within list
- * @property {boolean} [options.copy=false] create copy when dragging an item
- * @property {boolean} [options.drop=true] allow drop from related sortables
+ * @property {boolean} [options.drop=true] allow drop from related sortables (doesn't impact reordering this sortable's children until the children are moved to a differen sortable)
+ * @property {boolean} [options.copy=false] create copy when dragging an item (this disables sort=true for this sortable)
  * @property {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
@@ -28,13 +28,11 @@ import icons from './icons'
 export default {
     name: 'sortable',
     sort: true,
-    copy: false,
     drop: true,
+    copy: false,
     orderId: 'data-order',
     orderIdIsNumber: true,
     threshold: 10,
-    alwaysInList: true,
-    returnToOriginal: false,
     dragClass: null,
     orderClass: null,
     offList: 'closest',
