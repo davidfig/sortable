@@ -1,63 +1,137 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const Sortable = require('../src/sortable')
+'use strict';
 
-function test()
-{
-    new Sortable(document.getElementById('example-1'))
+var _sortable = require('../src/sortable');
 
-    const two = document.getElementById('example-2')
-    new Sortable(two.children[0], { name: 'list-2' })
-    new Sortable(two.children[1], { name: 'list-2' })
-    new Sortable(two.children[2], { name: 'list-2' })
+var _sortable2 = _interopRequireDefault(_sortable);
 
-    const three = document.getElementById('example-3')
-    new Sortable(three.children[0], { name: 'list-3', alwaysInList: false })
-    new Sortable(three.children[1], { name: 'list-3', sort: false, alwaysInList: false })
+var _highlight = require('./highlight');
 
-    const four = document.getElementById('example-4')
-    new Sortable(four.children[0], { name: 'list-4' })
-    new Sortable(four.children[1], { name: 'list-4' })
+var _highlight2 = _interopRequireDefault(_highlight);
 
-    const five = document.getElementById('example-5')
-    new Sortable(five.children[0], { name: 'list-5', dragClass: 'entry' })
-    new Sortable(five.children[1], { name: 'list-5', dragClass: 'entry', sort: false, orderClass: 'skip' })
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-    const six = document.getElementById('example-6')
-    new Sortable(six.children[0], { name: 'list-6', dragClass: 'entry' })
-    new Sortable(six.children[1], { name: 'list-6', dragClass: 'entry', deepSearch: true, sort: false })
+function test() {
+    var one = document.getElementById('example-1');
+    var a1 = new _sortable2.default(one);
+    events(one, [a1]);
 
-    const seven = document.getElementById('example-7')
-    new Sortable(seven.children[0], { name: 'list-7', dragClass: 'entry' })
-    new Sortable(seven.children[1], { name: 'list-7', dragClass: 'entry', sort: false, reverseOrder: true })
+    var two = document.getElementById('example-2');
+    var a2 = new _sortable2.default(two.children[0], { name: 'list-2' });
+    var b2 = new _sortable2.default(two.children[1], { name: 'list-2' });
+    var c2 = new _sortable2.default(two.children[2], { name: 'list-2' });
+    events(two, [a2, b2, c2]);
 
-    const eight = document.getElementById('example-8')
-    new Sortable(eight, { name: 'list-8', alwaysInList: false })
+    var three = document.getElementById('example-3');
+    var a3 = new _sortable2.default(three.children[0], { name: 'list-3' });
+    var b3 = new _sortable2.default(three.children[1], { name: 'list-3', sort: false });
+    events(three, [a3, b3]);
+
+    var four = document.getElementById('example-4');
+    var a4 = new _sortable2.default(four.children[0], { name: 'list-4' });
+    var b4 = new _sortable2.default(four.children[1], { name: 'list-4' });
+    events(four, [a4, b4]);
+
+    var five = document.getElementById('example-5');
+    var a5 = new _sortable2.default(five.children[0], { name: 'list-5', dragClass: 'entry' });
+    var b5 = new _sortable2.default(five.children[1], { name: 'list-5', dragClass: 'entry', sort: false, orderClass: 'skip' });
+    events(five, [a5, b5]);
+
+    var six = document.getElementById('example-6');
+    var a6 = new _sortable2.default(six.children[0], { name: 'list-6', dragClass: 'entry' });
+    var b6 = new _sortable2.default(six.children[1], { name: 'list-6', dragClass: 'entry', deepSearch: true, sort: false });
+    events(six, [a6, b6]);
+
+    var seven = document.getElementById('example-7');
+    var a7 = new _sortable2.default(seven.children[0], { name: 'list-7', dragClass: 'entry' });
+    var b7 = new _sortable2.default(seven.children[1], { name: 'list-7', dragClass: 'entry', sort: false, reverseOrder: true });
+    events(seven, [a7, b7]);
+
+    var eight = document.getElementById('example-8');
+    var a8 = new _sortable2.default(eight.children[0], { name: 'list-8', offList: 'cancel' });
+    var b8 = new _sortable2.default(eight.children[1], { name: 'list-8', offList: 'cancel' });
+    events(eight, [a8, b8]);
+
+    var nine = document.getElementById('example-9');
+    var a9 = new _sortable2.default(nine, { name: 'list-9', offList: 'delete' });
+    events(nine, [a9]);
+
+    var ten = document.getElementById('example-10');
+    var a10 = new _sortable2.default(ten.children[0], { name: 'list-10' });
+    var b10 = new _sortable2.default(ten.children[1], { name: 'list-10', drop: false });
+    events(ten, [a10, b10]);
+
+    var eleven = document.getElementById('example-11');
+    var a11 = new _sortable2.default(eleven.children[0], { name: 'list-11' });
+    var b11 = new _sortable2.default(eleven.children[1], { name: 'list-11', copy: true });
+    events(eleven, [a11, b11]);
 }
 
-window.onload = function ()
-{
-    test()
-    require('fork-me-github')('https://github.com/davidfig/sortable')
-    require('./highlight')()
+/**
+ * show events
+ * @param {HTMLElement} div
+ * @param {Sortable[]} sortables
+ */
+function events(div, sortables) {
+    function on(name, i) {
+        var letters = 'ABCDEF';
+        sortables[i].on(name, function () {
+            events.innerHTML += '<div>' + letters[i] + ': ' + name + '</div>';
+            events.scrollTop = events.scrollHeight;
+        });
+    }
+
+    var events = document.getElementById(div.id + '-events');
+    events.innerHTML = '<div style="font-weight:bold">events listed here...</div>';
+    for (var i = 0; i < sortables.length; i++) {
+        on('add-pending', i);
+        on('remove-pending', i);
+        on('delete-pending', i);
+        on('order-pending', i);
+        on('update-pending', i);
+        on('add', i);
+        on('remove', i);
+        on('delete', i);
+        on('order', i);
+        on('update', i);
+    }
 }
-},{"../src/sortable":185,"./highlight":2,"fork-me-github":4}],2:[function(require,module,exports){
-// shows the code in the demo
-module.exports = function highlight()
-{
-    var client = new XMLHttpRequest();
-    client.open('GET', 'code.js');
-    client.onreadystatechange = function()
-    {
-        var code = document.getElementById('code');
-        code.innerHTML = client.responseText;
-        require('highlight.js').highlightBlock(code);
-    };
-    client.send();
+
+window.onload = function () {
+    test();
+    (0, _highlight2.default)();
 };
 
-// for eslint
-/* globals window, XMLHttpRequest, document */
-},{"highlight.js":6}],3:[function(require,module,exports){
+},{"../src/sortable":185,"./highlight":2}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = highlight;
+
+var _highlight = require('highlight.js');
+
+var _forkMeGithub = require('fork-me-github');
+
+var _forkMeGithub2 = _interopRequireDefault(_forkMeGithub);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// shows the code in the demo
+function highlight() {
+    var client = new XMLHttpRequest();
+    client.open('GET', 'code.js');
+    client.onreadystatechange = function () {
+        var code = document.getElementById('code');
+        code.innerHTML = client.responseText;
+        (0, _highlight.highlightBlock)(code);
+    };
+    client.send();
+    (0, _forkMeGithub2.default)();
+}
+
+},{"fork-me-github":4,"highlight.js":6}],3:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -396,13 +470,19 @@ if ('undefined' !== typeof module) {
 }
 
 },{}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = forkMe;
 // Programatically add fork me on github ribbon from javascript without making changes to CSS, HTML, or adding image files
 // by David Figatner
-// copyright 2017 YOPEY YOPEY LLC
+// copyright 2018 YOPEY YOPEY LLC
 // MIT license
 // based on https://github.com/simonwhitaker/github-fork-ribbon-css (MIT license)
 
-const RIBBON = {
+var RIBBON = {
     width: '12.1em',
     height: '12.1em',
     overflow: 'hidden',
@@ -413,60 +493,18 @@ const RIBBON = {
     fontSize: '13px',
     textDecoration: 'none',
     textIndent: '-999999px'
-}
+};
 
-const BEFORE_AFTER = [
-    ['position', 'absolute'],
-    ['display', 'block'],
-    ['width', '15.38em'],
-    ['height', '1.54em'],
-    ['top', '3.23em'],
-    ['right', '-3.23em'],
-    ['-webkit-box-sizing', 'content-box'],
-    ['-moz-box-sizing', 'content-box'],
-    ['box-sizing', 'content-box'],
-    ['-webkit-transform', 'rotate(45deg)'],
-    ['-moz-transform', 'rotate(45deg)'],
-    ['-ms-Transform', 'rotate(45deg)'],
-    ['-o-transform', 'rotate(45deg)'],
-    ['transform', 'rotate(45deg)']
-]
+var BEFORE_AFTER = [['position', 'absolute'], ['display', 'block'], ['width', '15.38em'], ['height', '1.54em'], ['top', '3.23em'], ['right', '-3.23em'], ['-webkit-box-sizing', 'content-box'], ['-moz-box-sizing', 'content-box'], ['box-sizing', 'content-box'], ['-webkit-transform', 'rotate(45deg)'], ['-moz-transform', 'rotate(45deg)'], ['-ms-Transform', 'rotate(45deg)'], ['-o-transform', 'rotate(45deg)'], ['transform', 'rotate(45deg)']];
 
-const BEFORE = [
-    ['content', '""'],
-    ['padding', '.38em 0'],
-    ['background-color', '#a00'],
-    ['background-image', '-webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.15)))'],
-    ['background-image', '-webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'],
-    ['background-image', '-moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'],
-    ['background-image', '-ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'],
-    ['background-image', '-o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'],
-    ['background-image', 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'],
-    ['box-shadow', '0 .15em .23em 0 rgba(0, 0, 0, 0.5)'],
-    ['pointer-events', 'auto']
-]
+var BEFORE = [['content', '""'], ['padding', '.38em 0'], ['background-color', '#a00'], ['background-image', '-webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.15)))'], ['background-image', '-webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'], ['background-image', '-moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'], ['background-image', '-ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'], ['background-image', '-o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'], ['background-image', 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15))'], ['box-shadow', '0 .15em .23em 0 rgba(0, 0, 0, 0.5)'], ['pointer-events', 'auto']];
 
-const AFTER = [
-    ['content', 'attr(data-ribbon)'],
-    ['color', '#fff'],
-    ['font', '700 1em "Helvetica Neue", Helvetica, Arial, sans-serif'],
-    ['line-height', '1.54em'],
-    ['text-decoration', 'none'],
-    ['text-shadow', '0 -.08em rgba(0, 0, 0, 0.5)'],
-    ['text-align', 'center'],
-    ['text-indent', '0'],
-    ['padding', '.15em 0'],
-    ['margin', '.15em 0'],
-    ['border-width', '.08em 0'],
-    ['border-style', 'dotted'],
-    ['border-color', '#fff'],
-    ['border-color', 'rgba(255, 255, 255, 0.7)']
-]
+var AFTER = [['content', 'attr(data-ribbon)'], ['color', '#fff'], ['font', '700 1em "Helvetica Neue", Helvetica, Arial, sans-serif'], ['line-height', '1.54em'], ['text-decoration', 'none'], ['text-shadow', '0 -.08em rgba(0, 0, 0, 0.5)'], ['text-align', 'center'], ['text-indent', '0'], ['padding', '.15em 0'], ['margin', '.15em 0'], ['border-width', '.08em 0'], ['border-style', 'dotted'], ['border-color', '#fff'], ['border-color', 'rgba(255, 255, 255, 0.7)']];
 
 /**
  * Programmatically add "Fork me Github" Ribbon using inline CSS
  * Based on CSS from https,//github.com/simonwhitaker/github-fork-ribbon-css
- * @param {string} url - html link
+ * @param {string} [url] - do not need to include if URL is called from https://username.github.io/project/html
  * @param {object} [options]
  * @param {HTMLElement} [options.parent=document.body]
  * @param {boolean} [options.fixed]
@@ -474,81 +512,142 @@ const AFTER = [
  * @param {string} [options.text=fork me on github] text to show
  * @param {string} [options.background=#a00] color for ribbon
  */
-module.exports = function forkMe(url, options)
-{
-    options = options || {}
-    const a = document.createElement('a')
-    a.href = url
-    a.title = a.innerText = options.text || 'fork me on github'
-    a.setAttribute('data-ribbon', options.text || 'fork me on github')
-    a.className = 'github-fork-ribbon-' + Math.round(Math.random() * 100000)
-    if (options.parent)
-    {
-        options.parent.appendChild(a)
+function forkMe(url, options) {
+    options = options || {};
+    var a = document.createElement('a');
+    if (url) {
+        a.href = url;
+    } else {
+        var username = window.location.hostname.split('.')[0];
+        var project = window.location.pathname.split('/')[1];
+        a.href = 'https://github.com/' + username + '/' + project;
     }
-    else
-    {
-        document.body.appendChild(a)
+
+    a.title = a.innerText = options.text || 'fork me on github';
+    a.setAttribute('data-ribbon', options.text || 'fork me on github');
+    a.className = 'github-fork-ribbon-' + Math.round(Math.random() * 100000);
+    if (options.parent) {
+        options.parent.appendChild(a);
+    } else {
+        document.body.appendChild(a);
     }
-    a.style.position = options.fixed ? 'fixed' : 'absolute'
-    if (options.background)
-    {
-        BEFORE[2][1] = options.background
+    a.style.position = options.fixed ? 'fixed' : 'absolute';
+    if (options.background) {
+        BEFORE[2][1] = options.background;
     }
-    if (options.color)
-    {
-        AFTER[1][1] = options.color
+    if (options.color) {
+        AFTER[1][1] = options.color;
     }
-    for (let style in RIBBON)
-    {
-        a.style[style] = RIBBON[style]
+    for (var _style in RIBBON) {
+        a.style[_style] = RIBBON[_style];
     }
-    let beforeAfter = '{'
-    for (let style of BEFORE_AFTER)
-    {
-        beforeAfter += style[0] + ':' + style[1] + ';'
+    var beforeAfter = '{';
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = BEFORE_AFTER[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var _style2 = _step.value;
+
+            beforeAfter += _style2[0] + ':' + _style2[1] + ';';
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
     }
-    let before = beforeAfter
-    for (let style of BEFORE)
-    {
-        before += style[0] + ':' + style[1] + ';'
+
+    var before = beforeAfter;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = BEFORE[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var _style3 = _step2.value;
+
+            before += _style3[0] + ':' + _style3[1] + ';';
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
     }
-    let after = beforeAfter
-    for (let style of AFTER)
-    {
-        after += style[0] + ':' + style[1] + ';'
+
+    var after = beforeAfter;
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+        for (var _iterator3 = AFTER[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var _style4 = _step3.value;
+
+            after += _style4[0] + ':' + _style4[1] + ';';
+        }
+    } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+            }
+        } finally {
+            if (_didIteratorError3) {
+                throw _iteratorError3;
+            }
+        }
     }
-    let bottom, left
-    if (options.side)
-    {
-        bottom = options.side.toLowerCase().indexOf('bottom') !== -1
-        left = options.side.toLowerCase().indexOf('left') !== -1
+
+    var bottom = void 0,
+        left = void 0;
+    if (options.side) {
+        bottom = options.side.toLowerCase().indexOf('bottom') !== -1;
+        left = options.side.toLowerCase().indexOf('left') !== -1;
     }
-    if (bottom)
-    {
-        a.style.top = 'auto'
-        a.style.bottom = 0
-        before += 'top:auto;bottom:3.23em;'
-        after += 'top:auto;bottom:3.23em;'
+    if (bottom) {
+        a.style.top = 'auto';
+        a.style.bottom = 0;
+        before += 'top:auto;bottom:3.23em;';
+        after += 'top:auto;bottom:3.23em;';
     }
-    if (left)
-    {
-        a.style.right = 'auto'
-        a.style.left = 0
-        before += 'right:auto;left:-3.23em;'
-        after += 'right:auto;left:-3.23em;'
+    if (left) {
+        a.style.right = 'auto';
+        a.style.left = 0;
+        before += 'right:auto;left:-3.23em;';
+        after += 'right:auto;left:-3.23em;';
     }
-    if ((left && !bottom) || (!left && bottom))
-    {
-        before += 'transform:rotate(-45deg);'
-        after += 'transform:rotate(-45deg);'
+    if (left && !bottom || !left && bottom) {
+        before += 'transform:rotate(-45deg);';
+        after += 'transform:rotate(-45deg);';
     }
-    const style = document.createElement('style')
-    document.head.appendChild(style)
-    const sheet = style.sheet
-    sheet.insertRule('.' + a.className + '::before' + before + '}')
-    sheet.insertRule('.' + a.className + '::after' + after + '}')
+    var style = document.createElement('style');
+    document.head.appendChild(style);
+    var sheet = style.sheet;
+    sheet.insertRule('.' + a.className + '::before' + before + '}');
+    sheet.insertRule('.' + a.className + '::after' + after + '}');
 }
+
 },{}],5:[function(require,module,exports){
 /*
 Syntax highlighting with language autodetection.
@@ -17382,9 +17481,17 @@ module.exports = function(hljs) {
   };
 };
 },{}],183:[function(require,module,exports){
-module.exports={copy:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABXklEQVQ4ja2VPWsCQRCGHw8hlVjbm2C6BMTmigR/hySQwP4gyyvSJdjYna29EEhjEU0tln4cp0Y4NoW7ybq3Z87EF6bY2eGZWZiZhXwqK/uzioAAXoAxIJWNlU+omFy6BAYGJMsGKvag7oFNDpi2DXBnAgpWZW/Ame/7VCqVVLb1ek2v17Pdn8AV8G46i+YzwzCULk2n00PPL2oQwAPQsFNPJhO63e73eblcpqpWaihGoIG3rqgwDAmCgGazCYCUEiEEAJ1Ox05wYwLrWal936fdbqf8/X7fBtYBPHYNe54FPEIXQNk7AWhPHrAAPk7AGgMLXeGreRNFEbPZjNVqhZQyL3CPIciYhlar5ezJarVqxwr46cMn4BFHL87nc4bDYaqc7XZrHgeK4R49M7JUKlEomGE7JUlCHMewm+drrNHT+vdycKlG/vVV+w2mpRfsMzAyICPlO2rBupT7C/gC9G7LXmZLz0YAAAAASUVORK5CYII=',move:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABDUlEQVQ4ja2VMW6DMBSGP9IsTCxcoWo6IJZMHCaIhQv0HlwBMcRjb8BeRsYgbpGhmaCLX+VS45o0n/SE8LN/vd/YD/Aj0nE3e6AEFDAAs45Bj5V6jhevQGeIrEWn5zrJgZuHmMQNOLkq2yJmih6WYntPmy77P/a09FmYpqkrXwI8acE3IFnbC0EpRRAE9H1vS1+BdynzaGayLCMMw18r4jimrmsAmqZZpr81omX54zjOLqZpmvM8t9mOdn/Z3EqgnwPwLINrlquqIkkSiqKwWR6AF3lReHzltm3XrM7A2VR/2LER/nuwP7A0i3uv3ieWqyc8tDkIB0/7nauyJdJgz8DFELnosU0N1ob3L+ALRMrs/Hdy9wQAAAAASUVORK5CYII=',delete:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAB40lEQVQ4jaWVwU4TURSGv3OnQp1CJgMxbEkmEN1p0rBxAV2AxPgOmC58CRY8BpEFUZ/BRE0XwsIESRNhVS1h4RICNJXOpFPbOS5oh1LaodJ/d2/O/eb/T3LOwBAquK5TcF1nmFrpd/kVUnXbziOypJAV1TkAFTkSKKK6kw6C7Rw07wR+nJh4YkXRO2DhDjP7LWNev6rVSgOBnzKZNVTfAuPXFcLY1BQAjYsLUO1+EqrIm5e+/+EWsO3sRwc2PjMTA3PHx1et8LwYGJ6cxFBjWU9fXF7+jIHtnn3rjrnq+4l5P2cyN+Kng+B5DpopgLpt5+np2e/NzURgjxbqtp0nCLZS7VhLPb3h0cpKIqHUc1bVRWDLAChkex/Ynkd5Y4OHs7PUSiUqe3vYnsev9XVsz7v1ATEmC5AquK7TDMO5fi7+HB5CFBGentI4OwOgenDQ37LqfMF1HZOY6x4yy5VKVUWORiaJlJcrlaoBECiOytMoKgJcRVbdGRUoIrsxMB0E28D+vWHwvc0YPHqrvs/fapUHjkMUhqCKSafju65JqRvLenZj9DrqXg5j09OJrhrn55C0HDr6Mjn5OGq13jPE+jKWtdZxNhAI1wtWVRfFmCyq81fVUtYoKorI7qAFO5T+5xfwD0HCxifvFsyRAAAAAElFTkSuQmCC',reorder:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABWklEQVQ4ja2VMW7CQBBFn5BdIcElnIg07lwnPQUNddJYPoMLbuDaHS3pKHyDpAsSFwhxyQVAQqEA/RTxWhvHYIP40i92NPr7Z3dnFtqhX/BqOEAEvAIrQAVXRSwqclrhAVhYIqe4KHLP4gXYtxAz3APP55xdImaLDqpiTrVMz/OUpqlc1y1jvu8rz3PFcVxX/p8zjapi6/VakjSfz0vRIAgkSUmS1DmNADqF4FNp1XEIw5DtdgtAt9tlNBqdOiYbj/bCfhoClCSJJCkIgjLW4PDTOOwDd20sNOAe6Hca0y5EB9gAXzfQWgEbc9VLGsoej8eEYQjAcDjkeDwymUw4HA4mZWkcArw1bZ9lGbvdDoBer8d0OrXFAN7txb+HHcex8jyX7/tlzHVdpWkqz/OqN/xBzbC4tvW+qWk9g5sOB4NBtfwTXJxzVoUZsDN+O8DuhhkXDtg6tP4CfgAjHd1NvsCHcAAAAABJRU5ErkJggg=='}
-},{}],184:[function(require,module,exports){
-const icons = require('./icons')
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _icons = require('./icons');
+
+var _icons2 = _interopRequireDefault(_icons);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Options for Sortable
@@ -17394,847 +17501,1047 @@ const icons = require('./icons')
  * @property {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
  * @property {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
  * @property {boolean} [options.sort=true] allow sorting within list
+ * @property {boolean} [options.drop=true] allow drop from related sortables (doesn't impact reordering this sortable's children until the children are moved to a differen sortable)
+ * @property {boolean} [options.copy=false] create copy when dragging an item (this disables sort=true for this sortable)
  * @property {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
  * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
- * @property {object} [options.childrenStyles] styles to apply to children elements of Sortable
+ * @property {boolean} [options.returnToOriginal=true] if alwaysInList=false and element is dropped where there are no sortables then the element is returned to its starting sortable
+ * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
+ * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
  * @property {boolean} [options.useIcons=true] show icons when dragging
  * @property {object} [options.icons] default set of icons
  * @property {string} [options.icons.reorder]
  * @property {string} [options.icons.move]
  * @property {string} [options.icons.copy]
  * @property {string} [options.icons.delete]
+ * @property {string} [options.customIcon] source of custom image when over this sortable
  */
-module.exports = {
+exports.default = {
     name: 'sortable',
     sort: true,
+    drop: true,
+    copy: false,
     orderId: 'data-order',
     orderIdIsNumber: true,
     threshold: 10,
-    alwaysInList: true,
     dragClass: null,
     orderClass: null,
-    returnHome: true,
+    offList: 'closest',
     deepSearch: false,
     dragStyle: {
         boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
-        opacity: 0.85
+        opacity: 0.85,
+        position: 'absolute',
+        pointerEvents: 'none'
     },
-    childrenStyles: {
-        cursor: 'pointer'
-    },
+    cursorHover: ['grab', '-webkit-grab', 'pointer'],
+    cursorDown: ['grabbing', '-webkit-grabbing', 'pointer'],
     useIcons: true,
-    icons
-}
-},{"./icons":183}],185:[function(require,module,exports){
-const Events = require('eventemitter3')
+    icons: _icons2.default
+};
 
-const toGlobal = require('./toGlobal')
-const defaults = require('./options')
+},{"./icons":184}],184:[function(require,module,exports){
+'use strict';
 
-class Sortable extends Events
-{
+module.exports = { copy: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABXklEQVQ4ja2VPWsCQRCGHw8hlVjbm2C6BMTmigR/hySQwP4gyyvSJdjYna29EEhjEU0tln4cp0Y4NoW7ybq3Z87EF6bY2eGZWZiZhXwqK/uzioAAXoAxIJWNlU+omFy6BAYGJMsGKvag7oFNDpi2DXBnAgpWZW/Ame/7VCqVVLb1ek2v17Pdn8AV8G46i+YzwzCULk2n00PPL2oQwAPQsFNPJhO63e73eblcpqpWaihGoIG3rqgwDAmCgGazCYCUEiEEAJ1Ox05wYwLrWal936fdbqf8/X7fBtYBPHYNe54FPEIXQNk7AWhPHrAAPk7AGgMLXeGreRNFEbPZjNVqhZQyL3CPIciYhlar5ezJarVqxwr46cMn4BFHL87nc4bDYaqc7XZrHgeK4R49M7JUKlEomGE7JUlCHMewm+drrNHT+vdycKlG/vVV+w2mpRfsMzAyICPlO2rBupT7C/gC9G7LXmZLz0YAAAAASUVORK5CYII=', move: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABDUlEQVQ4ja2VMW6DMBSGP9IsTCxcoWo6IJZMHCaIhQv0HlwBMcRjb8BeRsYgbpGhmaCLX+VS45o0n/SE8LN/vd/YD/Aj0nE3e6AEFDAAs45Bj5V6jhevQGeIrEWn5zrJgZuHmMQNOLkq2yJmih6WYntPmy77P/a09FmYpqkrXwI8acE3IFnbC0EpRRAE9H1vS1+BdynzaGayLCMMw18r4jimrmsAmqZZpr81omX54zjOLqZpmvM8t9mOdn/Z3EqgnwPwLINrlquqIkkSiqKwWR6AF3lReHzltm3XrM7A2VR/2LER/nuwP7A0i3uv3ieWqyc8tDkIB0/7nauyJdJgz8DFELnosU0N1ob3L+ALRMrs/Hdy9wQAAAAASUVORK5CYII=', delete: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAB40lEQVQ4jaWVwU4TURSGv3OnQp1CJgMxbEkmEN1p0rBxAV2AxPgOmC58CRY8BpEFUZ/BRE0XwsIESRNhVS1h4RICNJXOpFPbOS5oh1LaodJ/d2/O/eb/T3LOwBAquK5TcF1nmFrpd/kVUnXbziOypJAV1TkAFTkSKKK6kw6C7Rw07wR+nJh4YkXRO2DhDjP7LWNev6rVSgOBnzKZNVTfAuPXFcLY1BQAjYsLUO1+EqrIm5e+/+EWsO3sRwc2PjMTA3PHx1et8LwYGJ6cxFBjWU9fXF7+jIHtnn3rjrnq+4l5P2cyN+Kng+B5DpopgLpt5+np2e/NzURgjxbqtp0nCLZS7VhLPb3h0cpKIqHUc1bVRWDLAChkex/Ynkd5Y4OHs7PUSiUqe3vYnsev9XVsz7v1ATEmC5AquK7TDMO5fi7+HB5CFBGentI4OwOgenDQ37LqfMF1HZOY6x4yy5VKVUWORiaJlJcrlaoBECiOytMoKgJcRVbdGRUoIrsxMB0E28D+vWHwvc0YPHqrvs/fapUHjkMUhqCKSafju65JqRvLenZj9DrqXg5j09OJrhrn55C0HDr6Mjn5OGq13jPE+jKWtdZxNhAI1wtWVRfFmCyq81fVUtYoKorI7qAFO5T+5xfwD0HCxifvFsyRAAAAAElFTkSuQmCC', reorder: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAABWklEQVQ4ja2VMW7CQBBFn5BdIcElnIg07lwnPQUNddJYPoMLbuDaHS3pKHyDpAsSFwhxyQVAQqEA/RTxWhvHYIP40i92NPr7Z3dnFtqhX/BqOEAEvAIrQAVXRSwqclrhAVhYIqe4KHLP4gXYtxAz3APP55xdImaLDqpiTrVMz/OUpqlc1y1jvu8rz3PFcVxX/p8zjapi6/VakjSfz0vRIAgkSUmS1DmNADqF4FNp1XEIw5DtdgtAt9tlNBqdOiYbj/bCfhoClCSJJCkIgjLW4PDTOOwDd20sNOAe6Hca0y5EB9gAXzfQWgEbc9VLGsoej8eEYQjAcDjkeDwymUw4HA4mZWkcArw1bZ9lGbvdDoBer8d0OrXFAN7txb+HHcex8jyX7/tlzHVdpWkqz/OqN/xBzbC4tvW+qWk9g5sOB4NBtfwTXJxzVoUZsDN+O8DuhhkXDtg6tP4CfgAjHd1NvsCHcAAAAABJRU5ErkJggg==', cancel: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAACH0lEQVQ4jZWVPUsjURSGnzMmMYWQcdQiSRfYZQMWFmK1GAMW/oCggrAGGyt/jf2yFoIRS/skwha7BLQQZlGwzMDKjglYmA9ztpgkTGZmNft2c86d9z733DlnYAq557mUe55LTbNWooJaJeY8pg9Q2UBZRfjgJbhHaCBaSy85X6VI/13D5lk6j/ANZO1tFv2JUs7sOrY/avgfnEp2H5Hr980AZA2Ra+cs+yWS0COTa2D2fbMJdZhhJVNq/hoTapWYd8ygWVSJQ7FZXvVEq8TGhs5j+iB4zGR2i8XNS4yEOY4ZCZPFzUuS2a3gJmuex6iGKhtBirn8EXFrBatQwUiYGAkTq1Ahbq0wlz8Kkw6kAHiYw0/DJ8W92vMM5pdZKF6gCnEzT+/pFvdqD9AgwyqAuOe51Iu+tCKKhZEwWSheEEvlAei1bNxaiUE3cjlJSZpGZMbP6gORyDYIQFjbD22U+yg6q1Dxjtmy6bdtYqn8uKYRurO2H9oeodCYzAnW+inx+WWvZrUSf6olek+3xOeXsdZPCV2Keh5DQ60Fs8/2MT33Bre+w6DbYtBt4dZ36Lk3PNvHhC7F0DqjbbRKzPmd/h5uOQm/GBUTfqSXmp+lSN8AkCJ9lDLQCZKGFYq9YFAeTZ7xLWd2HVuQw7Dpm+qIyuGoj0f8E2peZD7xqidTja8Z2febRRqCb8AOpDDsgI/D1B1KA0Pr/xqwU+l/fgF/AWTUxfGGLxBJAAAAAElFTkSuQmCC' };
+
+},{}],185:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _eventemitter = require('eventemitter3');
+
+var _eventemitter2 = _interopRequireDefault(_eventemitter);
+
+var _defaults = require('./defaults');
+
+var _defaults2 = _interopRequireDefault(_defaults);
+
+var _utils = require('./utils');
+
+var utils = _interopRequireWildcard(_utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Sortable = function (_Events) {
+    _inherits(Sortable, _Events);
+
     /**
      * Create sortable list
      * @param {HTMLElement} element
      * @param {object} [options]
      * @param {string} [options.name=sortable] dragging is allowed between Sortables with the same name
-     * @param {boolean} [options.sort=true] allow sorting within list
-     * @param {string} [options.dragClass] if set then drag only items with this className under element, otherwise use all children
+     * @param {string} [options.dragClass] if set then drag only items with this className under element; otherwise drag all children
+     * @param {string} [options.orderClass] use this class to include elements in ordering but not dragging; otherwise all children elements are included in when sorting and ordering
      * @param {boolean} [options.deepSearch] if dragClass and deepSearch then search all descendents of element for dragClass
-     * @param {string} [options.orderId=data-order] for non-sorting lists, use this data id to figure out sort order
-     * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.orderId to properly sort numbers
+     * @param {boolean} [options.sort=true] allow sorting within list
+     * @param {boolean} [options.drop=true] allow drop from related sortables (doesn't impact reordering this sortable's children until the children are moved to a differen sortable)
+     * @param {boolean} [options.copy=false] create copy when dragging an item (this disables sort=true for this sortable)
+     * @param {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
+     * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
      * @param {string} [options.reverseOrder] reverse sort the orderId
-     * @param {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
-     * @param {object} [options.childrenStyles] styles to apply to children elements of Sortable
+     * @param {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
+     * @param {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
+     * @param {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
+     * @param {boolean} [options.useIcons=true] show icons when dragging
      * @param {object} [options.icons] default set of icons
-     * @param {string} [options.icons.reorder] source of image
-     * @param {string} [options.icons.move] source of image
-     * @param {string} [options.icons.copy] source of image
-     * @param {string} [options.icons.delete] source of image
-     * @fires clicked
+     * @param {string} [options.icons.reorder]
+     * @param {string} [options.icons.move]
+     * @param {string} [options.icons.copy]
+     * @param {string} [options.icons.delete]
+     * @param {string} [options.customIcon] source of custom image when over this sortable
      * @fires pickup
      * @fires order
      * @fires add
      * @fires remove
      * @fires update
+     * @fires delete
      * @fires order-pending
      * @fires add-pending
      * @fires remove-pending
      * @fires update-pending
+     * @fires delete-pending
      */
-    constructor(element, options)
-    {
-        super()
-        this.options = options || {}
-        for (let option in defaults)
-        {
-            this.options[option] = typeof this.options[option] !== 'undefined' ? options[option] : defaults[option]
-        }
-        this.element = element
-        this.element.sortable = this
-        const elements = this._getChildren(this)
-        for (let child of elements)
-        {
-            if (!this.options.dragClass || this._containsClassName(child, this.options.dragClass))
-            {
-                child.__isSortable = true
-                child.addEventListener('mousedown', (e) => this._dragStart(e))
-                child.addEventListener('touchstart', (e) => this._dragStart(e))
-                for (let option in this.options.childrenStyles)
-                {
-                    child.style[option] = this.options.childrenStyles[option]
+    function Sortable(element, options) {
+        _classCallCheck(this, Sortable);
+
+        var _this = _possibleConstructorReturn(this, (Sortable.__proto__ || Object.getPrototypeOf(Sortable)).call(this));
+
+        _this.options = utils.options(options, _defaults2.default);
+        _this.element = element;
+        _this._addToGlobalTracker();
+        var elements = _this._getChildren();
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var child = _step.value;
+
+                if (!_this.options.dragClass || utils.containsClassName(child, _this.options.dragClass)) {
+                    _this.attachElement(child);
                 }
-                child.original = this
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
             }
         }
-        document.body.addEventListener('mousemove', (e) => this._dragMove(e))
-        document.body.addEventListener('touchmove', (e) => this._dragMove(e))
-        document.body.addEventListener('touchup', (e) => this._dragUp(e))
-        document.body.addEventListener('touchcancel', (e) => this._dragUp(e))
-        document.body.addEventListener('mouseup', (e) => this._dragUp(e))
-        document.body.addEventListener('mousecancel', (e) => this._dragUp(e))
 
-        if (!Sortable.list)
-        {
-            Sortable.list = []
-        }
-        Sortable.list.push(this)
-    }
+        _this.events = {
+            dragOver: function dragOver(e) {
+                return _this._dragOver(e);
+            },
+            drop: function drop(e) {
+                return _this._drop(e);
+            },
+            mouseOver: function mouseOver(e) {
+                return _this._mouseEnter(e);
+            }
+        };
+        element.addEventListener('dragover', _this.events.dragOver);
+        element.addEventListener('drop', _this.events.drop);
+        if (_this.options.cursorHover) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
-    /**
-     * Whether element contains classname
-     * @param {HTMLElement} e
-     * @param {string} name
-     * @returns {boolean}
-     * @private
-     */
-    _containsClassName(e, name)
-    {
-        const list = e.className.split(' ')
-        for (let entry of list)
-        {
-            if (entry === name)
-            {
-                return true
-            }
-        }
-        return false
-    }
+            try {
+                for (var _iterator2 = _this._getChildren()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _child = _step2.value;
 
-    /**
-     * add an element as a child of the sortable element; can also be used to swap between sortables
-     * NOTE: this will not work with deep-type elements; use attachElement instead
-     * @param {HTMLElement} element
-     * @param {number} index
-     */
-    add(element, index)
-    {
-        this.attachElement(element)
-        if (this.options.sort)
-        {
-            if (typeof index === 'undefined' || index >= this.element.children.length)
-            {
-                this.element.appendChild(element)
-            }
-            else
-            {
-                this.element.insertBefore(element, this.element.children[index + 1])
-            }
-        }
-        else
-        {
-            const id = this.options.orderId
-            let dragOrder = element.getAttribute(id)
-            dragOrder = this.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder
-            let found
-            const children = this._getChildren(this, true)
-            if (this.options.reverseOrder)
-            {
-                for (let i = children.length - 1; i >= 0; i--)
-                {
-                    const child = children[i]
-                    let childDragOrder = child.getAttribute(id)
-                    childDragOrder = this.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
-                    if (dragOrder > childDragOrder)
-                    {
-                        child.parentNode.insertBefore(element, child)
-                        found = true
-                        break
+                    utils.style(_child, 'cursor', _this.options.cursorHover);
+                    if (_this.options.cursorDown) {
+                        _child.addEventListener('mousedown', function (e) {
+                            return _this._mouseDown(e);
+                        });
+                    }
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
-            else
-            {
-                for (let child of children)
-                {
-                    let childDragOrder = child.getAttribute(id)
-                    childDragOrder = this.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
-                    if (dragOrder < childDragOrder)
-                    {
-                        child.parentNode.insertBefore(element, child)
-                        found = true
-                        break
+        }
+        return _this;
+    }
+
+    _createClass(Sortable, [{
+        key: '_mouseDown',
+        value: function _mouseDown(e) {
+            if (this.options.cursorHover) {
+                utils.style(e.target, 'cursor', this.options.cursorDown);
+            }
+        }
+
+        /**
+         * removes all event handlers from this.element and children
+         */
+
+    }, {
+        key: 'destroy',
+        value: function destroy() {
+            this.element.removeEventListener('dragover', this.events.dragOver);
+            this.element.removeEventListener('drop', this.events.drop);
+            var elements = this._getChildren();
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = elements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var child = _step3.value;
+
+                    this.removeElement(child);
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
                     }
                 }
             }
-            if (!found)
-            {
-                this.element.appendChild(element)
-            }
         }
-    }
 
-    /**
-     * attaches an HTML element to the sortable; can also be used to swap between sortables
-     * NOTE: you need to manually insert the element into this.element (this is useful when you have a deep structure)
-     * @param {HTMLElement} element
-     */
-    attachElement(element)
-    {
-        if (element.__isSortable)
-        {
-            element.original = this
-        }
-        else
-        {
-            element.__isSortable = true
-            element.addEventListener('mousedown', (e) => this._dragStart(e))
-            element.addEventListener('touchstart', (e) => this._dragStart(e))
-            for (let option in this.options.childrenStyles)
-            {
-                element.style[option] = this.options.childrenStyles[option]
-            }
-            element.original = this
-        }
-    }
+        /**
+         * the global defaults for new Sortable objects
+         * @type {DefaultOptions}
+         */
 
-    /**
-     * start drag
-     * @param {UIEvent} e
-     * @private
-     */
-    _dragStart(e)
-    {
-        this.dragging = e.currentTarget
-        this.dragging.pickup = false
-        this.dragging.start = { x: e.pageX, y: e.pageY }
-        this.dragging.style.cursor = 'no-cursor'
-        e.preventDefault()
-    }
-
-    /**
-     * pickup and clone element
-     * @param {UIEvent} e
-     * @private
-     */
-    _pickup(e)
-    {
-        this.indicator = this.dragging.cloneNode(true)
-        this.dragging.indicator = this.indicator
-        const pos = toGlobal(this.dragging)
-        this.dragging.style.position = 'absolute'
-        this.offset = { x: pos.x - e.pageX, y: pos.y - e.pageY }
-        this.dragging.style.left = pos.x + 'px'
-        this.dragging.style.top = pos.y + 'px'
-        for (let option in this.options.dragStyle)
-        {
-            this.dragging.style[option] = this.options.dragStyle[option]
-        }
-        this.dragging.parentNode.insertBefore(this.indicator, this.dragging)
-        document.body.appendChild(this.dragging)
-        if (this.options.useIcons)
-        {
-            const image = new Image()
-            image.src = this.options.icons.reorder
-            image.style.position = 'absolute'
-            image.style.transform = 'translate(-50%, -50%)'
-            image.style.left = pos.x + this.dragging.offsetWidth + 'px'
-            image.style.top = pos.y + this.dragging.offsetHeight + 'px'
-            document.body.appendChild(image)
-            this.dragging.icon = image
-        }
-        this.dragging.pickup = true
-        this.emit('pickup', this.dragging, this)
-    }
-
-    /**
-     * measure distance between two points
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @private
-     */
-    _distance(x1, y1, x2, y2)
-    {
-        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
-    }
-
-    /**
-     * find closest distance from UIEvent to a corner of an element
-     * @param {HTMLUListElement} e
-     * @param {HTMLElement} element
-     * @private
-     */
-    _distanceToClosestCorner(e, element)
-    {
-        const topLeft = this._distance(e.pageX, e.pageY, element.offsetLeft, element.offsetTop)
-        const topRight = this._distance(e.pageX, e.pageY, element.offsetLeft + element.offsetWidth, element.offsetTop)
-        const bottomLeft = this._distance(e.pageX, e.pageY, element.offsetLeft, element.offsetTop + element.offsetHeight)
-        const bottomRight = this._distance(e.pageX, e.pageY, element.offsetLeft + element.offsetWidth, element.offsetTop + element.offsetHeight)
-        return Math.min(topLeft, topRight, bottomLeft, bottomRight)
-    }
+    }, {
+        key: 'add',
 
 
-    /**
-     * determine whether these is overlap between two elements
-     * @param {HTMLElement} dragging
-     * @param {HTMLElement} element
-     * @private
-     */
-    _inside(dragging, element)
-    {
-        const x1 = dragging.offsetLeft
-        const y1 = dragging.offsetTop
-        const w1 = dragging.offsetWidth
-        const h1 = dragging.offsetHeight
-        const pos = toGlobal(element)
-        const x2 = pos.x
-        const y2 = pos.y
-        const w2 = element.offsetWidth
-        const h2 = element.offsetHeight
-        return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
-    }
-
-    /**
-     * find closest Sortable to screen location
-     * @param {UIEvent} e
-     * @param {HTMLElement} dragging
-     * @param {Sortable[]} list of related Sortables
-     * @private
-     */
-    _findClosest(e, dragging, list)
-    {
-        let min = Infinity, found
-        for (let related of list)
-        {
-            if (this._inside(dragging, related.element))
-            {
-                return related
-            }
-            else if (related.options.alwaysInList)
-            {
-                const calculate = this._distanceToClosestCorner(e, related.element)
-                if (calculate < min)
-                {
-                    min = calculate
-                    found = related
+        /**
+         * add an element as a child of the sortable element; can also be used to swap between sortables
+         * NOTE: this will not work with deep-type elements; use attachElement instead
+         * @param {HTMLElement} element
+         * @param {number} index
+         */
+        value: function add(element, index) {
+            this.attachElement(element);
+            if (this.options.sort) {
+                if (typeof index === 'undefined' || index >= this.element.children.length) {
+                    this.element.appendChild(element);
+                } else {
+                    this.element.insertBefore(element, this.element.children[index + 1]);
                 }
-            }
-        }
-        return found
-    }
+            } else {
+                var id = this.options.orderId;
+                var dragOrder = element.getAttribute(id);
+                dragOrder = this.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder;
+                var found = void 0;
+                var children = this._getChildren(true);
+                if (this.options.reverseOrder) {
+                    for (var i = children.length - 1; i >= 0; i--) {
+                        var child = children[i];
+                        var childDragOrder = child.getAttribute(id);
+                        childDragOrder = this.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder;
+                        if (dragOrder > childDragOrder) {
+                            child.parentNode.insertBefore(element, child);
+                            found = true;
+                            break;
+                        }
+                    }
+                } else {
+                    var _iteratorNormalCompletion4 = true;
+                    var _didIteratorError4 = false;
+                    var _iteratorError4 = undefined;
 
-    /**
-     * @param {number} xa1
-     * @param {number} ya1
-     * @param {number} xa2
-     * @param {number} xa2
-     * @param {number} xb1
-     * @param {number} yb1
-     * @param {number} xb2
-     * @param {number} yb2
-     * calculate percentage of overlap between two boxes
-     * from https://stackoverflow.com/a/21220004/1955997
-     * @private
-     */
-    _percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
-    {
-        const sa = (xa2 - xa1) * (ya2 - ya1)
-        const sb = (xb2 - xb1) * (yb2 - yb1)
-        const si = Math.max(0, Math.min(xa2, xb2) - Math.max(xa1, xb1)) * Math.max(0, Math.min(ya2, yb2) - Math.max(ya1, yb1))
-        const union = sa + sb - si
-        return si / union
-    }
+                    try {
+                        for (var _iterator4 = children[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                            var _child2 = _step4.value;
 
-    /**
-     * place indicator in the sortable list according to options.sort
-     * @param {Sortable} sortable
-     * @param {HTMLElement} dragging element
-     * @private
-     */
-    _placeInList(sortable, dragging)
-    {
-        if (sortable.options.sort)
-        {
-            this._placeInSortableList(sortable, dragging)
-        }
-        else
-        {
-            this._placeInOrderedList(sortable, dragging)
-        }
-    }
-
-    _traverseChildren(base, search, results)
-    {
-        for (let child of base.children)
-        {
-            if (search.length)
-            {
-                if (search.indexOf(child.className) !== -1)
-                {
-                    results.push(child)
-                }
-            }
-            else
-            {
-                results.push(child)
-            }
-            this._traverseChildren(child, search, results)
-        }
-    }
-
-    /**
-     * find children in div
-     * @param {Sortable} sortable
-     * @param {boolean} [order] search for dragOrder as well
-     * @private
-     */
-    _getChildren(sortable, order)
-    {
-        if (sortable.options.deepSearch)
-        {
-            let search = []
-            if (order && sortable.options.orderClass)
-            {
-                if (sortable.options.dragClass)
-                {
-                    search.push(sortable.options.dragClass)
-                }
-                if (order && sortable.options.orderClass)
-                {
-                    search.push(sortable.options.orderClass)
-                }
-            }
-            else if (!order && sortable.options.dragClass)
-            {
-                search.push(sortable.options.dragClass)
-            }
-            const results = []
-            this._traverseChildren(sortable.element, search, results)
-            return results
-        }
-        else
-        {
-            if (sortable.options.dragClass)
-            {
-                let list = []
-                for (let child of sortable.element.children)
-                {
-                    if (this._containsClassName(child, sortable.options.dragClass) || ((order || !sortable.options.orderClass) || (order && sortable.options.orderClass && this._containsClassName(child, sortable.options.orderClass))))
-                    {
-                        list.push(child)
+                            var _childDragOrder = _child2.getAttribute(id);
+                            _childDragOrder = this.options.orderIsNumber ? parseFloat(_childDragOrder) : _childDragOrder;
+                            if (dragOrder < _childDragOrder) {
+                                _child2.parentNode.insertBefore(element, _child2);
+                                found = true;
+                                break;
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError4 = true;
+                        _iteratorError4 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                                _iterator4.return();
+                            }
+                        } finally {
+                            if (_didIteratorError4) {
+                                throw _iteratorError4;
+                            }
+                        }
                     }
                 }
-                return list
-            }
-            else
-            {
-                return sortable.element.children
+                if (!found) {
+                    this.element.appendChild(element);
+                }
             }
         }
-    }
 
-    /**
-     * place indicator in an ordered list
-     * @param {Sortable} sortable
-     * @param {HTMLElement} dragging
-     * @private
-     */
-    _placeInOrderedList(sortable, dragging)
-    {
-        const id = sortable.options.orderId
-        dragging.indicator.remove()
-        sortable.indicator = dragging.indicator
-        let dragOrder = sortable.indicator.getAttribute(id)
-        dragOrder = sortable.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder
-        let found
-        const children = this._getChildren(sortable, true)
-        if (sortable.options.reverseOrder)
-        {
-            for (let i = children.length - 1; i >= 0; i--)
-            {
-                const child = children[i]
-                let childDragOrder = child.getAttribute(id)
-                childDragOrder = sortable.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
-                if (dragOrder > childDragOrder)
-                {
-                    child.parentNode.insertBefore(sortable.indicator, child)
-                    this._setIcon(dragging, sortable)
-                    found = true
-                    break
-                }
-            }
-        }
-        else
-        {
-            for (let child of children)
-            {
-                let childDragOrder = child.getAttribute(id)
-                childDragOrder = sortable.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder
-                if (dragOrder < childDragOrder)
-                {
-                    child.parentNode.insertBefore(sortable.indicator, child)
-                    this._setIcon(dragging, sortable)
-                    found = true
-                    break
-                }
-            }
-        }
-        if (!found)
-        {
-            sortable.element.appendChild(sortable.indicator)
-            this._setIcon(dragging, sortable)
-        }
-    }
+        /**
+         * attaches an HTML element to the sortable; can also be used to swap between sortables
+         * NOTE: you need to manually insert the element into this.element (this is useful when you have a deep structure)
+         * @param {HTMLElement} element
+         */
 
-    /**
-     * find last child that is of type dragClass (if set)
-     * @param {Sortable} sortable
-     * @private
-     */
-    _getLastChild(sortable)
-    {
-        if (sortable.options.deepSearch)
-        {
-            const search = []
-            if (sortable.options.dragClass)
-            {
-                search.push(sortable.options.dragClass)
-            }
-            const results = []
-            this._traverseChildren(sortable.element, search, results)
-            if (results.length)
-            {
-                return results[results.length - 1]
-            }
-            else
-            {
-                return null
-            }
-        }
-        else
-        {
-            if (sortable.options.dragClass)
-            {
-                for (let i = sortable.element.children.length - 1; i >= 0; i--)
-                {
-                    const child = sortable.element.children[i]
-                    if (this._containsClassName(child, sortable.options.dragClass))
-                    {
-                        return child
-                    }
-                }
-                return null
-            }
-            else
-            {
-                if (sortable.element.children.length)
-                {
-                    return sortable.element.children[sortable.element.children.length - 1]
-                }
-                else
-                {
-                    return null
-                }
-            }
-        }
-    }
+    }, {
+        key: 'attachElement',
+        value: function attachElement(element) {
+            var _this2 = this;
 
-    /**
-     * set icon if available
-     * @param {HTMLElement} dragging
-     * @param {Sortable} sortable
-     * @private
-     */
-    _setIcon(dragging, sortable)
-    {
-        if (dragging.current && dragging.current !== sortable)
-        {
-            dragging.current.emit('remove-pending', dragging, dragging.current)
-        }
-        if (dragging.icon)
-        {
-            dragging.icon.src = dragging.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
-            dragging.current = sortable
-        }
-        if (dragging.original === sortable)
-        {
-            sortable.emit('order-pending', dragging, sortable)
-            sortable.emit('update-pending', sortable)
-        }
-        else
-        {
-            sortable.emit('add-pending', dragging, sortable)
-            sortable.emit('update-pending')
-        }
-    }
+            if (element.__sortable) {
+                element.__sortable.original = this;
+            } else {
+                element.__sortable = {
+                    sortable: this,
+                    original: this,
+                    dragStart: function dragStart(e) {
+                        return _this2._dragStart(e);
+                    }
 
-    /**
-     * place indicator in an sortable list
-     * @param {Sortable} sortable
-     * @param {HTMLElement} dragging
-     * @private
-     */
-    _placeInSortableList(sortable, dragging)
-    {
-        const element = sortable.element
-        sortable.element.appendChild(dragging.indicator)
-        sortable.indicator = dragging.indicator
-        const lastChild = this._getLastChild(sortable)
-        if (!lastChild)
-        {
-            element.appendChild(sortable.indicator)
-            this._setIcon(dragging, sortable)
-        }
-        else
-        {
-            if (dragging.offsetTop >= element.offsetTop + element.offsetHeight)
-            {
-                element.appendChild(sortable.indicator)
-                this._setIcon(dragging, sortable)
-            }
-            else if (dragging.offsetTop + dragging.offsetHeight < element.offsetTop)
-            {
-                element.insertBefore(sortable.indicator, element.firstChild)
-                this._setIcon(dragging, sortable)
-            }
-            else
-            {
-                const xa1 = dragging.offsetLeft
-                const ya1 = dragging.offsetTop
-                const xa2 = dragging.offsetLeft + dragging.offsetWidth
-                const ya2 = dragging.offsetTop + dragging.offsetHeight
-                let largest = 0, closest, isBefore = true, indicator
-                const search = []
-                if (sortable.options.dragClass)
-                {
-                    search.push(sortable.options.dragClass)
+                    // ensure every element has an id
+                };if (!element.id) {
+                    element.id = '__sortable-' + this.options.name + '-' + Sortable.tracker[this.options.name].counter;
+                    Sortable.tracker[this.options.name].counter++;
                 }
-                if (sortable.options.orderClass)
-                {
-                    search.push(sortable.options.orderClass)
+                if (this.options.copy) {
+                    element.__sortable.copy = 0;
                 }
-                const elements = this._getChildren(sortable, true)
-                for (let child of elements)
-                {
-                    if (child === sortable.indicator)
-                    {
-                        indicator = true
-                    }
-                    const pos = toGlobal(child)
-                    const xb1 = pos.x
-                    const yb1 = pos.y
-                    const xb2 = pos.x + child.offsetWidth
-                    const yb2 = pos.y + child.offsetHeight
-                    const percentage = this._percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2)
-                    if (percentage > largest)
-                    {
-                        largest = percentage
-                        closest = child
-                        isBefore = indicator
-                    }
-                }
-                if (closest && closest !== sortable.indicator)
-                {
-                    if (isBefore)
-                    {
-                        element.insertBefore(sortable.indicator, closest.nextSibling)
-                        this._setIcon(dragging, sortable)
-                        sortable.emit('order-pending', sortable)
-                    }
-                    else
-                    {
-                        element.insertBefore(sortable.indicator, closest)
-                        this._setIcon(dragging, sortable)
-                        sortable.emit('order-pending', sortable)
-                    }
-                }
-                else
-                {
-                    sortable.element.appendChild(dragging.indicator)
-                    sortable.indicator = dragging.indicator
-                    this._setIcon(dragging, sortable)
-                }
+                element.addEventListener('dragstart', element.__sortable.dragStart);
+                element.setAttribute('draggable', true);
             }
         }
-    }
 
-    /**
-     * handle move
-     * @param {UIEvent} e
-     * @private
-     */
-    _dragMove(e)
-    {
-        if (this.dragging)
-        {
-            if (!this.dragging.pickup)
-            {
-                if (this._distance(this.dragging.start.x, this.dragging.start.y, e.pageX, e.pageY) > this.options.threshold)
-                {
-                    this._pickup(e)
-                }
-                else
-                {
-                    return
-                }
+        /**
+         * removes all events from an HTML element
+         * NOTE: does not remove the element from its parent
+         * @param {HTMLElement} element
+         */
+
+    }, {
+        key: 'removeElement',
+        value: function removeElement(element) {
+            element.removeEventListener('mousedown', element.dragStart);
+            element.removeEventListener('touchstart', element.dragStart);
+        }
+
+        /**
+         * add sortable to global list that tracks all sortables
+         * @private
+         */
+
+    }, {
+        key: '_addToGlobalTracker',
+        value: function _addToGlobalTracker() {
+            var _this3 = this;
+
+            if (!Sortable.tracker) {
+                Sortable.tracker = {};
+                document.body.addEventListener('dragover', function (e) {
+                    return _this3._bodyDragOver(e);
+                });
+                document.body.addEventListener('drop', function (e) {
+                    return _this3._bodyDrop(e);
+                });
             }
-            this.dragging.style.left = e.pageX + this.offset.x + 'px'
-            this.dragging.style.top = e.pageY + this.offset.y + 'px'
-            if (this.dragging.icon)
-            {
-                this.dragging.icon.style.left = e.pageX + this.offset.x + this.dragging.offsetWidth + 'px'
-                this.dragging.icon.style.top = e.pageY + this.offset.y + this.dragging.offsetHeight + 'px'
+            if (Sortable.tracker[this.options.name]) {
+                Sortable.tracker[this.options.name].list.push(this);
+            } else {
+                Sortable.tracker[this.options.name] = { list: [this], counter: 0 };
             }
-            const list = []
-            for (let sortable of Sortable.list)
-            {
-                if (sortable.options.name === this.options.name)
-                {
-                    list.push(sortable)
+        }
+
+        /**
+         * default drag over for the body
+         * @param {DragEvent} e
+         * @private
+         */
+
+    }, {
+        key: '_bodyDragOver',
+        value: function _bodyDragOver(e) {
+            var name = e.dataTransfer.types[0];
+            if (name) {
+                var id = e.dataTransfer.types[1];
+                var element = document.getElementById(id);
+                var sortable = this._findClosest(e, Sortable.tracker[name].list, element);
+                if (sortable) {
+                    this._placeInList(sortable, e.pageX, e.pageY, element);
+                    e.dataTransfer.dropEffect = 'move';
+                    this._updateDragging(e, element);
+                } else {
+                    this._noDrop(e);
                 }
+                e.preventDefault();
             }
-            if (list.length === 1)
-            {
-                if (this.options.alwaysInList || this._inside(this.dragging, this.element))
-                {
-                    this.dragging.sortable = this
-                    this._placeInList(this, this.dragging)
-                }
-                else
-                {
-                    this.dragging.indicator.remove()
-                    if (this.dragging.icon)
-                    {
-                        this.dragging.icon.src = this.options.icons.delete
+        }
+
+        /**
+         * handle no drop
+         * @param {UIEvent} e
+         * @param {boolean} [cancel] force cancel (for options.copy)
+         * @private
+         */
+
+    }, {
+        key: '_noDrop',
+        value: function _noDrop(e, cancel) {
+            e.dataTransfer.dropEffect = 'move';
+            var id = e.dataTransfer.types[1];
+            var element = document.getElementById(id);
+            if (element) {
+                this._updateDragging(e, element);
+                this._setIcon(element, null, cancel);
+                if (!cancel) {
+                    if (element.__sortable.original.options.offList === 'delete') {
+                        if (!element.__sortable.display) {
+                            element.__sortable.display = element.style.display || 'unset';
+                            element.style.display = 'none';
+                            element.__sortable.original.emit('delete-pending', element, element.__sortable.original);
+                        }
+                    } else {
+                        this._replaceInList(element.__sortable.original, element);
                     }
                 }
             }
-            else
-            {
-                const closest = this._findClosest(e, this.dragging, list)
-                if (closest)
-                {
-                    this.dragging.sortable = closest
-                    this._placeInList(closest, this.dragging)
-                }
-                else
-                {
-                    this.dragging.sortable = null
-                    this.dragging.indicator.remove()
-                    if (this.dragging.icon)
-                    {
-                        this.dragging.icon.src = this.options.icons.delete
+        }
+
+        /**
+         * default drop for the body
+         * @param {DragEvent} e
+         * @private
+         */
+
+    }, {
+        key: '_bodyDrop',
+        value: function _bodyDrop(e) {
+            var name = e.dataTransfer.types[0];
+            if (name) {
+                var id = e.dataTransfer.types[1];
+                var element = document.getElementById(id);
+                var sortable = this._findClosest(e, Sortable.tracker[name].list, element);
+                if (element) {
+                    if (sortable) {
+                        e.preventDefault();
+                    }
+                    this._removeDragging(element);
+                    if (element.__sortable.display) {
+                        element.remove();
+                        element.style.display = element.__sortable.display;
+                        element.__sortable.display = null;
+                        element.__sortable.original.emit('delete', element, element.__sortable.original);
+                        element.__sortable.original = null;
                     }
                 }
             }
-            e.preventDefault()
-            e.stopPropagation()
         }
-    }
 
-    /**
-     * handle up
-     * @param {UIEvent} e
-     * @private
-     */
-    _dragUp(e)
-    {
-        if (this.dragging)
-        {
-            if (this.dragging.pickup)
-            {
-                this.dragging.style.position = 'unset'
-                this.dragging.style.zIndex = 'unset'
-                this.dragging.style.boxShadow = 'unset'
-                this.dragging.style.opacity = 'unset'
-                if (this.indicator.parentNode)
-                {
-                    this.indicator.parentNode.insertBefore(this.dragging, this.indicator)
-                    this.dragging.original = this.dragging.current
-                    this.indicator.remove()
-                    this.indicator = null
-                    if (this.dragging.original === this)
-                    {
-                        this.emit('order', this.dragging, this)
-                        this.emit('update', this.dragging, this)
-                    }
-                    else
-                    {
-                        this.dragging.original.emit('remove', this.dragging, this.dragging.original)
-                        this.dragging.original.emit('update', this.dragging, this.dragging.original)
-                        this.dragging.sortable.emit('add', this.dragging, this)
-                        this.dragging.sortable.emit('update', this.dragging, this)
-                    }
+        /**
+         * start drag
+         * @param {UIEvent} e
+         * @private
+         */
+
+    }, {
+        key: '_dragStart',
+        value: function _dragStart(e) {
+            var sortable = e.target.__sortable.original;
+            var dragging = e.target.cloneNode(true);
+            for (var style in sortable.options.dragStyle) {
+                dragging.style[style] = sortable.options.dragStyle[style];
+            }
+            var pos = utils.toGlobal(e.target);
+            dragging.style.left = pos.x + 'px';
+            dragging.style.top = pos.y + 'px';
+            var offset = { x: pos.x - e.pageX, y: pos.y - e.pageY };
+            document.body.appendChild(dragging);
+            if (sortable.options.useIcons) {
+                var image = new Image();
+                image.src = sortable.options.icons.reorder;
+                image.style.position = 'absolute';
+                image.style.transform = 'translate(-50%, -50%)';
+                image.style.left = dragging.offsetLeft + dragging.offsetWidth + 'px';
+                image.style.top = dragging.offsetTop + dragging.offsetHeight + 'px';
+                document.body.appendChild(image);
+                dragging.icon = image;
+            }
+            if (sortable.options.cursorHover) {
+                utils.style(e.target, 'cursor', sortable.options.cursorHover);
+            }
+            var target = e.target;
+            if (sortable.options.copy) {
+                target = e.target.cloneNode(true);
+                target.id = e.target.id + '-copy-' + e.target.__sortable.copy;
+                e.target.__sortable.copy++;
+                sortable.attachElement(target);
+                target.__sortable.isCopy = true;
+                target.__sortable.original = this;
+                target.__sortable.display = target.style.display || 'unset';
+                target.style.display = 'none';
+                document.body.appendChild(target);
+            }
+            e.dataTransfer.clearData();
+            e.dataTransfer.setData(sortable.options.name, sortable.options.name);
+            e.dataTransfer.setData(target.id, target.id);
+            e.dataTransfer.setDragImage(document.createElement('div'), 0, 0);
+            target.__sortable.current = this;
+            target.__sortable.index = sortable.options.copy ? -1 : sortable._getIndex(target);
+            target.__sortable.dragging = dragging;
+            target.__sortable.offset = offset;
+        }
+    }, {
+        key: '_dragOver',
+        value: function _dragOver(e) {
+            var sortable = e.dataTransfer.types[0];
+            if (sortable && sortable === this.options.name) {
+                var id = e.dataTransfer.types[1];
+                var element = document.getElementById(id);
+                if (element.__sortable.isCopy && element.__sortable.original === this) {
+                    this._noDrop(e, true);
+                } else if (this.options.drop || element.__sortable.original === this) {
+                    this._placeInList(this, e.pageX, e.pageY, element);
+                    e.dataTransfer.dropEffect = element.__sortable.isCopy ? 'copy' : 'move';
+                    this._updateDragging(e, element);
+                } else {
+                    this._noDrop(e);
                 }
-                else
-                {
-                    this.dragging.remove()
-                    this.dragging.original = null
-                    this.indicator.remove()
-                    this.indicator = null
-                    this.dragging.original.emit('remove', this.dragging, this)
-                }
-                if (this.dragging.icon)
-                {
-                    this.dragging.icon.remove()
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+    }, {
+        key: '_updateDragging',
+        value: function _updateDragging(e, element) {
+            var dragging = element.__sortable.dragging;
+            var offset = element.__sortable.offset;
+            if (dragging) {
+                dragging.style.left = e.pageX + offset.x + 'px';
+                dragging.style.top = e.pageY + offset.y + 'px';
+                if (dragging.icon) {
+                    dragging.icon.style.left = dragging.offsetLeft + dragging.offsetWidth + 'px';
+                    dragging.icon.style.top = dragging.offsetTop + dragging.offsetHeight + 'px';
                 }
             }
-            else
-            {
-                this.emit('clicked', this.dragging, this)
+        }
+    }, {
+        key: '_removeDragging',
+        value: function _removeDragging(element) {
+            var dragging = element.__sortable.dragging;
+            dragging.remove();
+            if (dragging.icon) {
+                dragging.icon.remove();
             }
-            this.dragging = null
-            e.preventDefault()
+            element.__sortable.dragging = null;
+            element.__sortable.isCopy = false;
         }
-    }
-
-    /**
-     * the global defaults for new Sortable objects
-     * @type {DefaultOptions}
-     */
-    static get defaults()
-    {
-        return defaults
-    }
-
-    /**
-     * create multiple sortable elements
-     * @param {HTMLElements[]} elements
-     * @param {object} options - see constructor for options
-     */
-    static create(elements, options)
-    {
-        const results = []
-        for (let element of elements)
-        {
-            results.push(new Sortable(element, options))
+    }, {
+        key: '_drop',
+        value: function _drop(e) {
+            var name = e.dataTransfer.types[0];
+            if (name && name === this.options.name) {
+                var id = e.dataTransfer.types[1];
+                var element = document.getElementById(id);
+                if (element.__sortable.original !== this) {
+                    element.__sortable.original.emit('remove', element, element.__sortable.original);
+                    this.emit('add', element, this);
+                    element.__sortable.original = this;
+                    if (this.options.sort) {
+                        this.emit('order', element, this);
+                    }
+                    this.emit('update', element, this);
+                } else {
+                    if (element.__sortable.index !== this._getIndex(e.target)) {
+                        this.emit('order', element, this);
+                        this.emit('update', element, this);
+                    }
+                }
+                this._removeDragging(element);
+                e.preventDefault();
+                e.stopPropagation();
+            }
         }
-        return results
-    }
-}
 
-module.exports = Sortable
+        /**
+         * find closest Sortable to screen location
+         * @param {UIEvent} e
+         * @param {Sortable[]} list of related Sortables
+         * @param {HTMLElement} element
+         * @private
+         */
 
-/**
- * fires when an element is clicked but not moved beyond the options.threshold
- * @event Sortable#clicked
- * @property {HTMLElement} element clicked
- * @property {Sortable} sortable containing element
- */
+    }, {
+        key: '_findClosest',
+        value: function _findClosest(e, list, element) {
+            var min = Infinity,
+                found = void 0;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+                for (var _iterator5 = list[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var related = _step5.value;
+
+                    if (!related.options.drop && element.__sortable.original !== related || element.__sortable.isCopy && element.__sortable.original === related) {
+                        continue;
+                    }
+                    if (utils.inside(e.pageX, e.pageY, related.element)) {
+                        return related;
+                    } else if (related.options.offList === 'closest') {
+                        var calculate = utils.distanceToClosestCorner(e.pageX, e.pageY, related.element);
+                        if (calculate < min) {
+                            min = calculate;
+                            found = related;
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
+                }
+            }
+
+            return found;
+        }
+
+        /**
+         * place indicator in the sortable list according to options.sort
+         * @param {number} x
+         * @param {number} y
+         * @param {Sortable} sortable
+         * @param {HTMLElement} element
+         * @private
+         */
+
+    }, {
+        key: '_placeInList',
+        value: function _placeInList(sortable, x, y, element) {
+            if (element.__sortable.display) {
+                element.style.display = element.__sortable.display === 'unset' ? '' : element.__sortable.display;
+                element.__sortable.display = null;
+            }
+
+            if (this.options.sort) {
+                this._placeInSortableList(sortable, x, y, element);
+            } else {
+                this._placeInOrderedList(sortable, element);
+            }
+            this._setIcon(element, sortable);
+        }
+
+        /**
+         * replace item in list at original index position
+         */
+
+    }, {
+        key: '_replaceInList',
+        value: function _replaceInList(sortable, element) {
+            var children = sortable._getChildren();
+            if (children.length) {
+                var index = element.__sortable.index;
+                if (index < children.length) {
+                    children[index].parentNode.insertBefore(element, children[index]);
+                } else {
+                    children[0].appendChild(element);
+                }
+            } else {
+                sortable.element.appendChild(element);
+            }
+        }
+    }, {
+        key: '_getIndex',
+        value: function _getIndex(child) {
+            var children = this._getChildren();
+            for (var i = 0; i < children.length; i++) {
+                if (children[i] === child) {
+                    return i;
+                }
+            }
+        }
+    }, {
+        key: '_traverseChildren',
+        value: function _traverseChildren(base, search, results) {
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = base.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var child = _step6.value;
+
+                    if (search.length) {
+                        if (search.indexOf(child.className) !== -1) {
+                            results.push(child);
+                        }
+                    } else {
+                        results.push(child);
+                    }
+                    this._traverseChildren(child, search, results);
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
+                    }
+                }
+            }
+        }
+
+        /**
+         * find children in div
+         * @param {Sortable} sortable
+         * @param {boolean} [order] search for dragOrder as well
+         * @private
+         */
+
+    }, {
+        key: '_getChildren',
+        value: function _getChildren(order) {
+            if (this.options.deepSearch) {
+                var search = [];
+                if (order && this.options.orderClass) {
+                    if (this.options.dragClass) {
+                        search.push(this.options.dragClass);
+                    }
+                    if (order && this.options.orderClass) {
+                        search.push(this.options.orderClass);
+                    }
+                } else if (!order && this.options.dragClass) {
+                    search.push(this.options.dragClass);
+                }
+                var results = [];
+                this._traverseChildren(this.element, search, results);
+                return results;
+            } else {
+                if (this.options.dragClass) {
+                    var list = [];
+                    var _iteratorNormalCompletion7 = true;
+                    var _didIteratorError7 = false;
+                    var _iteratorError7 = undefined;
+
+                    try {
+                        for (var _iterator7 = this.element.children[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                            var child = _step7.value;
+
+                            if (utils.containsClassName(child, this.options.dragClass) || order && !this.options.orderClass || order && this.options.orderClass && utils.containsClassName(child, this.options.orderClass)) {
+                                list.push(child);
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError7 = true;
+                        _iteratorError7 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                                _iterator7.return();
+                            }
+                        } finally {
+                            if (_didIteratorError7) {
+                                throw _iteratorError7;
+                            }
+                        }
+                    }
+
+                    return list;
+                } else {
+                    return this.element.children;
+                }
+            }
+        }
+
+        /**
+         * place indicator in an ordered list
+         * @param {Sortable} sortable
+         * @param {HTMLElement} dragging
+         * @private
+         */
+
+    }, {
+        key: '_placeInOrderedList',
+        value: function _placeInOrderedList(sortable, dragging) {
+            if (dragging.__sortable.current !== sortable) {
+                var id = sortable.options.orderId;
+                var dragOrder = dragging.getAttribute(id);
+                dragOrder = sortable.options.orderIdIsNumber ? parseFloat(dragOrder) : dragOrder;
+                var found = void 0;
+                var children = sortable._getChildren(true);
+                if (sortable.options.reverseOrder) {
+                    for (var i = children.length - 1; i >= 0; i--) {
+                        var child = children[i];
+                        var childDragOrder = child.getAttribute(id);
+                        childDragOrder = sortable.options.orderIsNumber ? parseFloat(childDragOrder) : childDragOrder;
+                        if (dragOrder > childDragOrder) {
+                            child.parentNode.insertBefore(dragging, child);
+                            found = true;
+                            break;
+                        }
+                    }
+                } else {
+                    var _iteratorNormalCompletion8 = true;
+                    var _didIteratorError8 = false;
+                    var _iteratorError8 = undefined;
+
+                    try {
+                        for (var _iterator8 = children[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                            var _child3 = _step8.value;
+
+                            var _childDragOrder2 = _child3.getAttribute(id);
+                            _childDragOrder2 = sortable.options.orderIsNumber ? parseFloat(_childDragOrder2) : _childDragOrder2;
+                            if (dragOrder < _childDragOrder2) {
+                                _child3.parentNode.insertBefore(dragging, _child3);
+                                found = true;
+                                break;
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError8 = true;
+                        _iteratorError8 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                                _iterator8.return();
+                            }
+                        } finally {
+                            if (_didIteratorError8) {
+                                throw _iteratorError8;
+                            }
+                        }
+                    }
+                }
+                if (!found) {
+                    sortable.element.appendChild(dragging);
+                }
+                dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                sortable.emit('add-pending', dragging, sortable);
+                dragging.__sortable.current = sortable;
+                sortable.emit('update-pending', dragging, sortable);
+            }
+        }
+
+        /**
+         * place indicator in an sortable list
+         * @param {number} x
+         * @param {number} y
+         * @param {HTMLElement} dragging
+         * @private
+         */
+
+    }, {
+        key: '_placeInSortableList',
+        value: function _placeInSortableList(sortable, x, y, dragging) {
+            var element = sortable.element;
+            var children = sortable._getChildren();
+            if (!children.length) {
+                if (dragging.__sortable.current !== sortable) {
+                    dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                    dragging.__sortable.current = sortable;
+                    sortable.emit('add-pending', dragging, sortable);
+                }
+                element.appendChild(dragging);
+            } else {
+                var distance = Infinity,
+                    closest = void 0,
+                    isBefore = void 0,
+                    indicator = void 0;
+                var _elements = sortable._getChildren(true);
+                var _iteratorNormalCompletion9 = true;
+                var _didIteratorError9 = false;
+                var _iteratorError9 = undefined;
+
+                try {
+                    for (var _iterator9 = _elements[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                        var child = _step9.value;
+
+                        if (child === dragging) {
+                            indicator = true;
+                        }
+                        if (utils.inside(x, y, child)) {
+                            if (child === dragging) {
+                                return;
+                            }
+                            closest = child;
+                            isBefore = indicator;
+                            break;
+                        } else {
+                            var measure = utils.distanceToClosestCorner(x, y, child);
+                            if (measure < distance) {
+                                closest = child;
+                                distance = measure;
+                                isBefore = indicator;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError9 = true;
+                    _iteratorError9 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                            _iterator9.return();
+                        }
+                    } finally {
+                        if (_didIteratorError9) {
+                            throw _iteratorError9;
+                        }
+                    }
+                }
+
+                if (closest) {
+                    if (closest === dragging) {
+                        return;
+                    }
+                    if (isBefore) {
+                        element.insertBefore(dragging, closest.nextSibling);
+                    } else {
+                        element.insertBefore(dragging, closest);
+                    }
+                    sortable.emit('order-pending', dragging, sortable);
+                }
+            }
+            if (dragging.__sortable.current !== sortable) {
+                sortable.emit('add-pending', dragging, sortable);
+                dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                dragging.__sortable.current = sortable;
+            }
+            sortable.emit('update-pending', dragging, sortable);
+        }
+
+        /**
+         * set icon if available
+         * @param {HTMLElement} dragging
+         * @param {Sortable} sortable
+         * @param {boolean} [cancel] force cancel (for options.copy)
+         * @private
+         */
+
+    }, {
+        key: '_setIcon',
+        value: function _setIcon(element, sortable, cancel) {
+            var dragging = element.__sortable.dragging;
+            if (dragging && dragging.icon) {
+                if (!sortable) {
+                    sortable = element.__sortable.original;
+                    if (cancel) {
+                        dragging.icon.src = sortable.options.icons.cancel;
+                    } else {
+                        dragging.icon.src = sortable.options.offList === 'delete' ? sortable.options.icons.delete : sortable.options.icons.cancel;
+                    }
+                } else {
+                    if (element.__sortable.isCopy) {
+                        dragging.icon.src = sortable.options.icons.copy;
+                    } else {
+                        dragging.icon.src = element.__sortable.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move;
+                    }
+                }
+            }
+        }
+    }], [{
+        key: 'create',
+
+
+        /**
+         * create multiple sortable elements
+         * @param {HTMLElements[]} elements
+         * @param {object} options - see constructor for options
+         */
+        value: function create(elements, options) {
+            var results = [];
+            var _iteratorNormalCompletion10 = true;
+            var _didIteratorError10 = false;
+            var _iteratorError10 = undefined;
+
+            try {
+                for (var _iterator10 = elements[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                    var element = _step10.value;
+
+                    results.push(new Sortable(element, options));
+                }
+            } catch (err) {
+                _didIteratorError10 = true;
+                _iteratorError10 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
+                    }
+                } finally {
+                    if (_didIteratorError10) {
+                        throw _iteratorError10;
+                    }
+                }
+            }
+
+            return results;
+        }
+    }, {
+        key: 'defaults',
+        get: function get() {
+            return _defaults2.default;
+        }
+    }]);
+
+    return Sortable;
+}(_eventemitter2.default);
 
 /**
  * fires when an element is picked up because it was moved beyond the options.threshold
@@ -18262,6 +18569,13 @@ module.exports = Sortable
  * @event Sortable#remove
  * @property {HTMLElement} element removed
  * @property {Sortable} sortable where element was removed
+ */
+
+/**
+ * fires when an element is removed from all sortables
+ * @event Sortable#delete
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
  */
 
 /**
@@ -18293,29 +18607,197 @@ module.exports = Sortable
  */
 
 /**
+ * fires when an element is about to be removed from all sortables
+ * @event Sortable#delete-pending
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
  * fires when an element is added, removed, or reorder but element has not dropped yet
  * @event Sortable#update-pending
  * @property {HTMLElement} element being dragged
  * @property {Sortable} current sortable with element placeholder
  */
-},{"./options":184,"./toGlobal":186,"eventemitter3":3}],186:[function(require,module,exports){
-// from https://stackoverflow.com/a/26230989/1955997
-module.exports = function toGlobal(e)
-{
-    const box = e.getBoundingClientRect()
 
-    const body = document.body
-    const docEl = document.documentElement
 
-    const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop
-    const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft
+exports.default = Sortable;
 
-    const clientTop = docEl.clientTop || body.clientTop || 0
-    const clientLeft = docEl.clientLeft || body.clientLeft || 0
+},{"./defaults":183,"./utils":186,"eventemitter3":3}],186:[function(require,module,exports){
+'use strict';
 
-    const top = box.top + scrollTop - clientTop
-    const left = box.left + scrollLeft - clientLeft
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.containsClassName = containsClassName;
+exports.distance = distance;
+exports.distanceToClosestCorner = distanceToClosestCorner;
+exports.inside = inside;
+exports.toGlobal = toGlobal;
+exports.options = options;
+exports.style = style;
+/**
+ * Whether element contains classname
+ * @param {HTMLElement} e
+ * @param {string} name
+ * @returns {boolean}
+ * @private
+ */
+function containsClassName(e, name) {
+    if (e.className) {
+        var list = e.className.split(' ');
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-    return { y: Math.round(top), x: Math.round(left) }
+        try {
+            for (var _iterator = list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var entry = _step.value;
+
+                if (entry === name) {
+                    return true;
+                }
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    }
+    return false;
 }
+
+/**
+ * measure distance between two points
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} x2
+ * @param {number} y2
+ */
+function distance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+}
+
+/**
+ * find closest distance from UIEvent to a corner of an element
+ * @param {number} x
+ * @param {number} y
+ * @param {HTMLElement} element
+ */
+function distanceToClosestCorner(x, y, element) {
+    var pos = toGlobal(element);
+    var topLeft = distance(x, y, pos.x, pos.y);
+    var topRight = distance(x, y, pos.x + element.offsetWidth, pos.y);
+    var bottomLeft = distance(x, y, pos.x, pos.y + element.offsetHeight);
+    var bottomRight = distance(x, y, pos.x + element.offsetWidth, pos.y + element.offsetHeight);
+    return Math.min(topLeft, topRight, bottomLeft, bottomRight);
+}
+
+/**
+ * determine whether the mouse is inside an element
+     * @param {HTMLElement} dragging
+ * @param {HTMLElement} element
+ */
+function inside(x, y, element) {
+    var pos = toGlobal(element);
+    var x1 = pos.x;
+    var y1 = pos.y;
+    var w1 = element.offsetWidth;
+    var h1 = element.offsetHeight;
+    return x >= x1 && x <= x1 + w1 && y >= y1 && y <= y1 + h1;
+}
+
+/**
+ * determines global location of a div
+ * from https://stackoverflow.com/a/26230989/1955997
+ * @param {HTMLElement} e
+ * @returns {PointLike}
+ */
+function toGlobal(e) {
+    var box = e.getBoundingClientRect();
+
+    var body = document.body;
+    var docEl = document.documentElement;
+
+    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+    var clientTop = docEl.clientTop || body.clientTop || 0;
+    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+    var top = box.top + scrollTop - clientTop;
+    var left = box.left + scrollLeft - clientLeft;
+
+    return { y: Math.round(top), x: Math.round(left) };
+}
+
+/**
+ * @typedef {object} PointLike
+ * @property {number} x
+ * @property {number} y
+ */
+
+/**
+ * combines options and default options
+ * @param {object} options
+ * @param {object} defaults
+ * @returns {object} options+defaults
+ */
+function options(options, defaults) {
+    options = options || {};
+    for (var option in defaults) {
+        options[option] = typeof options[option] !== 'undefined' ? options[option] : defaults[option];
+    }
+    return options;
+}
+
+/**
+ * set a style on an element
+ * @param {HTMLElement} element
+ * @param {string} style
+ * @param {(string|string[])} value - single value or list of possible values (test each one in order to see if it works)
+ */
+function style(element, style, value) {
+    if (Array.isArray(value)) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+            for (var _iterator2 = value[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var entry = _step2.value;
+
+                element.style[style] = entry;
+                if (element.style[style] === entry) {
+                    break;
+                }
+            }
+        } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
+                }
+            } finally {
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
+                }
+            }
+        }
+    } else {
+        element.style[style] = value;
+    }
+}
+
 },{}]},{},[1]);
