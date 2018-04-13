@@ -1,69 +1,62 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
-var _sortable = require('../src/sortable');
-
-var _sortable2 = _interopRequireDefault(_sortable);
-
-var _highlight = require('./highlight');
-
-var _highlight2 = _interopRequireDefault(_highlight);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var Sortable = require('../src/sortable');
+var Highlight = require('./highlight');
 
 function test() {
     var one = document.getElementById('example-1');
-    var a1 = new _sortable2.default(one);
+    var a1 = new Sortable(one);
     events(one, [a1]);
 
     var two = document.getElementById('example-2');
-    var a2 = new _sortable2.default(two.children[0], { name: 'list-2' });
-    var b2 = new _sortable2.default(two.children[1], { name: 'list-2' });
-    var c2 = new _sortable2.default(two.children[2], { name: 'list-2' });
+    var a2 = new Sortable(two.children[0], { name: 'list-2' });
+    var b2 = new Sortable(two.children[1], { name: 'list-2' });
+    var c2 = new Sortable(two.children[2], { name: 'list-2' });
     events(two, [a2, b2, c2]);
 
     var three = document.getElementById('example-3');
-    var a3 = new _sortable2.default(three.children[0], { name: 'list-3' });
-    var b3 = new _sortable2.default(three.children[1], { name: 'list-3', sort: false });
+    var a3 = new Sortable(three.children[0], { name: 'list-3' });
+    var b3 = new Sortable(three.children[1], { name: 'list-3', sort: false });
     events(three, [a3, b3]);
 
     var four = document.getElementById('example-4');
-    var a4 = new _sortable2.default(four.children[0], { name: 'list-4' });
-    var b4 = new _sortable2.default(four.children[1], { name: 'list-4' });
+    var a4 = new Sortable(four.children[0], { name: 'list-4' });
+    var b4 = new Sortable(four.children[1], { name: 'list-4' });
     events(four, [a4, b4]);
 
     var five = document.getElementById('example-5');
-    var a5 = new _sortable2.default(five.children[0], { name: 'list-5', dragClass: 'entry' });
-    var b5 = new _sortable2.default(five.children[1], { name: 'list-5', dragClass: 'entry', sort: false, orderClass: 'skip' });
+    var a5 = new Sortable(five.children[0], { name: 'list-5', dragClass: 'entry' });
+    var b5 = new Sortable(five.children[1], { name: 'list-5', dragClass: 'entry', sort: false, orderClass: 'skip' });
     events(five, [a5, b5]);
 
     var six = document.getElementById('example-6');
-    var a6 = new _sortable2.default(six.children[0], { name: 'list-6', dragClass: 'entry' });
-    var b6 = new _sortable2.default(six.children[1], { name: 'list-6', dragClass: 'entry', deepSearch: true, sort: false });
+    var a6 = new Sortable(six.children[0], { name: 'list-6', dragClass: 'entry' });
+    var b6 = new Sortable(six.children[1], { name: 'list-6', dragClass: 'entry', deepSearch: true, sort: false });
     events(six, [a6, b6]);
 
     var seven = document.getElementById('example-7');
-    var a7 = new _sortable2.default(seven.children[0], { name: 'list-7', dragClass: 'entry' });
-    var b7 = new _sortable2.default(seven.children[1], { name: 'list-7', dragClass: 'entry', sort: false, reverseOrder: true });
+    var a7 = new Sortable(seven.children[0], { name: 'list-7', dragClass: 'entry' });
+    var b7 = new Sortable(seven.children[1], { name: 'list-7', dragClass: 'entry', sort: false, reverseOrder: true });
     events(seven, [a7, b7]);
 
     var eight = document.getElementById('example-8');
-    var a8 = new _sortable2.default(eight.children[0], { name: 'list-8', offList: 'cancel' });
-    var b8 = new _sortable2.default(eight.children[1], { name: 'list-8', offList: 'cancel' });
+    var a8 = new Sortable(eight.children[0], { name: 'list-8', offList: 'cancel' });
+    var b8 = new Sortable(eight.children[1], { name: 'list-8', offList: 'cancel' });
     events(eight, [a8, b8]);
 
     var nine = document.getElementById('example-9');
-    var a9 = new _sortable2.default(nine, { name: 'list-9', offList: 'delete' });
+    var a9 = new Sortable(nine, { name: 'list-9', offList: 'delete' });
     events(nine, [a9]);
 
     var ten = document.getElementById('example-10');
-    var a10 = new _sortable2.default(ten.children[0], { name: 'list-10' });
-    var b10 = new _sortable2.default(ten.children[1], { name: 'list-10', drop: false });
+    var a10 = new Sortable(ten.children[0], { name: 'list-10' });
+    var b10 = new Sortable(ten.children[1], { name: 'list-10', drop: false });
     events(ten, [a10, b10]);
 
     var eleven = document.getElementById('example-11');
-    var a11 = new _sortable2.default(eleven.children[0], { name: 'list-11' });
-    var b11 = new _sortable2.default(eleven.children[1], { name: 'list-11', copy: true });
+    var a11 = new Sortable(eleven.children[0], { name: 'list-11' });
+    var b11 = new Sortable(eleven.children[1], { name: 'list-11', copy: true });
     events(eleven, [a11, b11]);
 }
 
@@ -89,47 +82,39 @@ function events(div, sortables) {
         on('delete-pending', i);
         on('order-pending', i);
         on('update-pending', i);
+        on('copy-pending', i);
         on('add', i);
         on('remove', i);
         on('delete', i);
         on('order', i);
         on('update', i);
+        on('copy', i);
     }
 }
 
 window.onload = function () {
     test();
-    (0, _highlight2.default)();
+    Highlight();
 };
 
 },{"../src/sortable":185,"./highlight":2}],2:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = highlight;
-
-var _highlight = require('highlight.js');
-
-var _forkMeGithub = require('fork-me-github');
-
-var _forkMeGithub2 = _interopRequireDefault(_forkMeGithub);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var highlight = require('highlight.js');
+var ForkMe = require('fork-me-github').default;
 
 // shows the code in the demo
-function highlight() {
+module.exports = function () {
     var client = new XMLHttpRequest();
     client.open('GET', 'code.js');
     client.onreadystatechange = function () {
         var code = document.getElementById('code');
         code.innerHTML = client.responseText;
-        (0, _highlight.highlightBlock)(code);
+        highlight.highlightBlock(code);
     };
     client.send();
-    (0, _forkMeGithub2.default)();
-}
+    ForkMe();
+};
 
 },{"fork-me-github":4,"highlight.js":6}],3:[function(require,module,exports){
 'use strict';
@@ -17498,10 +17483,10 @@ var icons = require('./icons');
  * @property {string} [options.orderId=data-order] for ordered lists, use this data id to figure out sort order
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
- * @property {boolean} [options.alwaysInList=true] place element inside closest related Sortable object; if set to false then the object is removed if dropped outside related sortables
- * @property {boolean} [options.returnToOriginal=true] if alwaysInList=false and element is dropped where there are no sortables then the element is returned to its starting sortable
+ * @property {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
  * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
  * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
+ * @property {number} [options.threshold=10] minimum movement distance in pixels before calculating a movement
  * @property {boolean} [options.useIcons=true] show icons when dragging
  * @property {object} [options.icons] default set of icons
  * @property {string} [options.icons.reorder]
@@ -17517,7 +17502,7 @@ module.exports = {
     copy: false,
     orderId: 'data-order',
     orderIdIsNumber: true,
-    threshold: 10,
+    threshold: 5,
     dragClass: null,
     orderClass: null,
     offList: 'closest',
@@ -17544,25 +17529,16 @@ module.exports = { copy: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAU
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventemitter = require('eventemitter3');
-
-var _eventemitter2 = _interopRequireDefault(_eventemitter);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var Events = require('eventemitter3');
+
 var defaults = require('./defaults');
 var utils = require('./utils');
-
-/**
- * Sortable Class
- * @class
- */
 
 var Sortable = function (_Events) {
     _inherits(Sortable, _Events);
@@ -17597,11 +17573,13 @@ var Sortable = function (_Events) {
      * @fires remove
      * @fires update
      * @fires delete
+     * @fires copy
      * @fires order-pending
      * @fires add-pending
      * @fires remove-pending
      * @fires update-pending
      * @fires delete-pending
+     * @fires copy-pending
      */
     function Sortable(element, options) {
         _classCallCheck(this, Sortable);
@@ -17900,6 +17878,13 @@ var Sortable = function (_Events) {
                 var element = document.getElementById(id);
                 var sortable = this._findClosest(e, Sortable.tracker[name].list, element);
                 if (sortable) {
+                    if (sortable.last && Math.abs(sortable.last.x - e.pageX) < sortable.options.threshold && Math.abs(sortable.last.y - e.pageY) < sortable.options.threshold) {
+                        sortable._updateDragging(e, element);
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+                    sortable.last = { x: e.pageX, y: e.pageY };
                     this._placeInList(sortable, e.pageX, e.pageY, element);
                     e.dataTransfer.dropEffect = 'move';
                     this._updateDragging(e, element);
@@ -18030,6 +18015,13 @@ var Sortable = function (_Events) {
             if (sortable && sortable === this.options.name) {
                 var id = e.dataTransfer.types[1];
                 var element = document.getElementById(id);
+                if (this.last && Math.abs(this.last.x - e.pageX) < this.options.threshold && Math.abs(this.last.y - e.pageY) < this.options.threshold) {
+                    this._updateDragging(e, element);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                this.last = { x: e.pageX, y: e.pageY };
                 if (element.__sortable.isCopy && element.__sortable.original === this) {
                     this._noDrop(e, true);
                 } else if (this.options.drop || element.__sortable.original === this) {
@@ -18081,6 +18073,9 @@ var Sortable = function (_Events) {
                     element.__sortable.original = this;
                     if (this.options.sort) {
                         this.emit('order', element, this);
+                    }
+                    if (element.__sortable.isCopy) {
+                        this.emit('copy', element, this);
                     }
                     this.emit('update', element, this);
                 } else {
@@ -18363,24 +18358,30 @@ var Sortable = function (_Events) {
                 }
                 dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
                 sortable.emit('add-pending', dragging, sortable);
+                if (dragging.__sortable.isCopy) {
+                    sortable.emit('copy-pending', dragging, sortable);
+                }
                 dragging.__sortable.current = sortable;
                 sortable.emit('update-pending', dragging, sortable);
             }
         }
 
         /**
-         * search for where to place using distance
+         * search for where to place using percentage
          * @param {Sortable} sortable
          * @param {HTMLElement} dragging
-         * @param {number} x
-         * @param {number} y
-         * @return {boolean} false=nothing to do
+         * @returns {number} 0 = not found; 1 = nothing to do; 2 = moved
          */
 
     }, {
-        key: '_placeByDistance',
-        value: function _placeByDistance(sortable, dragging, x, y) {
-            var distance = Infinity,
+        key: '_placeByPercentage',
+        value: function _placeByPercentage(sortable, dragging) {
+            var cursor = dragging.__sortable.dragging;
+            var xa1 = cursor.offsetLeft;
+            var ya1 = cursor.offsetTop;
+            var xa2 = cursor.offsetLeft + cursor.offsetWidth;
+            var ya2 = cursor.offsetTop + cursor.offsetHeight;
+            var largest = 0,
                 closest = void 0,
                 isBefore = void 0,
                 indicator = void 0;
@@ -18397,17 +18398,16 @@ var Sortable = function (_Events) {
                     if (child === dragging) {
                         indicator = true;
                     }
-                    if (utils.inside(x, y, child)) {
+                    var pos = utils.toGlobal(child);
+                    var xb1 = pos.x;
+                    var yb1 = pos.y;
+                    var xb2 = pos.x + child.offsetWidth;
+                    var yb2 = pos.y + child.offsetHeight;
+                    var percentage = utils.percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2);
+                    if (percentage > largest) {
+                        largest = percentage;
                         closest = child;
                         isBefore = indicator;
-                        break;
-                    } else {
-                        var measure = utils.distanceToClosestCorner(x, y, child);
-                        if (measure < distance) {
-                            closest = child;
-                            distance = measure;
-                            isBefore = indicator;
-                        }
                     }
                 }
             } catch (err) {
@@ -18425,13 +18425,84 @@ var Sortable = function (_Events) {
                 }
             }
 
-            if (closest === dragging) {
+            if (closest) {
+                if (closest === dragging) {
+                    return 1;
+                }
+                if (isBefore && closest.nextSibling) {
+                    element.insertBefore(dragging, closest.nextSibling);
+                    sortable.emit('order-pending', sortable);
+                } else {
+                    element.insertBefore(dragging, closest);
+                    sortable.emit('order-pending', sortable);
+                }
+                return 2;
+            } else {
+                return 0;
+            }
+        }
+
+        /**
+         * search for where to place using distance
+         * @param {Sortable} sortable
+         * @param {HTMLElement} dragging
+         * @param {number} x
+         * @param {number} y
+         * @return {boolean} false=nothing to do
+         */
+
+    }, {
+        key: '_placeByDistance',
+        value: function _placeByDistance(sortable, dragging, x, y) {
+            if (utils.inside(x, y, dragging)) {
                 return true;
             }
-            if (isBefore) {
-                element.insertBefore(dragging, closest.nextSibling);
-            } else {
-                element.insertBefore(dragging, closest);
+            var index = -1;
+            if (dragging.__sortable.current === sortable) {
+                index = sortable._getIndex(dragging);
+                sortable.element.appendChild(dragging);
+            }
+            var distance = Infinity,
+                closest = void 0;
+            var element = sortable.element;
+            var elements = sortable._getChildren(true);
+            var _iteratorNormalCompletion10 = true;
+            var _didIteratorError10 = false;
+            var _iteratorError10 = undefined;
+
+            try {
+                for (var _iterator10 = elements[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                    var child = _step10.value;
+
+                    if (utils.inside(x, y, child)) {
+                        closest = child;
+                        break;
+                    } else {
+                        var measure = utils.distanceToClosestCorner(x, y, child);
+                        if (measure < distance) {
+                            closest = child;
+                            distance = measure;
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError10 = true;
+                _iteratorError10 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
+                    }
+                } finally {
+                    if (_didIteratorError10) {
+                        throw _iteratorError10;
+                    }
+                }
+            }
+
+            element.insertBefore(dragging, closest);
+            if (index === sortable._getIndex(dragging)) {
+                return true;
             }
             sortable.emit('order-pending', dragging, sortable);
         }
@@ -18454,15 +18525,22 @@ var Sortable = function (_Events) {
                     dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
                     dragging.__sortable.current = sortable;
                     sortable.emit('add-pending', dragging, sortable);
+                    if (dragging.__sortable.isCopy) {
+                        sortable.emit('copy-pending', dragging, sortable);
+                    }
                 }
                 element.appendChild(dragging);
             } else {
+                // const percentage = this._placeByPercentage(sortable, dragging)
                 if (this._placeByDistance(sortable, dragging, x, y)) {
                     return;
                 }
             }
             if (dragging.__sortable.current !== sortable) {
                 sortable.emit('add-pending', dragging, sortable);
+                if (dragging.__sortable.isCopy) {
+                    sortable.emit('copy-pending', dragging, sortable);
+                }
                 dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
                 dragging.__sortable.current = sortable;
             }
@@ -18509,27 +18587,27 @@ var Sortable = function (_Events) {
          */
         value: function create(elements, options) {
             var results = [];
-            var _iteratorNormalCompletion10 = true;
-            var _didIteratorError10 = false;
-            var _iteratorError10 = undefined;
+            var _iteratorNormalCompletion11 = true;
+            var _didIteratorError11 = false;
+            var _iteratorError11 = undefined;
 
             try {
-                for (var _iterator10 = elements[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-                    var element = _step10.value;
+                for (var _iterator11 = elements[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                    var element = _step11.value;
 
                     results.push(new Sortable(element, options));
                 }
             } catch (err) {
-                _didIteratorError10 = true;
-                _iteratorError10 = err;
+                _didIteratorError11 = true;
+                _iteratorError11 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                        _iterator10.return();
+                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                        _iterator11.return();
                     }
                 } finally {
-                    if (_didIteratorError10) {
-                        throw _iteratorError10;
+                    if (_didIteratorError11) {
+                        throw _iteratorError11;
                     }
                 }
             }
@@ -18544,7 +18622,7 @@ var Sortable = function (_Events) {
     }]);
 
     return Sortable;
-}(_eventemitter2.default);
+}(Events);
 
 /**
  * fires when an element is picked up because it was moved beyond the options.threshold
@@ -18577,6 +18655,13 @@ var Sortable = function (_Events) {
 /**
  * fires when an element is removed from all sortables
  * @event Sortable#delete
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
+ * fires when a copy of an element is dropped
+ * @event Sortable#copy
  * @property {HTMLElement} element removed
  * @property {Sortable} sortable where element was dragged from
  */
@@ -18621,6 +18706,13 @@ var Sortable = function (_Events) {
  * @event Sortable#update-pending
  * @property {HTMLElement} element being dragged
  * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
+ * fires when a copy of an element is about to drop
+ * @event Sortable#copy-pending
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
  */
 
 module.exports = Sortable;
@@ -18817,6 +18909,7 @@ function percentage(xa1, ya1, xa2, ya2, xb1, yb1, xb2, yb2) {
 
 module.exports = {
     containsClassName: containsClassName,
+    distance: distance,
     distanceToClosestCorner: distanceToClosestCorner,
     inside: inside,
     toGlobal: toGlobal,
