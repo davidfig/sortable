@@ -318,7 +318,7 @@ class Sortable extends Events
                         element.__sortable.original.emit('delete-pending', element, element.__sortable.original)
                     }
                 }
-                else
+                else if (!element.__sortable.original.options.copy)
                 {
                     this._replaceInList(element.__sortable.original, element)
                 }
