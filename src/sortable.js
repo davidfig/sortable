@@ -119,27 +119,6 @@ export default class Sortable extends Events
             results.push(new Sortable(element, options))
         }
         return results
-    }    /**
-     * add sortable to global list that tracks all sortables
-     * @private
-     */
-
-    _addToGlobalTracker()
-    {
-        if (!Sortable.tracker)
-        {
-            Sortable.tracker = {}
-            document.body.addEventListener('dragover', (e) => this._bodyDragOver(e))
-            document.body.addEventListener('drop', (e) => this._bodyDrop(e))
-        }
-        if (Sortable.tracker[this.options.name])
-        {
-            Sortable.tracker[this.options.name].list.push(this)
-        }
-        else
-        {
-            Sortable.tracker[this.options.name] = { list: [this], counter: 0 }
-        }
     }
 
     /**
@@ -247,6 +226,28 @@ export default class Sortable extends Events
     }
 
     /**
+     * add sortable to global list that tracks all sortables
+     * @private
+     */
+    _addToGlobalTracker()
+    {
+        if (!Sortable.tracker)
+        {
+            Sortable.tracker = {}
+            document.body.addEventListener('dragover', (e) => this._bodyDragOver(e))
+            document.body.addEventListener('drop', (e) => this._bodyDrop(e))
+        }
+        if (Sortable.tracker[this.options.name])
+        {
+            Sortable.tracker[this.options.name].list.push(this)
+        }
+        else
+        {
+            Sortable.tracker[this.options.name] = { list: [this], counter: 0 }
+        }
+    }
+
+    /**
      * default drag over for the body
      * @param {DragEvent} e
      * @private
@@ -267,29 +268,39 @@ export default class Sortable extends Events
             }
             else
             {
-                e.dataTransfer.dropEffect = 'move'
-                const id = e.dataTransfer.types[1]
-                const element = document.getElementById(id)
-                if (element)
-                {
-                    this._updateDragging(e, element)
-                    this._setIcon(element, null)
-                    if (element.__sortable.original.options.offList === 'delete')
-                    {
-                        if (!element.__sortable.display)
-                        {
-                            element.__sortable.display = element.style.display || 'unset'
-                            element.style.display = 'none'
-                            element.__sortable.original.emit('delete-pending', element, element.__sortable.original)
-                        }
-                    }
-                    else
-                    {
-                        this._replaceInList(element.__sortable.original, element)
-                    }
-                }
+                this._noDrop(e)
             }
             e.preventDefault()
+        }
+    }
+
+    /**
+     * handle no drop
+     * @param {UIEvent} e
+     * @private
+     */
+    _noDrop(e)
+    {
+        e.dataTransfer.dropEffect = 'move'
+        const id = e.dataTransfer.types[1]
+        const element = document.getElementById(id)
+        if (element)
+        {
+            this._updateDragging(e, element)
+            this._setIcon(element, null)
+            if (element.__sortable.original.options.offList === 'delete')
+            {
+                if (!element.__sortable.display)
+                {
+                    element.__sortable.display = element.style.display || 'unset'
+                    element.style.display = 'none'
+                    element.__sortable.original.emit('delete-pending', element, element.__sortable.original)
+                }
+            }
+            else
+            {
+                this._replaceInList(element.__sortable.original, element)
+            }
         }
     }
 
@@ -374,9 +385,16 @@ export default class Sortable extends Events
         {
             const id = e.dataTransfer.types[1]
             const element = document.getElementById(id)
-            this._placeInList(this, e.pageX, e.pageY, element)
-            e.dataTransfer.dropEffect = 'move'
-            this._updateDragging(e, element)
+            if (this.options.drop || element.__sortable.original === this)
+            {
+                this._placeInList(this, e.pageX, e.pageY, element)
+                e.dataTransfer.dropEffect = 'move'
+                this._updateDragging(e, element)
+            }
+            else
+            {
+                this._noDrop(e)
+            }
             e.preventDefault()
             e.stopPropagation()
         }
@@ -452,7 +470,7 @@ export default class Sortable extends Events
         let min = Infinity, found
         for (let related of list)
         {
-            if (!element.__sortable.original.options.drop && element.__sortable.original !== related)
+            if (!related.options.drop && element.__sortable.original !== related)
             {
                 continue
             }

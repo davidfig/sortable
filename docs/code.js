@@ -48,8 +48,8 @@ function test()
     events(nine, [a9])
 
     const ten = document.getElementById('example-10')
-    const a10 = new Sortable(ten.children[0], { name: 'list-10', copy: true })
-    const b10 = new Sortable(ten.children[1], { name: 'list-10' })
+    const a10 = new Sortable(ten.children[0], { name: 'list-10' })
+    const b10 = new Sortable(ten.children[1], { name: 'list-10', drop: false })
     events(ten, [a10, b10])
 }
 
