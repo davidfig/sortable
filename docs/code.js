@@ -39,8 +39,8 @@ function test()
     events(seven, [a7, b7])
 
     const eight = document.getElementById('example-8')
-    const a8 = new Sortable(eight.children[0], { name: 'list-8' })//, offList: 'cancel' })
-    const b8 = new Sortable(eight.children[1], { name: 'list-8' })//, offList: 'cancel' })
+    const a8 = new Sortable(eight.children[0], { name: 'list-8', offList: 'cancel' })
+    const b8 = new Sortable(eight.children[1], { name: 'list-8', offList: 'cancel' })
     events(eight, [a8, b8])
 
     const nine = document.getElementById('example-9')

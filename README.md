@@ -4,24 +4,26 @@ Vanilla drag-and-drop sortable list(s)
 Features include:
 
 * dragging and dropping between sortable and ordered lists (options.sort)
-* optional removing when dragging off lists (options.alwaysInList)
-* better movement algorithm (I compare the percentage of div covered to determine when to swap)
+* three ways to handle dragging off lists:
+  1. closest - find closest list
+  2. cancel - return to original position before dragging
+  3. delete - remove element from all lists
+* custom ghost image and icon support so dragging looks nicer and isn't limited by browser
 * search descendents for a className when determining where to sort or how to order (options.deepSearch)
-* custom icons to show what is happening during drag
-* robust event system based on eventemitter3
-* ordered lists may be reverse ordered 
+* robust event system based on eventemitter3 (i.e., add, remove, order, update, delete, and -pending versions of these events)
+* ordered lists may be reverse ordered and ordered by a data-? setting
+* dynamically add elements
+* uses built in drag and drop API
 
 ## Rationale
 I tried many of the existing drag-and-drop libraries but could not find all the features I wanted in one neat package.
-
-The goal of this package is to enable (fake) drag-and-drop between ordered and sortable lists. The library does not use the built-in drag and drop API but instead use mouse and touch events to simulate the drag and drop. This means if you're looking to drag and drop between your document and other apps then you should use a different library. (I based this design decision on my needs and a set of old code that did not use the drag and drop API.) 
 
 ## Super Simple Example
 ```js
     new Sortable(document.getElementById('sortme'))
 ```
 
-## Live Example
+## Examples Showing Features
 [davidfig.github.io/sortable/](https://davidfig.github.io/sortable/)
 
 ## API Documentation

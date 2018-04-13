@@ -256,11 +256,11 @@ export default class Sortable extends Events
         const name = e.dataTransfer.types[0]
         if (name)
         {
-            const sortable = this._findClosest(e, Sortable.tracker[name].list)
+            const id = e.dataTransfer.types[1]
+            const element = document.getElementById(id)
+            const sortable = this._findClosest(e, Sortable.tracker[name].list, element)
             if (sortable)
             {
-                const id = e.dataTransfer.types[1]
-                const element = document.getElementById(id)
                 this._placeInList(sortable, e.pageX, e.pageY, element)
                 e.dataTransfer.dropEffect = 'move'
                 this._updateDragging(e, element)
@@ -303,9 +303,9 @@ export default class Sortable extends Events
         const name = e.dataTransfer.types[0]
         if (name)
         {
-            const sortable = this._findClosest(e, Sortable.tracker[name].list)
             const id = e.dataTransfer.types[1]
             const element = document.getElementById(id)
+            const sortable = this._findClosest(e, Sortable.tracker[name].list, element)
             if (element)
             {
                 if (sortable)
@@ -443,15 +443,19 @@ export default class Sortable extends Events
     /**
      * find closest Sortable to screen location
      * @param {UIEvent} e
-     * @param {HTMLElement} dragging
      * @param {Sortable[]} list of related Sortables
+     * @param {HTMLElement} element
      * @private
      */
-    _findClosest(e, list)
+    _findClosest(e, list, element)
     {
         let min = Infinity, found
         for (let related of list)
         {
+            if (!element.__sortable.original.options.drop && element.__sortable.original !== related)
+            {
+                continue
+            }
             if (utils.inside(e.pageX, e.pageY, related.element))
             {
                 return related

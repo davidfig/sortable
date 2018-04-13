@@ -37,7 +37,7 @@ export default {
     returnToOriginal: false,
     dragClass: null,
     orderClass: null,
-    returnHome: true,
+    offList: 'closest',
     deepSearch: false,
     dragStyle: {
         boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
