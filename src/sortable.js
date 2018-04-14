@@ -479,6 +479,12 @@ class Sortable extends Events
         }
     }
 
+    /**
+     * update the dragging element
+     * @param {UIEvent} e
+     * @param {HTMLElement} element
+     * @private
+     */
     _updateDragging(e, element)
     {
         const dragging = element.__sortable.dragging
@@ -495,6 +501,11 @@ class Sortable extends Events
         }
     }
 
+    /**
+     * remove the dragging element
+     * @param {HTMLElement} element
+     * @private
+     */
     _removeDragging(element)
     {
         const dragging = element.__sortable.dragging
@@ -507,6 +518,11 @@ class Sortable extends Events
         element.__sortable.isCopy = false
     }
 
+    /**
+     * drop the element into a sortable
+     * @param {HTMLElement} e
+     * @private
+     */
     _drop(e)
     {
         const name = e.dataTransfer.types[0]
@@ -629,6 +645,12 @@ class Sortable extends Events
         }
     }
 
+    /**
+     * count the index of the child in the list of children
+     * @param {HTMLElement} child
+     * @return {number}
+     * @private
+     */
     _getIndex(child)
     {
         const children = this._getChildren()
@@ -641,6 +663,13 @@ class Sortable extends Events
         }
     }
 
+    /**
+     * traverse and search descendents in DOM
+     * @param {HTMLElement} base
+     * @param {string} search
+     * @param {HTMLElement[]} results to return
+     * @private
+     */
     _traverseChildren(base, search, results)
     {
         for (let child of base.children)
@@ -791,6 +820,7 @@ class Sortable extends Events
      * @param {Sortable} sortable
      * @param {HTMLElement} dragging
      * @returns {number} 0 = not found; 1 = nothing to do; 2 = moved
+     * @private
      */
     _placeByPercentage(sortable, dragging)
     {
@@ -852,6 +882,7 @@ class Sortable extends Events
      * @param {number} x
      * @param {number} y
      * @return {boolean} false=nothing to do
+     * @private
      */
     _placeByDistance(sortable, dragging, x, y)
     {
@@ -983,6 +1014,7 @@ class Sortable extends Events
      * add a maximum counter to the element
      * @param {HTMLElement} element
      * @param {Sortable} sortable
+     * @private
      */
     _maximumCounter(element, sortable)
     {
@@ -1003,6 +1035,7 @@ class Sortable extends Events
 
     /**
      * handle maximum
+     * @private
      */
     _maximum(element, sortable)
     {
@@ -1028,6 +1061,7 @@ class Sortable extends Events
     /**
      * clear pending list
      * @param {Sortable} sortable
+     * @private
      */
     _clearMaximumPending(sortable)
     {
@@ -1083,6 +1117,11 @@ class Sortable extends Events
         }
     }
 
+    /**
+     * change cursor during mousedown
+     * @param {MouseEvent} e
+     * @private
+     */
     _mouseDown(e)
     {
         if (this.options.cursorHover)
