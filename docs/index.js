@@ -17647,12 +17647,16 @@ var Sortable = function (_Events) {
             drop: function drop(e) {
                 return _this._drop(e);
             },
+            dragLeave: function dragLeave(e) {
+                return _this._dragLeave(e);
+            },
             mouseOver: function mouseOver(e) {
                 return _this._mouseEnter(e);
             }
         };
         element.addEventListener('dragover', _this.events.dragOver);
         element.addEventListener('drop', _this.events.drop);
+        element.addEventListener('dragleave', _this.events.dragLeave);
         if (_this.options.cursorHover) {
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
@@ -17687,19 +17691,12 @@ var Sortable = function (_Events) {
         return _this;
     }
 
+    /**
+     * removes all event handlers from this.element and children
+     */
+
+
     _createClass(Sortable, [{
-        key: '_mouseDown',
-        value: function _mouseDown(e) {
-            if (this.options.cursorHover) {
-                utils.style(e.currentTarget, 'cursor', this.options.cursorDown);
-            }
-        }
-
-        /**
-         * removes all event handlers from this.element and children
-         */
-
-    }, {
         key: 'destroy',
         value: function destroy() {
             this.element.removeEventListener('dragover', this.events.dragOver);
@@ -17743,7 +17740,7 @@ var Sortable = function (_Events) {
 
         /**
          * add an element as a child of the sortable element; can also be used to swap between sortables
-         * NOTE: this will not work with deep-type elements; use attachElement instead
+         * NOTE: this may not work with deepSearch non-ordered elements; use attachElement instead
          * @param {HTMLElement} element
          * @param {number} index
          */
@@ -17903,21 +17900,23 @@ var Sortable = function (_Events) {
                 var id = e.dataTransfer.types[1];
                 var element = document.getElementById(id);
                 var sortable = this._findClosest(e, Sortable.tracker[name].list, element);
-                if (sortable) {
-                    if (sortable.last && Math.abs(sortable.last.x - e.pageX) < sortable.options.threshold && Math.abs(sortable.last.y - e.pageY) < sortable.options.threshold) {
-                        sortable._updateDragging(e, element);
-                        e.preventDefault();
-                        e.stopPropagation();
-                        return;
+                if (element) {
+                    if (sortable) {
+                        if (sortable.last && Math.abs(sortable.last.x - e.pageX) < sortable.options.threshold && Math.abs(sortable.last.y - e.pageY) < sortable.options.threshold) {
+                            sortable._updateDragging(e, element);
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return;
+                        }
+                        sortable.last = { x: e.pageX, y: e.pageY };
+                        this._placeInList(sortable, e.pageX, e.pageY, element);
+                        e.dataTransfer.dropEffect = 'move';
+                        this._updateDragging(e, element);
+                    } else {
+                        this._noDrop(e);
                     }
-                    sortable.last = { x: e.pageX, y: e.pageY };
-                    this._placeInList(sortable, e.pageX, e.pageY, element);
-                    e.dataTransfer.dropEffect = 'move';
-                    this._updateDragging(e, element);
-                } else {
-                    this._noDrop(e);
+                    e.preventDefault();
                 }
-                e.preventDefault();
             }
         }
 
@@ -17949,6 +17948,7 @@ var Sortable = function (_Events) {
                     }
                 }
                 if (element.__sortable.current) {
+                    this._clearMaximumPending(element.__sortable.current);
                     element.__sortable.current.emit('add-remove-pending', element, element.__sortable.current);
                     element.__sortable.current.emit('update-pending', element, element.__sortable.current);
                     element.__sortable.current = null;
@@ -18039,6 +18039,28 @@ var Sortable = function (_Events) {
             target.__sortable.dragging = dragging;
             target.__sortable.offset = offset;
         }
+
+        /**
+         * handle drag leave events for sortable element
+         * @param {DragEvent} e
+         * @private
+         */
+
+    }, {
+        key: '_dragLeave',
+        value: function _dragLeave(e) {
+            var sortable = e.dataTransfer.types[0];
+            if (sortable && sortable === this.options.name) {
+                this._clearMaximumPending(sortable);
+            }
+        }
+
+        /**
+         * handle drag over events for sortable element
+         * @param {DragEvent} e
+         * @private
+         */
+
     }, {
         key: '_dragOver',
         value: function _dragOver(e) {
@@ -18425,7 +18447,6 @@ var Sortable = function (_Events) {
                 if (dragging.__sortable.isCopy) {
                     sortable.emit('copy-pending', dragging, sortable);
                 }
-                this._clearMaximumPending(dragging.__sortable.current);
                 dragging.__sortable.current = sortable;
                 this._maximumPending(dragging, sortable);
                 sortable.emit('update-pending', dragging, sortable);
@@ -18588,16 +18609,6 @@ var Sortable = function (_Events) {
             var element = sortable.element;
             var children = sortable._getChildren();
             if (!children.length) {
-                if (dragging.__sortable.current !== sortable) {
-                    if (dragging.__sortable.current) {
-                        dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
-                    }
-                    dragging.__sortable.current = sortable;
-                    sortable.emit('add-pending', dragging, sortable);
-                    if (dragging.__sortable.isCopy) {
-                        sortable.emit('copy-pending', dragging, sortable);
-                    }
-                }
                 element.appendChild(dragging);
             } else {
                 // const percentage = this._placeByPercentage(sortable, dragging)
@@ -18611,7 +18622,6 @@ var Sortable = function (_Events) {
                     sortable.emit('copy-pending', dragging, sortable);
                 }
                 if (dragging.__sortable.current) {
-                    this._clearMaximumPending(dragging.__sortable.current);
                     if (dragging.__sortable.current !== dragging.__sortable.original) {
                         dragging.__sortable.current.emit('add-remove-pending', dragging, dragging.__sortable.current);
                     } else {
@@ -18713,6 +18723,7 @@ var Sortable = function (_Events) {
                         child.remove();
                         sortable.emit('maximum-remove', child, sortable);
                     }
+                    sortable.removePending = null;
                 }
                 this._maximumCounter(element, sortable);
             }
@@ -18732,6 +18743,7 @@ var Sortable = function (_Events) {
                     child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display;
                     child.__sortable.display = null;
                 }
+                sortable.removePending = null;
             }
         }
 
@@ -18747,9 +18759,9 @@ var Sortable = function (_Events) {
         value: function _maximumPending(element, sortable) {
             if (sortable.options.maximum) {
                 var children = sortable._getChildren();
-                var savePending = sortable.removePending ? sortable.removePending.slice(0) : [];
-                this._clearMaximumPending(sortable);
                 if (children.length > sortable.options.maximum) {
+                    var savePending = sortable.removePending ? sortable.removePending.slice(0) : [];
+                    this._clearMaximumPending(sortable);
                     sortable.removePending = [];
                     var sort = void 0;
                     if (sortable.options.maximumFIFO) {
@@ -18763,16 +18775,21 @@ var Sortable = function (_Events) {
                     }
                     for (var i = 0; i < children.length - sortable.options.maximum; i++) {
                         var hide = sort[i];
-                        if (hide !== element) {
-                            hide.__sortable.display = hide.style.display || 'unset';
-                            hide.style.display = 'none';
-                            sortable.removePending.push(hide);
-                            if (savePending.indexOf(hide) === -1) {
-                                sortable.emit('maximum-remove-pending', hide, sortable);
-                            }
+                        hide.__sortable.display = hide.style.display || 'unset';
+                        hide.style.display = 'none';
+                        sortable.removePending.push(hide);
+                        if (savePending.indexOf(hide) === -1) {
+                            sortable.emit('maximum-remove-pending', hide, sortable);
                         }
                     }
                 }
+            }
+        }
+    }, {
+        key: '_mouseDown',
+        value: function _mouseDown(e) {
+            if (this.options.cursorHover) {
+                utils.style(e.currentTarget, 'cursor', this.options.cursorDown);
             }
         }
     }], [{

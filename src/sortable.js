@@ -65,10 +65,12 @@ class Sortable extends Events
         this.events = {
             dragOver: (e) => this._dragOver(e),
             drop: (e) => this._drop(e),
+            dragLeave: (e) => this._dragLeave(e),
             mouseOver: (e) => this._mouseEnter(e)
         }
         element.addEventListener('dragover', this.events.dragOver)
         element.addEventListener('drop', this.events.drop)
+        element.addEventListener('dragleave', this.events.dragLeave)
         if (this.options.cursorHover)
         {
             for (let child of this._getChildren())
@@ -79,14 +81,6 @@ class Sortable extends Events
                     child.addEventListener('mousedown', (e) => this._mouseDown(e))
                 }
             }
-        }
-    }
-
-    _mouseDown(e)
-    {
-        if (this.options.cursorHover)
-        {
-            utils.style(e.currentTarget, 'cursor', this.options.cursorDown)
         }
     }
 
@@ -131,7 +125,7 @@ class Sortable extends Events
 
     /**
      * add an element as a child of the sortable element; can also be used to swap between sortables
-     * NOTE: this will not work with deep-type elements; use attachElement instead
+     * NOTE: this may not work with deepSearch non-ordered elements; use attachElement instead
      * @param {HTMLElement} element
      * @param {number} index
      */
@@ -278,25 +272,28 @@ class Sortable extends Events
             const id = e.dataTransfer.types[1]
             const element = document.getElementById(id)
             const sortable = this._findClosest(e, Sortable.tracker[name].list, element)
-            if (sortable)
+            if (element)
             {
-                if (sortable.last && Math.abs(sortable.last.x - e.pageX) < sortable.options.threshold && Math.abs(sortable.last.y - e.pageY) < sortable.options.threshold)
+                if (sortable)
                 {
-                    sortable._updateDragging(e, element)
-                    e.preventDefault()
-                    e.stopPropagation()
-                    return
+                    if (sortable.last && Math.abs(sortable.last.x - e.pageX) < sortable.options.threshold && Math.abs(sortable.last.y - e.pageY) < sortable.options.threshold)
+                    {
+                        sortable._updateDragging(e, element)
+                        e.preventDefault()
+                        e.stopPropagation()
+                        return
+                    }
+                    sortable.last = { x: e.pageX, y: e.pageY }
+                    this._placeInList(sortable, e.pageX, e.pageY, element)
+                    e.dataTransfer.dropEffect = 'move'
+                    this._updateDragging(e, element)
                 }
-                sortable.last = { x: e.pageX, y: e.pageY }
-                this._placeInList(sortable, e.pageX, e.pageY, element)
-                e.dataTransfer.dropEffect = 'move'
-                this._updateDragging(e, element)
+                else
+                {
+                    this._noDrop(e)
+                }
+                e.preventDefault()
             }
-            else
-            {
-                this._noDrop(e)
-            }
-            e.preventDefault()
         }
     }
 
@@ -333,9 +330,9 @@ class Sortable extends Events
             }
             if (element.__sortable.current)
             {
+                this._clearMaximumPending(element.__sortable.current)
                 element.__sortable.current.emit('add-remove-pending', element, element.__sortable.current)
                 element.__sortable.current.emit('update-pending', element, element.__sortable.current)
-                this._clearMaximumPending(element.__sortable.current)
                 element.__sortable.current = null
             }
         }
@@ -429,6 +426,25 @@ class Sortable extends Events
         target.__sortable.offset = offset
     }
 
+    /**
+     * handle drag leave events for sortable element
+     * @param {DragEvent} e
+     * @private
+     */
+    _dragLeave(e)
+    {
+        const sortable = e.dataTransfer.types[0]
+        if (sortable && sortable === this.options.name)
+        {
+            this._clearMaximumPending(sortable)
+        }
+    }
+
+    /**
+     * handle drag over events for sortable element
+     * @param {DragEvent} e
+     * @private
+     */
     _dragOver(e)
     {
         const sortable = e.dataTransfer.types[0]
@@ -764,7 +780,6 @@ class Sortable extends Events
             {
                 sortable.emit('copy-pending', dragging, sortable)
             }
-            this._clearMaximumPending(dragging.__sortable.current)
             dragging.__sortable.current = sortable
             this._maximumPending(dragging, sortable)
             sortable.emit('update-pending', dragging, sortable)
@@ -842,7 +857,6 @@ class Sortable extends Events
     {
         if (utils.inside(x, y, dragging))
         {
-            this._maximumPending(dragging, sortable)
             return true
         }
         let index = -1
@@ -893,19 +907,6 @@ class Sortable extends Events
         const children = sortable._getChildren()
         if (!children.length)
         {
-            if (dragging.__sortable.current !== sortable)
-            {
-                if (dragging.__sortable.current)
-                {
-                    dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
-                }
-                dragging.__sortable.current = sortable
-                sortable.emit('add-pending', dragging, sortable)
-                if (dragging.__sortable.isCopy)
-                {
-                    sortable.emit('copy-pending', dragging, sortable)
-                }
-            }
             element.appendChild(dragging)
         }
         else
@@ -925,7 +926,6 @@ class Sortable extends Events
             }
             if (dragging.__sortable.current)
             {
-                this._clearMaximumPending(dragging.__sortable.current)
                 if (dragging.__sortable.current !== dragging.__sortable.original)
                 {
                     dragging.__sortable.current.emit('add-remove-pending', dragging, dragging.__sortable.current)
@@ -1019,6 +1019,7 @@ class Sortable extends Events
                     child.remove()
                     sortable.emit('maximum-remove', child, sortable)
                 }
+                sortable.removePending = null
             }
             this._maximumCounter(element, sortable)
         }
@@ -1038,6 +1039,7 @@ class Sortable extends Events
                 child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display
                 child.__sortable.display = null
             }
+            sortable.removePending = null
         }
     }
 
@@ -1052,10 +1054,10 @@ class Sortable extends Events
         if (sortable.options.maximum)
         {
             const children = sortable._getChildren()
-            const savePending = sortable.removePending ? sortable.removePending.slice(0) : []
-            this._clearMaximumPending(sortable)
             if (children.length > sortable.options.maximum)
             {
+                const savePending = sortable.removePending ? sortable.removePending.slice(0) : []
+                this._clearMaximumPending(sortable)
                 sortable.removePending = []
                 let sort
                 if (sortable.options.maximumFIFO)
@@ -1078,6 +1080,14 @@ class Sortable extends Events
                     }
                 }
             }
+        }
+    }
+
+    _mouseDown(e)
+    {
+        if (this.options.cursorHover)
+        {
+            utils.style(e.currentTarget, 'cursor', this.options.cursorDown)
         }
     }
 }
