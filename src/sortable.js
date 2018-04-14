@@ -335,6 +335,7 @@ class Sortable extends Events
             {
                 element.__sortable.current.emit('add-remove-pending', element, element.__sortable.current)
                 element.__sortable.current.emit('update-pending', element, element.__sortable.current)
+                this._clearMaximumPending(element.__sortable.current)
                 element.__sortable.current = null
             }
         }
@@ -841,6 +842,7 @@ class Sortable extends Events
     {
         if (utils.inside(x, y, dragging))
         {
+            this._maximumPending(dragging, sortable)
             return true
         }
         let index = -1
@@ -1067,15 +1069,12 @@ class Sortable extends Events
                 for (let i = 0; i < children.length - sortable.options.maximum; i++)
                 {
                     const hide = sort[i]
-                    if (hide !== element)
+                    hide.__sortable.display = hide.style.display || 'unset'
+                    hide.style.display = 'none'
+                    sortable.removePending.push(hide)
+                    if (savePending.indexOf(hide) === -1)
                     {
-                        hide.__sortable.display = hide.style.display || 'unset'
-                        hide.style.display = 'none'
-                        sortable.removePending.push(hide)
-                        if (savePending.indexOf(hide) === -1)
-                        {
-                            sortable.emit('maximum-remove-pending', hide, sortable)
-                        }
+                        sortable.emit('maximum-remove-pending', hide, sortable)
                     }
                 }
             }
