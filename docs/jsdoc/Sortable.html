@@ -86,6 +86,12 @@
             
                 <li class="parent  " data-name="Sortable.create"><a href="Sortable.html#.create">create</a></li>
             
+                <li class="parent  " data-name="Sortable#_clearMaximumPending"><a href="Sortable.html#_clearMaximumPending">_clearMaximumPending</a></li>
+            
+                <li class="parent  " data-name="Sortable#_maximum"><a href="Sortable.html#_maximum">_maximum</a></li>
+            
+                <li class="parent  " data-name="Sortable#_maximumCounter"><a href="Sortable.html#_maximumCounter">_maximumCounter</a></li>
+            
                 <li class="parent  " data-name="Sortable#_placeByDistance"><a href="Sortable.html#_placeByDistance">_placeByDistance</a></li>
             
                 <li class="parent  " data-name="Sortable#_placeByPercentage"><a href="Sortable.html#_placeByPercentage">_placeByPercentage</a></li>
@@ -107,6 +113,8 @@
             
                 <li class="parent" data-name="Sortable#event:add-pending"><a href="Sortable.html#event:add-pending">add-pending</a></li>
             
+                <li class="parent" data-name="Sortable#event:add-remove-pending"><a href="Sortable.html#event:add-remove-pending">add-remove-pending</a></li>
+            
                 <li class="parent" data-name="Sortable#event:copy"><a href="Sortable.html#event:copy">copy</a></li>
             
                 <li class="parent" data-name="Sortable#event:copy-pending"><a href="Sortable.html#event:copy-pending">copy-pending</a></li>
@@ -114,6 +122,10 @@
                 <li class="parent" data-name="Sortable#event:delete"><a href="Sortable.html#event:delete">delete</a></li>
             
                 <li class="parent" data-name="Sortable#event:delete-pending"><a href="Sortable.html#event:delete-pending">delete-pending</a></li>
+            
+                <li class="parent" data-name="Sortable#event:maximum-remove"><a href="Sortable.html#event:maximum-remove">maximum-remove</a></li>
+            
+                <li class="parent" data-name="Sortable#event:maximum-remove-pending"><a href="Sortable.html#event:maximum-remove-pending">maximum-remove-pending</a></li>
             
                 <li class="parent" data-name="Sortable#event:order"><a href="Sortable.html#event:order">order</a></li>
             
@@ -174,7 +186,7 @@
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line46">sortable.js:46</a>
+            <a href="sortable.js.html#line51">sortable.js:51</a>
         </div>
         
     </div>
@@ -680,6 +692,74 @@
 	
         <tr>
             
+                <td class="name"><code>maximum</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>maximum number of elements allowed in a sortable list</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>maximumFIFO</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>direction of search to choose which item to remove when maximum is reached</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>cursorHover</code></td>
             
             
@@ -1046,17 +1126,23 @@
     
         <li>event:copy</li>
     
+        <li>event:maximum-remove</li>
+    
         <li>event:order-pending</li>
     
         <li>event:add-pending</li>
     
         <li>event:remove-pending</li>
     
+        <li>event:add-remove-pending</li>
+    
         <li>event:update-pending</li>
     
         <li>event:delete-pending</li>
     
         <li>event:copy-pending</li>
+    
+        <li>event:maximum-remove-pending</li>
     </ul>
     
 
@@ -1162,7 +1248,7 @@
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line117">sortable.js:117</a>
+            <a href="sortable.js.html#line122">sortable.js:122</a>
         </div>
         
     </div>
@@ -1292,6 +1378,347 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="_clearMaximumPending">
+            <a class="share-icon" href="#_clearMaximumPending"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                _clearMaximumPending
+            </span>
+            <span class="signature">(sortable)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="sortable.js.html#line1024">sortable.js:1024</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>clear pending list</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_maximum">
+            <a class="share-icon" href="#_maximum"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                _maximum
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="sortable.js.html#line1000">sortable.js:1000</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>handle maximum</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_maximumCounter">
+            <a class="share-icon" href="#_maximumCounter"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                _maximumCounter
+            </span>
+            <span class="signature">(element, sortable)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="sortable.js.html#line980">sortable.js:980</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>add a maximum counter to the element</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="_placeByDistance">
             <a class="share-icon" href="#_placeByDistance"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
@@ -1306,7 +1733,7 @@
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line808">sortable.js:808</a>
+            <a href="sortable.js.html#line835">sortable.js:835</a>
         </div>
         
     </div>
@@ -1525,7 +1952,7 @@
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line747">sortable.js:747</a>
+            <a href="sortable.js.html#line774">sortable.js:774</a>
         </div>
         
     </div>
@@ -1698,7 +2125,7 @@
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line133">sortable.js:133</a>
+            <a href="sortable.js.html#line138">sortable.js:138</a>
         </div>
         
     </div>
@@ -1843,7 +2270,7 @@ NOTE: this will not work with deep-type elements; use attachElement instead</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line195">sortable.js:195</a>
+            <a href="sortable.js.html#line200">sortable.js:200</a>
         </div>
         
     </div>
@@ -1965,7 +2392,7 @@ NOTE: you need to manually insert the element into this.element (this is useful 
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line91">sortable.js:91</a>
+            <a href="sortable.js.html#line96">sortable.js:96</a>
         </div>
         
     </div>
@@ -2041,7 +2468,7 @@ NOTE: you need to manually insert the element into this.element (this is useful 
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line229">sortable.js:229</a>
+            <a href="sortable.js.html#line237">sortable.js:237</a>
         </div>
         
     </div>
@@ -2608,6 +3035,76 @@ NOTE: does not remove the element from its parent</p>
 	
         <tr>
             
+                <td class="name"><code>options.maximum</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>maximum number of elements allowed in a sortable list</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.maximumFIFO</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last"><p>whether to use first-in-first-out (or last-in-first-out) to choose which item to remove when maximum is reached</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>options.cursorHover</code></td>
             
             
@@ -3027,7 +3524,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line947">sortable.js:947</a>
+            <a href="sortable.js.html#line1095">sortable.js:1095</a>
         </div>
         
     </div>
@@ -3177,7 +3674,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line989">sortable.js:989</a>
+            <a href="sortable.js.html#line1144">sortable.js:1144</a>
         </div>
         
     </div>
@@ -3189,6 +3686,156 @@ NOTE: does not remove the element from its parent</p>
     
     <div class="description">
         <p>fires when element is added but not dropped yet</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>being dragged</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>current</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>sortable with element placeholder</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:add-remove-pending">
+            <a class="share-icon" href="#event:add-remove-pending"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                add-remove-pending
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="sortable.js.html#line1158">sortable.js:1158</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when element is removed after being temporarily added</p>
     </div>
     
 
@@ -3327,7 +3974,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line968">sortable.js:968</a>
+            <a href="sortable.js.html#line1116">sortable.js:1116</a>
         </div>
         
     </div>
@@ -3477,7 +4124,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line1017">sortable.js:1017</a>
+            <a href="sortable.js.html#line1179">sortable.js:1179</a>
         </div>
         
     </div>
@@ -3627,7 +4274,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line961">sortable.js:961</a>
+            <a href="sortable.js.html#line1109">sortable.js:1109</a>
         </div>
         
     </div>
@@ -3777,7 +4424,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line1003">sortable.js:1003</a>
+            <a href="sortable.js.html#line1165">sortable.js:1165</a>
         </div>
         
     </div>
@@ -3789,6 +4436,306 @@ NOTE: does not remove the element from its parent</p>
     
     <div class="description">
         <p>fires when an element is about to be removed from all sortables</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>removed</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>where element was dragged from</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:maximum-remove">
+            <a class="share-icon" href="#event:maximum-remove"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                maximum-remove
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="sortable.js.html#line1130">sortable.js:1130</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when an element is removed because maximum was reached for the sortable</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>removed</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sortable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Sortable.html">Sortable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>where element was dragged from</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:maximum-remove-pending">
+            <a class="share-icon" href="#event:maximum-remove-pending"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                maximum-remove-pending
+            </span>
+            
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="sortable.js.html#line1186">sortable.js:1186</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>fires when an element is about to be removed because maximum was reached for the sortable</p>
     </div>
     
 
@@ -3927,7 +4874,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line940">sortable.js:940</a>
+            <a href="sortable.js.html#line1088">sortable.js:1088</a>
         </div>
         
     </div>
@@ -4077,7 +5024,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line982">sortable.js:982</a>
+            <a href="sortable.js.html#line1137">sortable.js:1137</a>
         </div>
         
     </div>
@@ -4227,7 +5174,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line933">sortable.js:933</a>
+            <a href="sortable.js.html#line1081">sortable.js:1081</a>
         </div>
         
     </div>
@@ -4377,7 +5324,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line954">sortable.js:954</a>
+            <a href="sortable.js.html#line1102">sortable.js:1102</a>
         </div>
         
     </div>
@@ -4527,7 +5474,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line996">sortable.js:996</a>
+            <a href="sortable.js.html#line1151">sortable.js:1151</a>
         </div>
         
     </div>
@@ -4677,7 +5624,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line975">sortable.js:975</a>
+            <a href="sortable.js.html#line1123">sortable.js:1123</a>
         </div>
         
     </div>
@@ -4827,7 +5774,7 @@ NOTE: does not remove the element from its parent</p>
 
         
         <div class="tag-source">
-            <a href="sortable.js.html#line1010">sortable.js:1010</a>
+            <a href="sortable.js.html#line1172">sortable.js:1172</a>
         </div>
         
     </div>
@@ -4973,7 +5920,7 @@ NOTE: does not remove the element from its parent</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Apr 14 2018 07:33:26 GMT+0800 (DST)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Apr 14 2018 09:43:30 GMT+0800 (DST)
             </div>
         </footer>
     </div>

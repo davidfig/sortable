@@ -73,6 +73,10 @@ li {
     margin: 0.25em 0.25em;
 }
 
+.size {
+    min-width: 10em;
+}
+
 .small {
     width: 5em;
     overflow: hidden;
@@ -103,13 +107,13 @@ li {
     margin: 0 auto;
 }
 
-#example-2, #example-3, #example-5, #example-7, #example-8, #example-10, #example-11 {
+#example-2, #example-3, #example-5, #example-7, #example-8, #example-10, #example-11, #example-12, #example-13 {
     display: flex;
     justify-content: space-around;
     margin: 0 auto;
 }
 
-#example-2 > div, #example-3 > div, #example-4 > div, #example-6, #example-4, #example-8 > div, #example-9, #example-10 > div, #example-11 > div {
+#example-2 > div, #example-3 > div, #example-4 > div, #example-6, #example-4, #example-8 > div, #example-9, #example-10 > div, #example-11 > div, #example-12 > div, #example-13 > div {
     margin: 0 auto;
 }
 

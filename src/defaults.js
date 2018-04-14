@@ -14,6 +14,8 @@ const icons = require('./icons')
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
  * @property {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
+ * @property {number} [options.maximum] maximum number of elements allowed in a sortable list
+ * @property {boolean} [options.maximumFIFO] whether to use first-in-first-out (or last-in-first-out) to choose which item to remove when maximum is reached
  * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
  * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
  * @property {number} [options.threshold=10] minimum movement distance in pixels before calculating a movement
@@ -36,6 +38,8 @@ module.exports = {
     dragClass: null,
     orderClass: null,
     offList: 'closest',
+    maximum: null,
+    maximumFIFO: true,
     deepSearch: false,
     dragStyle: {
         boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',

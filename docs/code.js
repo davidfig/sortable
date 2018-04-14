@@ -56,6 +56,17 @@ function test()
     const a11 = new Sortable(eleven.children[0], { name: 'list-11' })
     const b11 = new Sortable(eleven.children[1], { name: 'list-11', copy: true })
     events(eleven, [a11, b11])
+
+    const twelve = document.getElementById('example-12')
+    const a12 = new Sortable(twelve.children[0], { name: 'list-12', dragClass: 'entry', offList: 'delete' })
+    const b12 = new Sortable(twelve.children[1], { name: 'list-12', dragClass: 'entry', offList: 'delete' })
+    events(twelve, [a12, b12])
+
+    const thirteen = document.getElementById('example-13')
+    const a13 = new Sortable(thirteen.children[0], { name: 'list-13', dragClass: 'entry' })
+    const b13 = new Sortable(thirteen.children[1], { name: 'list-13', dragClass: 'entry', maximum: 3 })
+    const c13 = new Sortable(thirteen.children[2], { name: 'list-13', dragClass: 'entry', maximum: 1 })
+    events(thirteen, [a13, b13, c13])
 }
 
 /**
@@ -85,12 +96,15 @@ function events(div, sortables)
         on('order-pending', i)
         on('update-pending', i)
         on('copy-pending', i)
+        on('add-remove-pending', i)
+        on('maximum-remove-pending', i)
         on('add', i)
         on('remove', i)
         on('delete', i)
         on('order', i)
         on('update', i)
         on('copy', i)
+        on('maximum-remove', i)
     }
 }
 

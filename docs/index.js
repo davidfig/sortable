@@ -58,6 +58,17 @@ function test() {
     var a11 = new Sortable(eleven.children[0], { name: 'list-11' });
     var b11 = new Sortable(eleven.children[1], { name: 'list-11', copy: true });
     events(eleven, [a11, b11]);
+
+    var twelve = document.getElementById('example-12');
+    var a12 = new Sortable(twelve.children[0], { name: 'list-12', dragClass: 'entry', offList: 'delete' });
+    var b12 = new Sortable(twelve.children[1], { name: 'list-12', dragClass: 'entry', offList: 'delete' });
+    events(twelve, [a12, b12]);
+
+    var thirteen = document.getElementById('example-13');
+    var a13 = new Sortable(thirteen.children[0], { name: 'list-13', dragClass: 'entry' });
+    var b13 = new Sortable(thirteen.children[1], { name: 'list-13', dragClass: 'entry', maximum: 3 });
+    var c13 = new Sortable(thirteen.children[2], { name: 'list-13', dragClass: 'entry', maximum: 1 });
+    events(thirteen, [a13, b13, c13]);
 }
 
 /**
@@ -83,12 +94,15 @@ function events(div, sortables) {
         on('order-pending', i);
         on('update-pending', i);
         on('copy-pending', i);
+        on('add-remove-pending', i);
+        on('maximum-remove-pending', i);
         on('add', i);
         on('remove', i);
         on('delete', i);
         on('order', i);
         on('update', i);
         on('copy', i);
+        on('maximum-remove', i);
     }
 }
 
@@ -17484,6 +17498,8 @@ var icons = require('./icons');
  * @property {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
  * @property {string} [options.reverseOrder] reverse sort the orderId
  * @property {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
+ * @property {number} [options.maximum] maximum number of elements allowed in a sortable list
+ * @property {boolean} [options.maximumFIFO] whether to use first-in-first-out (or last-in-first-out) to choose which item to remove when maximum is reached
  * @property {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
  * @property {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
  * @property {number} [options.threshold=10] minimum movement distance in pixels before calculating a movement
@@ -17506,6 +17522,8 @@ module.exports = {
     dragClass: null,
     orderClass: null,
     offList: 'closest',
+    maximum: null,
+    maximumFIFO: true,
     deepSearch: false,
     dragStyle: {
         boxShadow: '3px 3px 5px rgba(0,0,0,0.25)',
@@ -17558,6 +17576,8 @@ var Sortable = function (_Events) {
      * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
      * @param {string} [options.reverseOrder] reverse sort the orderId
      * @param {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
+     * @param {number} [options.maximum] maximum number of elements allowed in a sortable list
+     * @param {boolean} [options.maximumFIFO] direction of search to choose which item to remove when maximum is reached
      * @param {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
      * @param {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
      * @param {boolean} [options.useIcons=true] show icons when dragging
@@ -17574,12 +17594,15 @@ var Sortable = function (_Events) {
      * @fires update
      * @fires delete
      * @fires copy
+     * @fires maximum-remove
      * @fires order-pending
      * @fires add-pending
      * @fires remove-pending
+     * @fires add-remove-pending
      * @fires update-pending
      * @fires delete-pending
      * @fires copy-pending
+     * @fires maximum-remove-pending
      */
     function Sortable(element, options) {
         _classCallCheck(this, Sortable);
@@ -17808,8 +17831,11 @@ var Sortable = function (_Events) {
                         return _this2._dragStart(e);
                     }
 
-                    // ensure every element has an id
-                };if (!element.id) {
+                    // add a counter for maximum
+                };this._maximumCounter(element, this);
+
+                // ensure every element has an id
+                if (!element.id) {
                     element.id = '__sortable-' + this.options.name + '-' + Sortable.tracker[this.options.name].counter;
                     Sortable.tracker[this.options.name].counter++;
                 }
@@ -17921,6 +17947,11 @@ var Sortable = function (_Events) {
                     } else if (!element.__sortable.original.options.copy) {
                         this._replaceInList(element.__sortable.original, element);
                     }
+                }
+                if (element.__sortable.current) {
+                    element.__sortable.current.emit('add-remove-pending', element, element.__sortable.current);
+                    element.__sortable.current.emit('update-pending', element, element.__sortable.current);
+                    element.__sortable.current = null;
                 }
             }
         }
@@ -18077,6 +18108,7 @@ var Sortable = function (_Events) {
                     if (element.__sortable.isCopy) {
                         this.emit('copy', element, this);
                     }
+                    this._maximum(element, this);
                     this.emit('update', element, this);
                 } else {
                     if (element.__sortable.index !== this._getIndex(e.currentTarget)) {
@@ -18356,12 +18388,20 @@ var Sortable = function (_Events) {
                 if (!found) {
                     sortable.element.appendChild(dragging);
                 }
-                dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                if (dragging.__sortable.current) {
+                    if (dragging.__sortable.current !== dragging.__sortable.original) {
+                        dragging.__sortable.current.emit('add-remove-pending', dragging, dragging.__sortable.current);
+                    } else {
+                        dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                    }
+                }
                 sortable.emit('add-pending', dragging, sortable);
                 if (dragging.__sortable.isCopy) {
                     sortable.emit('copy-pending', dragging, sortable);
                 }
+                this._clearMaximumPending(dragging.__sortable.current);
                 dragging.__sortable.current = sortable;
+                this._maximumPending(dragging, sortable);
                 sortable.emit('update-pending', dragging, sortable);
             }
         }
@@ -18504,6 +18544,7 @@ var Sortable = function (_Events) {
             if (index === sortable._getIndex(dragging)) {
                 return true;
             }
+            this._maximumPending(dragging, sortable);
             sortable.emit('order-pending', dragging, sortable);
         }
 
@@ -18522,7 +18563,9 @@ var Sortable = function (_Events) {
             var children = sortable._getChildren();
             if (!children.length) {
                 if (dragging.__sortable.current !== sortable) {
-                    dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                    if (dragging.__sortable.current) {
+                        dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                    }
                     dragging.__sortable.current = sortable;
                     sortable.emit('add-pending', dragging, sortable);
                     if (dragging.__sortable.isCopy) {
@@ -18541,9 +18584,17 @@ var Sortable = function (_Events) {
                 if (dragging.__sortable.isCopy) {
                     sortable.emit('copy-pending', dragging, sortable);
                 }
-                dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                if (dragging.__sortable.current) {
+                    this._clearMaximumPending(dragging.__sortable.current);
+                    if (dragging.__sortable.current !== dragging.__sortable.original) {
+                        dragging.__sortable.current.emit('add-remove-pending', dragging, dragging.__sortable.current);
+                    } else {
+                        dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
+                    }
+                }
                 dragging.__sortable.current = sortable;
             }
+            this._maximumPending(dragging, sortable);
             sortable.emit('update-pending', dragging, sortable);
         }
 
@@ -18576,6 +18627,128 @@ var Sortable = function (_Events) {
                 }
             }
         }
+
+        /**
+         * add a maximum counter to the element
+         * @param {HTMLElement} element
+         * @param {Sortable} sortable
+         */
+
+    }, {
+        key: '_maximumCounter',
+        value: function _maximumCounter(element, sortable) {
+            var count = -1;
+            if (sortable.options.maximum) {
+                var children = sortable._getChildren();
+                var _iteratorNormalCompletion11 = true;
+                var _didIteratorError11 = false;
+                var _iteratorError11 = undefined;
+
+                try {
+                    for (var _iterator11 = children[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                        var child = _step11.value;
+
+                        if (child !== element && child.__sortable) {
+                            count = child.__sortable.maximum > count ? child.__sortable.maximum : count;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError11 = true;
+                    _iteratorError11 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                            _iterator11.return();
+                        }
+                    } finally {
+                        if (_didIteratorError11) {
+                            throw _iteratorError11;
+                        }
+                    }
+                }
+            }
+            element.__sortable.maximum = count + 1;
+        }
+
+        /**
+         * handle maximum
+         */
+
+    }, {
+        key: '_maximum',
+        value: function _maximum(element, sortable) {
+            if (sortable.options.maximum) {
+                var children = sortable._getChildren();
+                if (children.length > sortable.options.maximum) {
+                    while (sortable.removePending.length) {
+                        var child = sortable.removePending.pop();
+                        child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display;
+                        child.__sortable.display = null;
+                        child.remove();
+                        sortable.emit('maximum-remove', child, sortable);
+                    }
+                }
+                this._maximumCounter(element, sortable);
+            }
+        }
+
+        /**
+         * clear pending list
+         * @param {Sortable} sortable
+         */
+
+    }, {
+        key: '_clearMaximumPending',
+        value: function _clearMaximumPending(sortable) {
+            if (sortable.removePending) {
+                while (sortable.removePending.length) {
+                    var child = sortable.removePending.pop();
+                    child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display;
+                    child.__sortable.display = null;
+                }
+            }
+        }
+
+        /**
+         * handle pending maximum
+         * @param {HTMLElement} element
+         * @param {Sortable} sortable
+         * @private
+         */
+
+    }, {
+        key: '_maximumPending',
+        value: function _maximumPending(element, sortable) {
+            if (sortable.options.maximum) {
+                var children = sortable._getChildren();
+                var savePending = sortable.removePending ? sortable.removePending.slice(0) : [];
+                this._clearMaximumPending(sortable);
+                if (children.length > sortable.options.maximum) {
+                    sortable.removePending = [];
+                    var sort = void 0;
+                    if (sortable.options.maximumFIFO) {
+                        sort = children.sort(function (a, b) {
+                            return a === element ? 1 : a.__sortable.maximum - b.__sortable.maximum;
+                        });
+                    } else {
+                        sort = children.sort(function (a, b) {
+                            return a === element ? 1 : b.__sortable.maximum - a.__sortable.maximum;
+                        });
+                    }
+                    for (var i = 0; i < children.length - sortable.options.maximum; i++) {
+                        var hide = sort[i];
+                        if (hide !== element) {
+                            hide.__sortable.display = hide.style.display || 'unset';
+                            hide.style.display = 'none';
+                            sortable.removePending.push(hide);
+                            if (savePending.indexOf(hide) === -1) {
+                                sortable.emit('maximum-remove-pending', hide, sortable);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }], [{
         key: 'create',
 
@@ -18587,27 +18760,27 @@ var Sortable = function (_Events) {
          */
         value: function create(elements, options) {
             var results = [];
-            var _iteratorNormalCompletion11 = true;
-            var _didIteratorError11 = false;
-            var _iteratorError11 = undefined;
+            var _iteratorNormalCompletion12 = true;
+            var _didIteratorError12 = false;
+            var _iteratorError12 = undefined;
 
             try {
-                for (var _iterator11 = elements[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                    var element = _step11.value;
+                for (var _iterator12 = elements[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+                    var element = _step12.value;
 
                     results.push(new Sortable(element, options));
                 }
             } catch (err) {
-                _didIteratorError11 = true;
-                _iteratorError11 = err;
+                _didIteratorError12 = true;
+                _iteratorError12 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                        _iterator11.return();
+                    if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                        _iterator12.return();
                     }
                 } finally {
-                    if (_didIteratorError11) {
-                        throw _iteratorError11;
+                    if (_didIteratorError12) {
+                        throw _iteratorError12;
                     }
                 }
             }
@@ -18674,6 +18847,13 @@ var Sortable = function (_Events) {
  */
 
 /**
+ * fires when an element is removed because maximum was reached for the sortable
+ * @event Sortable#maximum-remove
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
  * fires when order was changed but element was not dropped yet
  * @event Sortable#order-pending
  * @property {HTMLElement} element being dragged
@@ -18695,6 +18875,13 @@ var Sortable = function (_Events) {
  */
 
 /**
+ * fires when element is removed after being temporarily added
+ * @event Sortable#add-remove-pending
+ * @property {HTMLElement} element being dragged
+ * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
  * fires when an element is about to be removed from all sortables
  * @event Sortable#delete-pending
  * @property {HTMLElement} element removed
@@ -18711,6 +18898,13 @@ var Sortable = function (_Events) {
 /**
  * fires when a copy of an element is about to drop
  * @event Sortable#copy-pending
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
+ * fires when an element is about to be removed because maximum was reached for the sortable
+ * @event Sortable#maximum-remove-pending
  * @property {HTMLElement} element removed
  * @property {Sortable} sortable where element was dragged from
  */

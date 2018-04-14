@@ -20,6 +20,8 @@ class Sortable extends Events
      * @param {boolean} [options.orderIdIsNumber=true] use parseInt on options.sortId to properly sort numbers
      * @param {string} [options.reverseOrder] reverse sort the orderId
      * @param {string} [options.offList=closest] how to handle when an element is dropped outside a sortable: closest=drop in closest sortable; cancel=return to starting sortable; delete=remove from all sortables
+     * @param {number} [options.maximum] maximum number of elements allowed in a sortable list
+     * @param {boolean} [options.maximumFIFO] direction of search to choose which item to remove when maximum is reached
      * @param {string} [options.cursorHover=grab -webkit-grab pointer] use this cursor list to set cursor when hovering over a sortable element
      * @param {string} [options.cursorDown=grabbing -webkit-grabbing pointer] use this cursor list to set cursor when mousedown/touchdown over a sortable element
      * @param {boolean} [options.useIcons=true] show icons when dragging
@@ -36,12 +38,15 @@ class Sortable extends Events
      * @fires update
      * @fires delete
      * @fires copy
+     * @fires maximum-remove
      * @fires order-pending
      * @fires add-pending
      * @fires remove-pending
+     * @fires add-remove-pending
      * @fires update-pending
      * @fires delete-pending
      * @fires copy-pending
+     * @fires maximum-remove-pending
      */
     constructor(element, options)
     {
@@ -206,6 +211,9 @@ class Sortable extends Events
                 dragStart: (e) => this._dragStart(e)
             }
 
+            // add a counter for maximum
+            this._maximumCounter(element, this)
+
             // ensure every element has an id
             if (!element.id)
             {
@@ -322,6 +330,12 @@ class Sortable extends Events
                 {
                     this._replaceInList(element.__sortable.original, element)
                 }
+            }
+            if (element.__sortable.current)
+            {
+                element.__sortable.current.emit('add-remove-pending', element, element.__sortable.current)
+                element.__sortable.current.emit('update-pending', element, element.__sortable.current)
+                element.__sortable.current = null
             }
         }
     }
@@ -496,6 +510,7 @@ class Sortable extends Events
                 {
                     this.emit('copy', element, this)
                 }
+                this._maximum(element, this)
                 this.emit('update', element, this)
             }
             else
@@ -727,13 +742,25 @@ class Sortable extends Events
             {
                 sortable.element.appendChild(dragging)
             }
-            dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
+            if (dragging.__sortable.current)
+            {
+                if (dragging.__sortable.current !== dragging.__sortable.original)
+                {
+                    dragging.__sortable.current.emit('add-remove-pending', dragging, dragging.__sortable.current)
+                }
+                else
+                {
+                    dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
+                }
+            }
             sortable.emit('add-pending', dragging, sortable)
             if (dragging.__sortable.isCopy)
             {
                 sortable.emit('copy-pending', dragging, sortable)
             }
+            this._clearMaximumPending(dragging.__sortable.current)
             dragging.__sortable.current = sortable
+            this._maximumPending(dragging, sortable)
             sortable.emit('update-pending', dragging, sortable)
         }
     }
@@ -842,6 +869,7 @@ class Sortable extends Events
         {
             return true
         }
+        this._maximumPending(dragging, sortable)
         sortable.emit('order-pending', dragging, sortable)
     }
 
@@ -860,7 +888,10 @@ class Sortable extends Events
         {
             if (dragging.__sortable.current !== sortable)
             {
-                dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
+                if (dragging.__sortable.current)
+                {
+                    dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
+                }
                 dragging.__sortable.current = sortable
                 sortable.emit('add-pending', dragging, sortable)
                 if (dragging.__sortable.isCopy)
@@ -885,9 +916,21 @@ class Sortable extends Events
             {
                 sortable.emit('copy-pending', dragging, sortable)
             }
-            dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
+            if (dragging.__sortable.current)
+            {
+                this._clearMaximumPending(dragging.__sortable.current)
+                if (dragging.__sortable.current !== dragging.__sortable.original)
+                {
+                    dragging.__sortable.current.emit('add-remove-pending', dragging, dragging.__sortable.current)
+                }
+                else
+                {
+                    dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
+                }
+            }
             dragging.__sortable.current = sortable
         }
+        this._maximumPending(dragging, sortable)
         sortable.emit('update-pending', dragging, sortable)
     }
 
@@ -924,6 +967,111 @@ class Sortable extends Events
                 else
                 {
                     dragging.icon.src = element.__sortable.original === sortable ? sortable.options.icons.reorder : sortable.options.icons.move
+                }
+            }
+        }
+    }
+
+    /**
+     * add a maximum counter to the element
+     * @param {HTMLElement} element
+     * @param {Sortable} sortable
+     */
+    _maximumCounter(element, sortable)
+    {
+        let count = -1
+        if (sortable.options.maximum)
+        {
+            const children = sortable._getChildren()
+            for (let child of children)
+            {
+                if (child !== element && child.__sortable)
+                {
+                    count = child.__sortable.maximum > count ? child.__sortable.maximum : count
+                }
+            }
+        }
+        element.__sortable.maximum = count + 1
+    }
+
+    /**
+     * handle maximum
+     */
+    _maximum(element, sortable)
+    {
+        if (sortable.options.maximum)
+        {
+            const children = sortable._getChildren()
+            if (children.length > sortable.options.maximum)
+            {
+                while (sortable.removePending.length)
+                {
+                    const child = sortable.removePending.pop()
+                    child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display
+                    child.__sortable.display = null
+                    child.remove()
+                    sortable.emit('maximum-remove', child, sortable)
+                }
+            }
+            this._maximumCounter(element, sortable)
+        }
+    }
+
+    /**
+     * clear pending list
+     * @param {Sortable} sortable
+     */
+    _clearMaximumPending(sortable)
+    {
+        if (sortable.removePending)
+        {
+            while (sortable.removePending.length)
+            {
+                const child = sortable.removePending.pop()
+                child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display
+                child.__sortable.display = null
+            }
+        }
+    }
+
+    /**
+     * handle pending maximum
+     * @param {HTMLElement} element
+     * @param {Sortable} sortable
+     * @private
+     */
+    _maximumPending(element, sortable)
+    {
+        if (sortable.options.maximum)
+        {
+            const children = sortable._getChildren()
+            const savePending = sortable.removePending ? sortable.removePending.slice(0) : []
+            this._clearMaximumPending(sortable)
+            if (children.length > sortable.options.maximum)
+            {
+                sortable.removePending = []
+                let sort
+                if (sortable.options.maximumFIFO)
+                {
+                    sort = children.sort((a, b) => { return a === element ? 1 : a.__sortable.maximum - b.__sortable.maximum })
+                }
+                else
+                {
+                    sort = children.sort((a, b) => { return a === element ? 1 : b.__sortable.maximum - a.__sortable.maximum })
+                }
+                for (let i = 0; i < children.length - sortable.options.maximum; i++)
+                {
+                    const hide = sort[i]
+                    if (hide !== element)
+                    {
+                        hide.__sortable.display = hide.style.display || 'unset'
+                        hide.style.display = 'none'
+                        sortable.removePending.push(hide)
+                        if (savePending.indexOf(hide) === -1)
+                        {
+                            sortable.emit('maximum-remove-pending', hide, sortable)
+                        }
+                    }
                 }
             }
         }
@@ -980,6 +1128,13 @@ class Sortable extends Events
  */
 
 /**
+ * fires when an element is removed because maximum was reached for the sortable
+ * @event Sortable#maximum-remove
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
  * fires when order was changed but element was not dropped yet
  * @event Sortable#order-pending
  * @property {HTMLElement} element being dragged
@@ -1001,6 +1156,13 @@ class Sortable extends Events
  */
 
 /**
+ * fires when element is removed after being temporarily added
+ * @event Sortable#add-remove-pending
+ * @property {HTMLElement} element being dragged
+ * @property {Sortable} current sortable with element placeholder
+ */
+
+/**
  * fires when an element is about to be removed from all sortables
  * @event Sortable#delete-pending
  * @property {HTMLElement} element removed
@@ -1017,6 +1179,13 @@ class Sortable extends Events
 /**
  * fires when a copy of an element is about to drop
  * @event Sortable#copy-pending
+ * @property {HTMLElement} element removed
+ * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
+ * fires when an element is about to be removed because maximum was reached for the sortable
+ * @event Sortable#maximum-remove-pending
  * @property {HTMLElement} element removed
  * @property {Sortable} sortable where element was dragged from
  */
