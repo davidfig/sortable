@@ -10,6 +10,7 @@ Features include:
   3. delete - remove element from all lists
 * custom ghost image and icon support so dragging looks nicer and isn't limited by browser
 * search descendents for a className when determining where to sort or how to order (options.deepSearch)
+* can set maximum number of elements in a sortable
 * robust event system based on eventemitter3 (i.e., add, remove, order, update, delete, and -pending versions of these events)
 * ordered lists may be reverse ordered and ordered by a data-? setting
 * dynamically add elements
