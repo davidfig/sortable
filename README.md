@@ -3,14 +3,15 @@ Vanilla drag-and-drop sortable list(s)
 
 Features include:
 
-* dragging and dropping between sortable and ordered lists (options.sort)
+* dragging and dropping between sortable and/or ordered lists (options.sort)
 * three ways to handle dragging off lists:
   1. closest - find closest list
   2. cancel - return to original position before dragging
   3. delete - remove element from all lists
+* lists that are copy-only or no-drop (options.copy and options.drop) 
 * custom ghost image and icon support so dragging looks nicer and isn't limited by browser
 * search descendents for a className when determining where to sort or how to order (options.deepSearch)
-* can set maximum number of elements in a sortable
+* limit the number of elements in a sortable (options.maximum)
 * robust event system based on eventemitter3 (i.e., add, remove, order, update, delete, and -pending versions of these events)
 * ordered lists may be reverse ordered and ordered by a data-? setting
 * dynamically add elements
@@ -21,7 +22,7 @@ I tried many of the existing drag-and-drop libraries but could not find all the 
 
 ## Super Simple Example
 ```js
-    new Sortable(document.getElementById('sortme'))
+new Sortable(document.getElementById('sortme'))
 ```
 
 ## Examples Showing Features
