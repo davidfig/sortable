@@ -689,7 +689,12 @@ class Sortable extends Events
             }
             else
             {
-                return this.element.children
+                const list = []
+                for (let child of this.element.children)
+                {
+                    list.push(child)
+                }
+                return list
             }
         }
     }
