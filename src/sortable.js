@@ -1044,15 +1044,18 @@ class Sortable extends Events
             const children = sortable._getChildren()
             if (children.length > sortable.options.maximum)
             {
-                while (sortable.removePending.length)
+                if (sortable.removePending)
                 {
-                    const child = sortable.removePending.pop()
-                    child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display
-                    child.__sortable.display = null
-                    child.remove()
-                    sortable.emit('maximum-remove', child, sortable)
+                    while (sortable.removePending.length)
+                    {
+                        const child = sortable.removePending.pop()
+                        child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display
+                        child.__sortable.display = null
+                        child.remove()
+                        sortable.emit('maximum-remove', child, sortable)
+                    }
+                    sortable.removePending = null
                 }
-                sortable.removePending = null
             }
             this._maximumCounter(element, sortable)
         }

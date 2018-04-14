@@ -18088,6 +18088,14 @@ var Sortable = function (_Events) {
                 e.stopPropagation();
             }
         }
+
+        /**
+         * update the dragging element
+         * @param {UIEvent} e
+         * @param {HTMLElement} element
+         * @private
+         */
+
     }, {
         key: '_updateDragging',
         value: function _updateDragging(e, element) {
@@ -18102,6 +18110,13 @@ var Sortable = function (_Events) {
                 }
             }
         }
+
+        /**
+         * remove the dragging element
+         * @param {HTMLElement} element
+         * @private
+         */
+
     }, {
         key: '_removeDragging',
         value: function _removeDragging(element) {
@@ -18113,6 +18128,13 @@ var Sortable = function (_Events) {
             element.__sortable.dragging = null;
             element.__sortable.isCopy = false;
         }
+
+        /**
+         * drop the element into a sortable
+         * @param {HTMLElement} e
+         * @private
+         */
+
     }, {
         key: '_drop',
         value: function _drop(e) {
@@ -18240,6 +18262,14 @@ var Sortable = function (_Events) {
                 sortable.element.appendChild(element);
             }
         }
+
+        /**
+         * count the index of the child in the list of children
+         * @param {HTMLElement} child
+         * @return {number}
+         * @private
+         */
+
     }, {
         key: '_getIndex',
         value: function _getIndex(child) {
@@ -18250,6 +18280,15 @@ var Sortable = function (_Events) {
                 }
             }
         }
+
+        /**
+         * traverse and search descendents in DOM
+         * @param {HTMLElement} base
+         * @param {string} search
+         * @param {HTMLElement[]} results to return
+         * @private
+         */
+
     }, {
         key: '_traverseChildren',
         value: function _traverseChildren(base, search, results) {
@@ -18458,6 +18497,7 @@ var Sortable = function (_Events) {
          * @param {Sortable} sortable
          * @param {HTMLElement} dragging
          * @returns {number} 0 = not found; 1 = nothing to do; 2 = moved
+         * @private
          */
 
     }, {
@@ -18536,6 +18576,7 @@ var Sortable = function (_Events) {
          * @param {number} x
          * @param {number} y
          * @return {boolean} false=nothing to do
+         * @private
          */
 
     }, {
@@ -18668,6 +18709,7 @@ var Sortable = function (_Events) {
          * add a maximum counter to the element
          * @param {HTMLElement} element
          * @param {Sortable} sortable
+         * @private
          */
 
     }, {
@@ -18708,6 +18750,7 @@ var Sortable = function (_Events) {
 
         /**
          * handle maximum
+         * @private
          */
 
     }, {
@@ -18716,14 +18759,16 @@ var Sortable = function (_Events) {
             if (sortable.options.maximum) {
                 var children = sortable._getChildren();
                 if (children.length > sortable.options.maximum) {
-                    while (sortable.removePending.length) {
-                        var child = sortable.removePending.pop();
-                        child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display;
-                        child.__sortable.display = null;
-                        child.remove();
-                        sortable.emit('maximum-remove', child, sortable);
+                    if (sortable.removePending) {
+                        while (sortable.removePending.length) {
+                            var child = sortable.removePending.pop();
+                            child.style.display = child.__sortable.display === 'unset' ? '' : child.__sortable.display;
+                            child.__sortable.display = null;
+                            child.remove();
+                            sortable.emit('maximum-remove', child, sortable);
+                        }
+                        sortable.removePending = null;
                     }
-                    sortable.removePending = null;
                 }
                 this._maximumCounter(element, sortable);
             }
@@ -18732,6 +18777,7 @@ var Sortable = function (_Events) {
         /**
          * clear pending list
          * @param {Sortable} sortable
+         * @private
          */
 
     }, {
@@ -18785,6 +18831,13 @@ var Sortable = function (_Events) {
                 }
             }
         }
+
+        /**
+         * change cursor during mousedown
+         * @param {MouseEvent} e
+         * @private
+         */
+
     }, {
         key: '_mouseDown',
         value: function _mouseDown(e) {
