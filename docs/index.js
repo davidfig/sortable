@@ -17922,11 +17922,11 @@ var Sortable = function (_Events) {
                             return;
                         }
                         sortable.last = { x: e.pageX, y: e.pageY };
-                        this._placeInList(sortable, e.pageX, e.pageY, element);
+                        sortable._placeInList(sortable, e.pageX, e.pageY, element);
                         e.dataTransfer.dropEffect = 'move';
-                        this._updateDragging(e, element);
+                        sortable._updateDragging(e, element);
                     } else {
-                        this._noDrop(e);
+                        sortable._noDrop(e);
                     }
                     e.preventDefault();
                 }
