@@ -17926,7 +17926,7 @@ var Sortable = function (_Events) {
                         e.dataTransfer.dropEffect = 'move';
                         sortable._updateDragging(e, element);
                     } else {
-                        sortable._noDrop(e);
+                        this._noDrop(e);
                     }
                     e.preventDefault();
                 }

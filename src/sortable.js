@@ -302,7 +302,7 @@ class Sortable extends Events
                 }
                 else
                 {
-                    sortable._noDrop(e)
+                    this._noDrop(e)
                 }
                 e.preventDefault()
             }
