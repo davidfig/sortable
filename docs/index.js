@@ -103,6 +103,7 @@ function events(div, sortables) {
         on('update', i);
         on('copy', i);
         on('maximum-remove', i);
+        on('clicked', i);
     }
 }
 
@@ -17603,6 +17604,7 @@ var Sortable = function (_Events) {
      * @fires delete-pending
      * @fires copy-pending
      * @fires maximum-remove-pending
+     * @fires clicked
      */
     function Sortable(element, options) {
         _classCallCheck(this, Sortable);
@@ -17613,6 +17615,32 @@ var Sortable = function (_Events) {
         _this.element = element;
         _this._addToGlobalTracker();
         var elements = _this._getChildren();
+        _this.events = {
+            dragStart: function dragStart(e) {
+                return _this._dragStart(e);
+            },
+            dragEnd: function dragEnd(e) {
+                return _this._dragEnd(e);
+            },
+            dragOver: function dragOver(e) {
+                return _this._dragOver(e);
+            },
+            drop: function drop(e) {
+                return _this._drop(e);
+            },
+            dragLeave: function dragLeave(e) {
+                return _this._dragLeave(e);
+            },
+            mouseOver: function mouseOver(e) {
+                return _this._mouseEnter(e);
+            },
+            mouseDown: function mouseDown(e) {
+                return _this._mouseDown(e);
+            },
+            mouseUp: function mouseUp(e) {
+                return _this._mouseUp(e);
+            }
+        };
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -17640,20 +17668,6 @@ var Sortable = function (_Events) {
             }
         }
 
-        _this.events = {
-            dragOver: function dragOver(e) {
-                return _this._dragOver(e);
-            },
-            drop: function drop(e) {
-                return _this._drop(e);
-            },
-            dragLeave: function dragLeave(e) {
-                return _this._dragLeave(e);
-            },
-            mouseOver: function mouseOver(e) {
-                return _this._mouseEnter(e);
-            }
-        };
         element.addEventListener('dragover', _this.events.dragOver);
         element.addEventListener('drop', _this.events.drop);
         element.addEventListener('dragleave', _this.events.dragLeave);
@@ -17668,10 +17682,9 @@ var Sortable = function (_Events) {
 
                     utils.style(_child, 'cursor', _this.options.cursorHover);
                     if (_this.options.cursorDown) {
-                        _child.addEventListener('mousedown', function (e) {
-                            return _this._mouseDown(e);
-                        });
+                        _child.addEventListener('mousedown', _this.events.mouseDown);
                     }
+                    _child.addEventListener('mouseup', _this.events.mouseUp);
                 }
             } catch (err) {
                 _didIteratorError2 = true;
@@ -17816,17 +17829,12 @@ var Sortable = function (_Events) {
     }, {
         key: 'attachElement',
         value: function attachElement(element) {
-            var _this2 = this;
-
             if (element.__sortable) {
                 element.__sortable.original = this;
             } else {
                 element.__sortable = {
                     sortable: this,
-                    original: this,
-                    dragStart: function dragStart(e) {
-                        return _this2._dragStart(e);
-                    }
+                    original: this
 
                     // add a counter for maximum
                 };this._maximumCounter(element, this);
@@ -17839,7 +17847,8 @@ var Sortable = function (_Events) {
                 if (this.options.copy) {
                     element.__sortable.copy = 0;
                 }
-                element.addEventListener('dragstart', element.__sortable.dragStart);
+                element.addEventListener('dragstart', this.events.dragStart);
+                element.addEventListener('dragend', this.events.dragEnd);
                 element.setAttribute('draggable', true);
             }
         }
@@ -17853,8 +17862,9 @@ var Sortable = function (_Events) {
     }, {
         key: 'removeElement',
         value: function removeElement(element) {
-            element.removeEventListener('mousedown', element.dragMove);
-            element.removeEventListener('touchstart', element.dragMove);
+            element.removeEventListener('dragstart', this.events.dragStart);
+            element.removeEventListener('dragend', this.events.dragEnd);
+            element.setAttribute('draggable', false);
         }
 
         /**
@@ -17865,7 +17875,7 @@ var Sortable = function (_Events) {
     }, {
         key: '_addToGlobalTracker',
         value: function _addToGlobalTracker() {
-            var _this3 = this;
+            var _this2 = this;
 
             if (!Sortable.tracker) {
                 Sortable.dragImage = document.createElement('div');
@@ -17873,10 +17883,10 @@ var Sortable = function (_Events) {
                 document.body.appendChild(Sortable.dragImage);
                 Sortable.tracker = {};
                 document.body.addEventListener('dragover', function (e) {
-                    return _this3._bodyDragOver(e);
+                    return _this2._bodyDragOver(e);
                 });
                 document.body.addEventListener('drop', function (e) {
-                    return _this3._bodyDrop(e);
+                    return _this2._bodyDrop(e);
                 });
             }
             if (Sortable.tracker[this.options.name]) {
@@ -17983,6 +17993,26 @@ var Sortable = function (_Events) {
                         element.__sortable.original = null;
                     }
                 }
+            }
+        }
+
+        /**
+         * end drag
+         * @param {UIEvent} e
+         * @private
+         */
+
+    }, {
+        key: '_dragEnd',
+        value: function _dragEnd(e) {
+            var element = e.currentTarget;
+            var dragging = element.__sortable.dragging;
+            if (dragging) {
+                dragging.remove();
+                if (dragging.icon) {
+                    dragging.icon.remove();
+                }
+                element.__sortable.dragging = null;
             }
         }
 
@@ -18121,11 +18151,13 @@ var Sortable = function (_Events) {
         key: '_removeDragging',
         value: function _removeDragging(element) {
             var dragging = element.__sortable.dragging;
-            dragging.remove();
-            if (dragging.icon) {
-                dragging.icon.remove();
+            if (dragging) {
+                dragging.remove();
+                if (dragging.icon) {
+                    dragging.icon.remove();
+                }
+                element.__sortable.dragging = null;
             }
-            element.__sortable.dragging = null;
             element.__sortable.isCopy = false;
         }
 
@@ -18142,22 +18174,24 @@ var Sortable = function (_Events) {
             if (name && name === this.options.name) {
                 var id = e.dataTransfer.types[1];
                 var element = document.getElementById(id);
-                if (element.__sortable.original !== this) {
-                    element.__sortable.original.emit('remove', element, element.__sortable.original);
-                    this.emit('add', element, this);
-                    element.__sortable.original = this;
-                    if (this.options.sort) {
-                        this.emit('order', element, this);
-                    }
-                    if (element.__sortable.isCopy) {
-                        this.emit('copy', element, this);
-                    }
-                    this._maximum(element, this);
-                    this.emit('update', element, this);
-                } else {
-                    if (element.__sortable.index !== this._getIndex(e.currentTarget)) {
-                        this.emit('order', element, this);
+                if (element.__sortable.current) {
+                    if (element.__sortable.original !== this) {
+                        element.__sortable.original.emit('remove', element, element.__sortable.original);
+                        this.emit('add', element, this);
+                        element.__sortable.original = this;
+                        if (this.options.sort) {
+                            this.emit('order', element, this);
+                        }
+                        if (element.__sortable.isCopy) {
+                            this.emit('copy', element, this);
+                        }
+                        this._maximum(element, this);
                         this.emit('update', element, this);
+                    } else {
+                        if (element.__sortable.index !== this._getIndex(e.currentTarget)) {
+                            this.emit('order', element, this);
+                            this.emit('update', element, this);
+                        }
                     }
                 }
                 this._removeDragging(element);
@@ -18843,6 +18877,21 @@ var Sortable = function (_Events) {
         value: function _mouseDown(e) {
             if (this.options.cursorHover) {
                 utils.style(e.currentTarget, 'cursor', this.options.cursorDown);
+            }
+        }
+
+        /**
+         * change cursor during mouseup
+         * @param {MouseEvent} e
+         * @private
+         */
+
+    }, {
+        key: '_mouseUp',
+        value: function _mouseUp(e) {
+            this.emit('clicked', e.currentTarget, this);
+            if (this.options.cursorHover) {
+                utils.style(e.currentTarget, 'cursor', this.options.cursorHover);
             }
         }
     }], [{

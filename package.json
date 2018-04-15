@@ -1,6 +1,6 @@
 {
   "name": "yy-sortable",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "description": "Vanilla drag-and-drop sortable list(s)",
   "main": "dist/sortable.js",
   "scripts": {

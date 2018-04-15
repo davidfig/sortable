@@ -105,6 +105,7 @@ function events(div, sortables)
         on('update', i)
         on('copy', i)
         on('maximum-remove', i)
+        on('clicked', i)
     }
 }
 

@@ -47,6 +47,7 @@ class Sortable extends Events
      * @fires delete-pending
      * @fires copy-pending
      * @fires maximum-remove-pending
+     * @fires clicked
      */
     constructor(element, options)
     {
@@ -55,18 +56,22 @@ class Sortable extends Events
         this.element = element
         this._addToGlobalTracker()
         const elements = this._getChildren()
+        this.events = {
+            dragStart: (e) => this._dragStart(e),
+            dragEnd: (e) => this._dragEnd(e),
+            dragOver: (e) => this._dragOver(e),
+            drop: (e) => this._drop(e),
+            dragLeave: (e) => this._dragLeave(e),
+            mouseOver: (e) => this._mouseEnter(e),
+            mouseDown: (e) => this._mouseDown(e),
+            mouseUp: (e) => this._mouseUp(e)
+        }
         for (let child of elements)
         {
             if (!this.options.dragClass || utils.containsClassName(child, this.options.dragClass))
             {
                 this.attachElement(child)
             }
-        }
-        this.events = {
-            dragOver: (e) => this._dragOver(e),
-            drop: (e) => this._drop(e),
-            dragLeave: (e) => this._dragLeave(e),
-            mouseOver: (e) => this._mouseEnter(e)
         }
         element.addEventListener('dragover', this.events.dragOver)
         element.addEventListener('drop', this.events.drop)
@@ -78,8 +83,9 @@ class Sortable extends Events
                 utils.style(child, 'cursor', this.options.cursorHover)
                 if (this.options.cursorDown)
                 {
-                    child.addEventListener('mousedown', (e) => this._mouseDown(e))
+                    child.addEventListener('mousedown', this.events.mouseDown)
                 }
+                child.addEventListener('mouseup', this.events.mouseUp)
             }
         }
     }
@@ -201,8 +207,7 @@ class Sortable extends Events
         {
             element.__sortable = {
                 sortable: this,
-                original: this,
-                dragStart: (e) => this._dragStart(e)
+                original: this
             }
 
             // add a counter for maximum
@@ -218,7 +223,8 @@ class Sortable extends Events
             {
                 element.__sortable.copy = 0
             }
-            element.addEventListener('dragstart', element.__sortable.dragStart)
+            element.addEventListener('dragstart', this.events.dragStart)
+            element.addEventListener('dragend', this.events.dragEnd)
             element.setAttribute('draggable', true)
         }
     }
@@ -230,8 +236,9 @@ class Sortable extends Events
      */
     removeElement(element)
     {
-        element.removeEventListener('mousedown', element.dragMove)
-        element.removeEventListener('touchstart', element.dragMove)
+        element.removeEventListener('dragstart', this.events.dragStart)
+        element.removeEventListener('dragend', this.events.dragEnd)
+        element.setAttribute('draggable', false)
     }
 
     /**
@@ -367,6 +374,26 @@ class Sortable extends Events
                     element.__sortable.original = null
                 }
             }
+        }
+    }
+
+    /**
+     * end drag
+     * @param {UIEvent} e
+     * @private
+     */
+    _dragEnd(e)
+    {
+        const element = e.currentTarget
+        const dragging = element.__sortable.dragging
+        if (dragging)
+        {
+            dragging.remove()
+            if (dragging.icon)
+            {
+                dragging.icon.remove()
+            }
+            element.__sortable.dragging = null
         }
     }
 
@@ -509,12 +536,15 @@ class Sortable extends Events
     _removeDragging(element)
     {
         const dragging = element.__sortable.dragging
-        dragging.remove()
-        if (dragging.icon)
+        if (dragging)
         {
-            dragging.icon.remove()
+            dragging.remove()
+            if (dragging.icon)
+            {
+                dragging.icon.remove()
+            }
+            element.__sortable.dragging = null
         }
-        element.__sortable.dragging = null
         element.__sortable.isCopy = false
     }
 
@@ -530,28 +560,31 @@ class Sortable extends Events
         {
             const id = e.dataTransfer.types[1]
             const element = document.getElementById(id)
-            if (element.__sortable.original !== this)
+            if (element.__sortable.current)
             {
-                element.__sortable.original.emit('remove', element, element.__sortable.original)
-                this.emit('add', element, this)
-                element.__sortable.original = this
-                if (this.options.sort)
+                if (element.__sortable.original !== this)
                 {
-                    this.emit('order', element, this)
-                }
-                if (element.__sortable.isCopy)
-                {
-                    this.emit('copy', element, this)
-                }
-                this._maximum(element, this)
-                this.emit('update', element, this)
-            }
-            else
-            {
-                if (element.__sortable.index !== this._getIndex(e.currentTarget))
-                {
-                    this.emit('order', element, this)
+                    element.__sortable.original.emit('remove', element, element.__sortable.original)
+                    this.emit('add', element, this)
+                    element.__sortable.original = this
+                    if (this.options.sort)
+                    {
+                        this.emit('order', element, this)
+                    }
+                    if (element.__sortable.isCopy)
+                    {
+                        this.emit('copy', element, this)
+                    }
+                    this._maximum(element, this)
                     this.emit('update', element, this)
+                }
+                else
+                {
+                    if (element.__sortable.index !== this._getIndex(e.currentTarget))
+                    {
+                        this.emit('order', element, this)
+                        this.emit('update', element, this)
+                    }
                 }
             }
             this._removeDragging(element)
@@ -1130,6 +1163,20 @@ class Sortable extends Events
         if (this.options.cursorHover)
         {
             utils.style(e.currentTarget, 'cursor', this.options.cursorDown)
+        }
+    }
+
+    /**
+     * change cursor during mouseup
+     * @param {MouseEvent} e
+     * @private
+     */
+    _mouseUp(e)
+    {
+        this.emit('clicked', e.currentTarget, this)
+        if (this.options.cursorHover)
+        {
+            utils.style(e.currentTarget, 'cursor', this.options.cursorHover)
         }
     }
 }
