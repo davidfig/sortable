@@ -274,7 +274,7 @@ class Sortable extends Events
     _bodyDragOver(e)
     {
         const name = e.dataTransfer.types[0]
-        if (name)
+        if (Sortable.tracker[name])
         {
             const id = e.dataTransfer.types[1]
             const element = document.getElementById(id)
@@ -353,7 +353,7 @@ class Sortable extends Events
     _bodyDrop(e)
     {
         const name = e.dataTransfer.types[0]
-        if (name)
+        if (Sortable.tracker[name])
         {
             const id = e.dataTransfer.types[1]
             const element = document.getElementById(id)
@@ -556,7 +556,7 @@ class Sortable extends Events
     _drop(e)
     {
         const name = e.dataTransfer.types[0]
-        if (name && name === this.options.name)
+        if (Sortable.tracker[name] && name === this.options.name)
         {
             const id = e.dataTransfer.types[1]
             const element = document.getElementById(id)

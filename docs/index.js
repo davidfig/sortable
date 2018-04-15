@@ -17906,7 +17906,7 @@ var Sortable = function (_Events) {
         key: '_bodyDragOver',
         value: function _bodyDragOver(e) {
             var name = e.dataTransfer.types[0];
-            if (name) {
+            if (Sortable.tracker[name]) {
                 var id = e.dataTransfer.types[1];
                 var element = document.getElementById(id);
                 var sortable = this._findClosest(e, Sortable.tracker[name].list, element);
@@ -17976,7 +17976,7 @@ var Sortable = function (_Events) {
         key: '_bodyDrop',
         value: function _bodyDrop(e) {
             var name = e.dataTransfer.types[0];
-            if (name) {
+            if (Sortable.tracker[name]) {
                 var id = e.dataTransfer.types[1];
                 var element = document.getElementById(id);
                 var sortable = this._findClosest(e, Sortable.tracker[name].list, element);
@@ -18171,7 +18171,7 @@ var Sortable = function (_Events) {
         key: '_drop',
         value: function _drop(e) {
             var name = e.dataTransfer.types[0];
-            if (name && name === this.options.name) {
+            if (Sortable.tracker[name] && name === this.options.name) {
                 var id = e.dataTransfer.types[1];
                 var element = document.getElementById(id);
                 if (element.__sortable.current) {
