@@ -17631,9 +17631,6 @@ var Sortable = function (_Events) {
             dragLeave: function dragLeave(e) {
                 return _this._dragLeave(e);
             },
-            mouseOver: function mouseOver(e) {
-                return _this._mouseEnter(e);
-            },
             mouseDown: function mouseDown(e) {
                 return _this._mouseDown(e);
             },
@@ -17879,6 +17876,12 @@ var Sortable = function (_Events) {
 
             if (!Sortable.tracker) {
                 Sortable.dragImage = document.createElement('div');
+                Sortable.dragImage.style.background = 'transparent';
+                Sortable.dragImage.style.position = 'fixed';
+                Sortable.dragImage.style.left = -10;
+                Sortable.dragImage.style.top = -10;
+                Sortable.dragImage.style.width = Sortable.dragImage.style.height = '5px';
+                Sortable.dragImage.style.zIndex = -1;
                 Sortable.dragImage.id = 'sortable-dragImage';
                 document.body.appendChild(Sortable.dragImage);
                 Sortable.tracker = {};
@@ -18013,6 +18016,9 @@ var Sortable = function (_Events) {
                     dragging.icon.remove();
                 }
                 element.__sortable.dragging = null;
+            }
+            if (this.options.cursorHover) {
+                utils.style(e.currentTarget, 'cursor', this.options.cursorHover);
             }
         }
 
@@ -18622,7 +18628,8 @@ var Sortable = function (_Events) {
             var index = -1;
             if (dragging.__sortable.current === sortable) {
                 index = sortable._getIndex(dragging);
-                sortable.element.appendChild(dragging);
+                // sortable.element.appendChild(dragging)
+                dragging.remove();
             }
             var distance = Infinity,
                 closest = void 0;
@@ -19052,6 +19059,13 @@ var Sortable = function (_Events) {
  * @event Sortable#maximum-remove-pending
  * @property {HTMLElement} element removed
  * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
+ * fires when an element is clicked without dragging
+ * @event Sortable#clicked
+ * @property {HTMLElement} element clicked
+ * @property {Sortable} sortable where element is a child
  */
 
 module.exports = Sortable;

@@ -62,7 +62,6 @@ class Sortable extends Events
             dragOver: (e) => this._dragOver(e),
             drop: (e) => this._drop(e),
             dragLeave: (e) => this._dragLeave(e),
-            mouseOver: (e) => this._mouseEnter(e),
             mouseDown: (e) => this._mouseDown(e),
             mouseUp: (e) => this._mouseUp(e)
         }
@@ -250,6 +249,12 @@ class Sortable extends Events
         if (!Sortable.tracker)
         {
             Sortable.dragImage = document.createElement('div')
+            Sortable.dragImage.style.background = 'transparent'
+            Sortable.dragImage.style.position = 'fixed'
+            Sortable.dragImage.style.left = -10
+            Sortable.dragImage.style.top = -10
+            Sortable.dragImage.style.width = Sortable.dragImage.style.height = '5px'
+            Sortable.dragImage.style.zIndex = -1
             Sortable.dragImage.id = 'sortable-dragImage'
             document.body.appendChild(Sortable.dragImage)
             Sortable.tracker = {}
@@ -394,6 +399,10 @@ class Sortable extends Events
                 dragging.icon.remove()
             }
             element.__sortable.dragging = null
+        }
+        if (this.options.cursorHover)
+        {
+            utils.style(e.currentTarget, 'cursor', this.options.cursorHover)
         }
     }
 
@@ -927,7 +936,8 @@ class Sortable extends Events
         if (dragging.__sortable.current === sortable)
         {
             index = sortable._getIndex(dragging)
-            sortable.element.appendChild(dragging)
+            // sortable.element.appendChild(dragging)
+            dragging.remove()
         }
         let distance = Infinity, closest
         const element = sortable.element
@@ -1291,6 +1301,13 @@ class Sortable extends Events
  * @event Sortable#maximum-remove-pending
  * @property {HTMLElement} element removed
  * @property {Sortable} sortable where element was dragged from
+ */
+
+/**
+ * fires when an element is clicked without dragging
+ * @event Sortable#clicked
+ * @property {HTMLElement} element clicked
+ * @property {Sortable} sortable where element is a child
  */
 
 module.exports = Sortable
