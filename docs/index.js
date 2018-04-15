@@ -18264,16 +18264,16 @@ var Sortable = function (_Events) {
     }, {
         key: '_placeInList',
         value: function _placeInList(sortable, x, y, element) {
-            if (element.__sortable.display) {
-                element.style.display = element.__sortable.display === 'unset' ? '' : element.__sortable.display;
-                element.__sortable.display = null;
-            }
             if (this.options.sort) {
                 this._placeInSortableList(sortable, x, y, element);
             } else {
                 this._placeInOrderedList(sortable, element);
             }
             this._setIcon(element, sortable);
+            if (element.__sortable.display) {
+                element.style.display = element.__sortable.display === 'unset' ? '' : element.__sortable.display;
+                element.__sortable.display = null;
+            }
         }
 
         /**
