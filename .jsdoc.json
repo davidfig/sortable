@@ -35,7 +35,7 @@
         "./node_modules/yy-jsdoc-template/plugins/skip-node_modules",
         "plugins/markdown"
     ],
-    "readmeShowNav": "Viewport",
+    "readmeShowNav": "Sortable",
     "templates": {
         "default": {
             "outputSourceFiles": true

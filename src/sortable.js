@@ -944,7 +944,6 @@ class Sortable extends Events
         {
             index = sortable._getIndex(dragging)
             sortable.element.appendChild(dragging)
-            // dragging.remove()
         }
         let distance = Infinity, closest
         const element = sortable.element
