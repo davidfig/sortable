@@ -469,11 +469,16 @@ class Sortable extends Events
      */
     _dragLeave(e)
     {
-        const sortable = e.dataTransfer.types[0]
-        if (sortable && sortable === this.options.name)
-        {
-            this._clearMaximumPending(sortable)
-        }
+        // const id = e.dataTransfer.types[1]
+        // if (id)
+        // {
+        //     const element = document.getElementById(id)
+        //     if (element)
+        //     {
+        //         const sortable = element.__sortable.current
+        //         sortable._maximumPending(element, sortable)
+        //     }
+        // }
     }
 
     /**
@@ -845,6 +850,8 @@ class Sortable extends Events
                 {
                     dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
                 }
+                this._clearMaximumPending(dragging.__sortable.current)
+                this._maximum(null, dragging.__sortable.current)
             }
             sortable.emit('add-pending', dragging, sortable)
             if (dragging.__sortable.isCopy)
@@ -936,8 +943,8 @@ class Sortable extends Events
         if (dragging.__sortable.current === sortable)
         {
             index = sortable._getIndex(dragging)
-            // sortable.element.appendChild(dragging)
-            dragging.remove()
+            sortable.element.appendChild(dragging)
+            // dragging.remove()
         }
         let distance = Infinity, closest
         const element = sortable.element
@@ -1008,6 +1015,8 @@ class Sortable extends Events
                 {
                     dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current)
                 }
+                this._clearMaximumPending(dragging.__sortable.current)
+                this._maximum(null, dragging.__sortable.current)
             }
             dragging.__sortable.current = sortable
         }
@@ -1100,7 +1109,10 @@ class Sortable extends Events
                     sortable.removePending = null
                 }
             }
-            this._maximumCounter(element, sortable)
+            if (element)
+            {
+                this._maximumCounter(element, sortable)
+            }
         }
     }
 

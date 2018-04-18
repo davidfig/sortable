@@ -18084,12 +18084,18 @@ var Sortable = function (_Events) {
 
     }, {
         key: '_dragLeave',
-        value: function _dragLeave(e) {
-            var sortable = e.dataTransfer.types[0];
-            if (sortable && sortable === this.options.name) {
-                this._clearMaximumPending(sortable);
-            }
-        }
+        value: function _dragLeave(e) {}
+        // const id = e.dataTransfer.types[1]
+        // if (id)
+        // {
+        //     const element = document.getElementById(id)
+        //     if (element)
+        //     {
+        //         const sortable = element.__sortable.current
+        //         sortable._maximumPending(element, sortable)
+        //     }
+        // }
+
 
         /**
          * handle drag over events for sortable element
@@ -18521,6 +18527,8 @@ var Sortable = function (_Events) {
                     } else {
                         dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
                     }
+                    this._clearMaximumPending(dragging.__sortable.current);
+                    this._maximum(null, dragging.__sortable.current);
                 }
                 sortable.emit('add-pending', dragging, sortable);
                 if (dragging.__sortable.isCopy) {
@@ -18628,8 +18636,8 @@ var Sortable = function (_Events) {
             var index = -1;
             if (dragging.__sortable.current === sortable) {
                 index = sortable._getIndex(dragging);
-                // sortable.element.appendChild(dragging)
-                dragging.remove();
+                sortable.element.appendChild(dragging);
+                // dragging.remove()
             }
             var distance = Infinity,
                 closest = void 0;
@@ -18709,6 +18717,8 @@ var Sortable = function (_Events) {
                     } else {
                         dragging.__sortable.current.emit('remove-pending', dragging, dragging.__sortable.current);
                     }
+                    this._clearMaximumPending(dragging.__sortable.current);
+                    this._maximum(null, dragging.__sortable.current);
                 }
                 dragging.__sortable.current = sortable;
             }
@@ -18811,7 +18821,9 @@ var Sortable = function (_Events) {
                         sortable.removePending = null;
                     }
                 }
-                this._maximumCounter(element, sortable);
+                if (element) {
+                    this._maximumCounter(element, sortable);
+                }
             }
         }
 
