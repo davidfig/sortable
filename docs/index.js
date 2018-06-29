@@ -18637,7 +18637,6 @@ var Sortable = function (_Events) {
             if (dragging.__sortable.current === sortable) {
                 index = sortable._getIndex(dragging);
                 sortable.element.appendChild(dragging);
-                // dragging.remove()
             }
             var distance = Infinity,
                 closest = void 0;
