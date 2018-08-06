@@ -17993,6 +17993,7 @@ var Sortable = function (_Events) {
                         element.style.display = element.__sortable.display;
                         element.__sortable.display = null;
                         element.__sortable.original.emit('delete', element, element.__sortable.original);
+                        element.__sortable.original.emit('update', element, element.__sortable.original);
                         element.__sortable.original = null;
                     }
                 }
