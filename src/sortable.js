@@ -246,7 +246,7 @@ class Sortable extends Events
      */
     _addToGlobalTracker()
     {
-        if (!Sortable.tracker)
+        if (!Sortable.tracker || !document.getElementById('sortable-dragImage'))
         {
             Sortable.dragImage = document.createElement('div')
             Sortable.dragImage.style.background = 'transparent'
@@ -456,7 +456,7 @@ class Sortable extends Events
         e.dataTransfer.clearData()
         e.dataTransfer.setData(sortable.options.name, sortable.options.name)
         e.dataTransfer.setData(target.id, target.id)
-        e.dataTransfer.setDragImage(Sortable.dragImage, 0, 0)
+        e.dataTransfer.setDragImage(document.getElementById('sortable-dragImage'), 0, 0)
         target.__sortable.current = this
         target.__sortable.index = sortable.options.copy ? -1 : sortable._getIndex(target)
         target.__sortable.dragging = dragging
