@@ -1,8 +1,8 @@
 {
   "name": "yy-sortable",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Vanilla drag-and-drop sortable list(s)",
-  "main": "src/sortable.js",
+  "main": "dist/sortable.js",
   "scripts": {
     "test": "budo docs/code.js:index.js --dir docs",
     "upgrade": "yarn upgrade-interactive --latest",
