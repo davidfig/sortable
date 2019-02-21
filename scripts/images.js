@@ -14,7 +14,7 @@ for (let file of files)
     const image = new Canvas.Image()
     image.onload = () =>
     {
-        const canvas = new Canvas(image.width, image.height)
+        const canvas = Canvas.createCanvas(image.width, image.height)
         const context = canvas.getContext('2d')
         context.drawImage(image, 0, 0)
         s += file + ':\'' + canvas.toDataURL() + '\','

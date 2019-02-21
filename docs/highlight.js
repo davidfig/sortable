@@ -1,5 +1,4 @@
 const highlight = require('highlight.js')
-const ForkMe = require('fork-me-github').default
 
 // shows the code in the demo
 module.exports = function()
@@ -13,5 +12,4 @@ module.exports = function()
         highlight.highlightBlock(code)
     }
     client.send()
-    ForkMe()
 }

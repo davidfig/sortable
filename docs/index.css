@@ -3,6 +3,13 @@ body {
     padding: 0;
 }
 
+.fruits
+{
+    max-width: 10em;
+    max-height: 10em;
+    border: 0.25em white solid;
+}
+
 .title {
     margin-top: 1%;
     margin-left: 15%;
@@ -126,6 +133,12 @@ li {
 }
 
 .example-6-out > div {
+    display: flex;
+    justify-content: center;
+}
+
+#example-14
+{
     display: flex;
     justify-content: center;
 }

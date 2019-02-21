@@ -67,6 +67,10 @@ function test()
     const b13 = new Sortable(thirteen.children[1], { name: 'list-13', dragClass: 'entry', maximum: 3 })
     const c13 = new Sortable(thirteen.children[2], { name: 'list-13', dragClass: 'entry', maximum: 1 })
     events(thirteen, [a13, b13, c13])
+
+    const fourteen = document.getElementById('example-14')
+    const a14 = new Sortable(fourteen, { name: 'list-14' })
+    events(fourteen, [a14])
 }
 
 /**
