@@ -1,8 +1,8 @@
 {
   "name": "yy-sortable",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Vanilla drag-and-drop sortable list(s)",
-  "main": "dist/sortable.js",
+  "main": "src/sortable.js",
   "scripts": {
     "test": "budo docs/code.js:index.js --dir docs",
     "upgrade": "yarn upgrade-interactive --latest",
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/davidfig/sortable.git"
   },
-  "author": "",
+  "author": "David S. Figatner",
   "license": "MIT",
   "dependencies": {
     "eventemitter3": "^3.0.1"
@@ -24,7 +24,6 @@
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
     "canvas": "^2.3.1",
-    "fork-me-github": "^1.1.0",
     "highlight.js": "^9.12.0",
     "yy-jsdoc-template": "^1.3.0"
   }
